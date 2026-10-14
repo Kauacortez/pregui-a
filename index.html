@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modo Monstro — Anti-Procrastinação Gamificado</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            monstro: {
+              dark: '#0B0F19',
+              card: '#161F30',
+              accent: '#10B981',
+              danger: '#EF4444',
+              warning: '#F59E0B',
+            }
+          },
+          animation: {
+            'shake': 'shake 0.25s infinite',
+            'breathe': 'breathe 2.5s infinite ease-in-out',
+            'victory': 'victory 0.8s infinite alternate ease-in-out',
+          },
+          keyframes: {
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%, 60%': { transform: 'translateX(-8px) rotate(-1deg)' },
+              '40%, 80%': { transform: 'translateX(8px) rotate(1deg)' },
+            },
+            breathe: {
+              '0%, 100%': { transform: 'translateY(0) scale(1)' },
+              '50%': { transform: 'translateY(-6px) scale(1.02)' },
+            },
+            victory: {
+              '0%': { transform: 'scale(1) rotate(-6deg)' },
+              '100%': { transform: 'scale(1.1) rotate(6deg)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & ReactDOM & Babel Standalone -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#0B0F19] text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-slate-950 font-sans antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ─────────────────────────────────────────────────────────────
+    // 🔊 Síntese de Efeitos Sonoros com Sirene de Fuga Ininterrupta
+    // ─────────────────────────────────────────────────────────────
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+        this.sirenNodes = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) this.ctx = new AudioContextClass();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      // Inicia a sirene de fuga contínua (roda no hardware de áudio, sem engasgo por troca de aba)
+      startEmergencySiren() {
+        this.init();
+        if (!this.ctx) return;
+        this.stopEmergencySiren();
+
+        const ctx = this.ctx;
+        
+        const osc = ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(750, ctx.currentTime);
+
+        const lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(4.0, ctx.currentTime);
+
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.setValueAtTime(320, ctx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+
+        const mainGain = ctx.createGain();
+        mainGain.gain.setValueAtTime(0.28, ctx.currentTime);
+
+        osc.connect(mainGain);
+        mainGain.connect(ctx.destination);
+
+        osc.start();
+        lfo.start();
+
+        this.sirenNodes = { osc, lfo, mainGain };
+      }
+
+      // Silencia a sirene imediatamente assim que o usuário retorna à aba
+      stopEmergencySiren() {
+        if (this.sirenNodes && this.ctx) {
+          try {
+            const { osc, lfo, mainGain } = this.sirenNodes;
+            mainGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+            setTimeout(() => {
+              try {
+                osc.stop();
+                lfo.stop();
+                osc.disconnect();
+                lfo.disconnect();
+                mainGain.disconnect();
+              } catch(e) {}
+            }, 100);
+          } catch(e) {}
+          this.sirenNodes = null;
+        }
+      }
+
+      playBuzzer() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.3);
+        } catch(e) { console.warn(e); }
+      }
+
+      playClick() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(650, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(250, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch(e) { console.warn(e); }
+      }
+
+      playCelebration() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            const startTime = this.ctx.currentTime + i * 0.12;
+            gain.gain.setValueAtTime(0.2, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.35);
+          });
+        } catch(e) { console.warn(e); }
+      }
+    }
+    const sound = new SoundFX();
+
+    const TAUNTS = [
+      "Eu vi você abrindo outra aba! O feed não vai pagar seus boletos.",
+      "Flagrado em fuga! A dopamina barata te venceu de novo?",
+      "Mais 5 minutos no Instagram e seu cérebro vira pudim.",
+      "Alerta de traição! Foco zero, desculpas mil.",
+      "Olha lá o procrastinador... volte já para cá!"
+    ];
+
+    const PENALTY_PHRASES = [
+      "Eu sou mais forte que a minha vontade de abrir redes sociais",
+      "Procrastinar é roubar tempo do meu próprio futuro",
+      "Fechei a outra aba e assumo meu compromisso de foco",
+      "Meu mascote tem razão e eu voltei para produzir"
+    ];
+
+    // ─────────────────────────────────────────────────────────────
+    // 👾 Componente Principal: App
+    // ─────────────────────────────────────────────────────────────
+    function App() {
+      const [isActive, setIsActive] = useState(false);
+      const [isPenalized, setIsPenalized] = useState(false);
+      const [timeLeft, setTimeLeft] = useState(25 * 60);
+      const [initialDuration, setInitialDuration] = useState(25 * 60);
+      const [distractionStrikes, setDistractionStrikes] = useState(0);
+      const [mascotMood, setMascotMood] = useState('dormindo');
+      const [mascotMessage, setMascotMessage] = useState("Estou dormindo. Não me acorde a menos que vá focar de verdade.");
+      const [distractionsList, setDistractionsList] = useState(['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos']);
+      const [newDistraction, setNewDistraction] = useState('');
+      
+      // Estado da penalidade e anti-trapaça
+      const [penaltyChallenge, setPenaltyChallenge] = useState(PENALTY_PHRASES[0]);
+      const [typedPenalty, setTypedPenalty] = useState('');
+      const [penaltyTimer, setPenaltyTimer] = useState(10);
+      const [cheatAttempt, setCheatAttempt] = useState(false);
+      
+      const titleIntervalRef = useRef(null);
+
+      // Sentinela de fuga da aba: dispara sirene ininterrupta até o retorno
+      useEffect(() => {
+        const handleVisibilityChange = () => {
+          if (document.hidden && isActive) {
+            sound.startEmergencySiren();
+
+            if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
+            let toggle = false;
+            titleIntervalRef.current = setInterval(() => {
+              document.title = toggle ? "🚨 VOLTE JÁ AQUI! 🚨" : "⚠️ ALARME DE PROCRASTINAÇÃO! ⚠️";
+              toggle = !toggle;
+            }, 500);
+
+            const randomTaunt = TAUNTS[Math.floor(Math.random() * TAUNTS.length)];
+            const randomPhrase = PENALTY_PHRASES[Math.floor(Math.random() * PENALTY_PHRASES.length)];
+            
+            setDistractionStrikes(prev => prev + 1);
+            setIsPenalized(true);
+            setPenaltyTimer(10);
+            setTypedPenalty('');
+            setCheatAttempt(false);
+            setPenaltyChallenge(randomPhrase);
+            setMascotMood('furioso');
+            setMascotMessage(`🚨 FLAGRADO: ${randomTaunt}`);
+
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('🚨 VOLTE JÁ PARA O TRABALHO!', {
+                body: 'Sirene ligada! O Monstro não vai parar de apitar até você voltar!',
+                requireInteraction: true
+              });
+            }
+          } else if (!document.hidden) {
+            sound.stopEmergencySiren();
+            if (titleIntervalRef.current) {
+              clearInterval(titleIntervalRef.current);
+              titleIntervalRef.current = null;
+            }
+            document.title = "Modo Monstro — Anti-Procrastinação Gamificado";
+          }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          sound.stopEmergencySiren();
+          if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
+        };
+      }, [isActive]);
+
+      // Timer da Sessão
+      useEffect(() => {
+        let interval = null;
+        if (isActive && !isPenalized) {
+          interval = setInterval(() => {
+            setTimeLeft(prev => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                setIsActive(false);
+                setMascotMood('comemorando');
+                setMascotMessage("🏆 MILAGRE! Você venceu a procrastinação e terminou a sessão!");
+                sound.playCelebration();
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [isActive, isPenalized]);
+
+      // Timer da Penitência (10s de vergonha)
+      useEffect(() => {
+        let penaltyInterval = null;
+        if (isPenalized && penaltyTimer > 0) {
+          penaltyInterval = setInterval(() => {
+            setPenaltyTimer(prev => Math.max(0, prev - 1));
+          }, 1000);
+        }
+        return () => clearInterval(penaltyInterval);
+      }, [isPenalized, penaltyTimer]);
+
+      const startSession = (minutes) => {
+        sound.playClick();
+        const duration = minutes * 60;
+        setTimeLeft(duration);
+        setInitialDuration(duration);
+        setDistractionStrikes(0);
+        setIsActive(true);
+        setIsPenalized(false);
+        setMascotMood('focado');
+        setMascotMessage("Modo Monstro ATIVADO! Olhos na tela e mãos no trabalho.");
+      };
+
+      const stopSession = () => {
+        sound.stopEmergencySiren();
+        if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
+        document.title = "Modo Monstro — Anti-Procrastinação Gamificado";
+        sound.playClick();
+        setIsActive(false);
+        setIsPenalized(false);
+        setMascotMood('dormindo');
+        setMascotMessage("Desistiu? A preguiça venceu desta vez, humano.");
+      };
+
+      const resolvePenalty = () => {
+        sound.stopEmergencySiren();
+        sound.playClick();
+        setIsPenalized(false);
+        setMascotMood('focado');
+        setMascotMessage("Penitência aceita. Retomando o contador. Não ouse fugir de novo!");
+      };
+
+      const addDistraction = (e) => {
+        e.preventDefault();
+        const trimmed = newDistraction.trim();
+        if (trimmed && !distractionsList.includes(trimmed)) {
+          sound.playClick();
+          setDistractionsList([...distractionsList, trimmed]);
+          setNewDistraction('');
+        }
+      };
+
+      const removeDistraction = (name) => {
+        if (isActive) return;
+        sound.playClick();
+        setDistractionsList(distractionsList.filter(item => item !== name));
+      };
+
+      const formatTime = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const progressPercent = initialDuration > 0 ? ((initialDuration - timeLeft) / initialDuration) * 100 : 0;
+      const strokeDashoffset = 440 - (440 * progressPercent) / 100;
+
+      const getMascotVisual = () => {
+        switch (mascotMood) {
+          case 'focado':
+            return { eyes: 'ò_ó', mouth: '—', bg: 'bg-emerald-500', anim: 'animate-breathe', ring: 'ring-emerald-500/40' };
+          case 'furioso':
+            return { eyes: 'ಠ益ಠ', mouth: '▲', bg: 'bg-red-600', anim: 'animate-shake', ring: 'ring-red-600/60' };
+          case 'comemorando':
+            return { eyes: '^ ▽ ^', mouth: 'O', bg: 'bg-purple-600', anim: 'animate-victory', ring: 'ring-purple-600/50' };
+          default:
+            return { eyes: '-.-', mouth: 'zZ', bg: 'bg-slate-700', anim: '', ring: 'ring-slate-700/30' };
+        }
+      };
+      const visual = getMascotVisual();
+
+      const canUnlockPenalty = penaltyTimer === 0 && typedPenalty.trim().toLowerCase() === penaltyChallenge.trim().toLowerCase();
+
+      return (
+        <div className="min-h-screen flex flex-col justify-between items-center p-4 sm:p-6 max-w-xl mx-auto">
+          {/* Header */}
+          <header className="w-full flex justify-between items-center border-b border-slate-800 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/30">
+                👾
+              </div>
+              <div>
+                <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+                  MODO MONSTRO <span className="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded font-black">ANTI-PROCRASTINAÇÃO</span>
+                </h1>
+                <p className="text-xs text-slate-400">Vigilante Comportamental de Foco</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                if ('Notification' in window) Notification.requestPermission();
+              }}
+              className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 font-semibold"
+            >
+              🔔 Notificações
+            </button>
+          </header>
+
+          {/* Dica da Sentinela */}
+          <div className="w-full mt-4 px-4 py-2.5 bg-red-950/40 border border-red-500/30 rounded-xl flex items-center gap-2 text-xs text-red-200">
+            <span className="text-red-400 text-base animate-pulse">🔊</span>
+            <span>
+              <strong>Alerta Sonoro Impiedoso:</strong> Se você sair desta aba durante a sessão, a sirene toca sem parar e a frase de penitência é <strong>100% blindada contra cópia</strong>!
+            </span>
+          </div>
+
+          {/* Área do Mascote */}
+          <div className="flex flex-col items-center justify-center my-4 w-full">
+            <div className="relative px-5 py-3 mb-5 bg-slate-900 border-2 border-slate-700 rounded-2xl text-center shadow-xl max-w-sm">
+              <p className="text-sm sm:text-base font-bold text-slate-100">{mascotMessage}</p>
+              <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-slate-900 border-r-2 border-b-2 border-slate-700 rotate-45"></div>
+            </div>
+
+            <div 
+              onClick={() => sound.playClick()}
+              className={`w-40 h-40 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.anim} ring-8 ${visual.ring} border-4 border-slate-900 shadow-2xl cursor-pointer select-none transition-colors duration-500`}
+            >
+              <span className="text-4xl font-black text-white font-mono tracking-widest drop-shadow-md">
+                {visual.eyes}
+              </span>
+              <span className="text-2xl font-black text-slate-950 mt-1">
+                {visual.mouth}
+              </span>
+            </div>
+
+            {distractionStrikes > 0 && (
+              <span className="mt-3 px-3 py-1 bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-black uppercase rounded-full">
+                🚨 {distractionStrikes} {distractionStrikes === 1 ? 'tentativa de fuga' : 'tentativas de fuga'}
+              </span>
+            )}
+          </div>
+
+          {/* Cronômetro Circular */}
+          <div className="relative flex items-center justify-center w-60 h-60 my-2">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="70" className="stroke-slate-800" strokeWidth="10" fill="transparent" />
+              <circle
+                cx="80" cy="80" r="70"
+                className={`transition-all duration-1000 ease-linear ${isActive ? 'stroke-emerald-400' : 'stroke-slate-600'}`}
+                strokeWidth="10"
+                strokeDasharray="440"
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+                fill="transparent"
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center justify-center">
+              <span className="text-5xl font-mono font-black text-white tracking-tight">
+                {formatTime(timeLeft)}
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
+                {isActive ? 'Foco em Andamento' : 'Pronto para Ativar'}
+              </span>
+            </div>
+          </div>
+
+          {/* Botões de Ação */}
+          <div className="w-full max-w-sm flex flex-col gap-3">
+            {!isActive ? (
+              <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-3 gap-2">
+                  {[15, 25, 45].map((mins) => (
+                    <button
+                      key={mins}
+                      onClick={() => startSession(mins)}
+                      className="py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 rounded-xl font-bold text-xs text-slate-200 transition-all"
+                    >
+                      {mins} min
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => startSession(25)}
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all"
+                >
+                  🔥 ATIVAR MODO MONSTRO (25M)
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={stopSession}
+                className="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30 transition-all uppercase tracking-wider"
+              >
+                🏳️ Desistir e Encarar a Vergonha
+              </button>
+            )}
+          </div>
+
+          {/* Tentações Proibidas */}
+          <div className="w-full max-w-md p-4 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl mt-6">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-300">
+                🚫 Tentações Proibidas ({distractionsList.length})
+              </h3>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {distractionsList.map((d) => (
+                <span key={d} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-800 text-red-300 border border-red-900/40 rounded-lg text-xs font-semibold">
+                  🚫 {d}
+                  {!isActive && (
+                    <button onClick={() => removeDistraction(d)} className="hover:text-red-100 ml-1 text-xs">×</button>
+                  )}
+                </span>
+              ))}
+            </div>
+            {!isActive && (
+              <form onSubmit={addDistraction} className="flex gap-2">
+                <input
+                  type="text"
+                  value={newDistraction}
+                  onChange={(e) => setNewDistraction(e.target.value)}
+                  placeholder="Ex: Reddit, Shopee, Anime..."
+                  className="flex-1 px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                />
+                <button type="submit" className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold">
+                  + Adicionar
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Modal de Bloqueio e Redenção com Proteção Anti-Cópia */}
+          {isPenalized && (
+            <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-slate-900 border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 text-center shadow-2xl shadow-red-500/30">
+                <div className="text-4xl mb-2 animate-bounce">⚠️</div>
+                <h2 className="text-2xl font-black text-red-500 uppercase tracking-tight">
+                  FLAGRADO EM FUGA!
+                </h2>
+                <p className="text-xs text-slate-300 mt-1">
+                  Você abandonou a aba de foco ({distractionStrikes}ª infração). Cumpra a penitência para destravar:
+                </p>
+
+                <div className="my-4 p-3 bg-slate-950 border border-slate-800 rounded-xl">
+                  <span className="text-xs uppercase text-slate-400 font-bold block mb-1">Tempo de reflexão forçado:</span>
+                  <span className="text-2xl font-mono font-black text-amber-400">
+                    {penaltyTimer > 0 ? `${penaltyTimer}s de castigo` : '✓ Tempo cumprido'}
+                  </span>
+                </div>
+
+                <div className="text-left my-4">
+                  <div className="mb-1">
+                    <label className="text-xs text-slate-400 font-bold block">
+                      Digite a frase abaixo para comprovar arrependimento:
+                    </label>
+                  </div>
+
+                  {/* CAIXA DE TEXTO TOTALMENTE BLINDADA CONTRA CÓPIA */}
+                  <div
+                    onCopy={(e) => { e.preventDefault(); sound.playBuzzer(); setCheatAttempt(true); }}
+                    onCut={(e) => e.preventDefault()}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                    style={{
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      msUserSelect: 'none'
+                    }}
+                    className="p-3 bg-red-950/50 border-2 border-red-800/80 rounded-xl text-xs sm:text-sm font-semibold text-red-200 select-none cursor-not-allowed mb-2 font-mono tracking-wide shadow-inner text-center"
+                  >
+                    "{penaltyChallenge}"
+                  </div>
+
+                  {/* CAMPO DE DIGITAÇÃO COM BLOQUEIO DE CTRL+V E DROP */}
+                  <input
+                    type="text"
+                    value={typedPenalty}
+                    onChange={(e) => setTypedPenalty(e.target.value)}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      sound.playBuzzer();
+                      setCheatAttempt(true);
+                      setTimeout(() => setCheatAttempt(false), 3000);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      sound.playBuzzer();
+                    }}
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    placeholder="Digite a frase aqui para provar sua redenção..."
+                    className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 rounded-xl text-slate-100 placeholder-slate-600 focus:outline-none text-xs font-mono transition-all"
+                  />
+
+                  {cheatAttempt && (
+                    <div className="mt-2 p-2 bg-red-950 border border-red-600 rounded-lg text-center animate-shake">
+                      <p className="text-xs text-red-300 font-black">
+                        🚨 TENTATIVA DE TRAPAÇA DETECTADA!
+                      </p>
+                      <p className="text-[11px] text-red-400">
+                        É proibido colar texto. Digite cada letra manualmente para pagar o castigo!
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={resolvePenalty}
+                  disabled={!canUnlockPenalty}
+                  className={`w-full py-3 rounded-xl font-black text-sm transition-all ${
+                    canUnlockPenalty
+                      ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/30 cursor-pointer active:scale-95'
+                      : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                  }`}
+                >
+                  {penaltyTimer > 0
+                    ? `AGUARDE ${penaltyTimer}S...`
+                    : typedPenalty.trim().toLowerCase() !== penaltyChallenge.trim().toLowerCase()
+                    ? 'DIGITE A FRASE COMPLETA'
+                    : 'RETOMAR O FOCO (NÃO ERRE DE NOVO)'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <footer className="w-full text-center border-t border-slate-800/80 pt-4 text-[11px] text-slate-500 mt-6">
+            Aba aberta e visível = Monstro focado. Trocou de aba = Sirene contínua estridente.
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useFocusStore, MascotMood } from '../store/useFocusStore';
+import { soundEffects } from '../utils/soundEffects';
+
+export const Mascot: React.FC = () => {
+  const { mascotMood, mascotMessage, distractionStrikes } = useFocusStore();
+
+  const getVisualConfig = (mood: MascotMood) => {
+    switch (mood) {
+      case 'focado':
+        return {
+          eyes: 'ò_ó',
+          mouth: '—',
+          bg: 'bg-emerald-500',
+          ring: 'border-emerald-300 ring-4 ring-emerald-500/30',
+          title: 'Monstro Concentrado',
+          horns: true,
+        };
+      case 'furioso':
+        return {
+          eyes: 'ಠ益ಠ',
+          mouth: '▲',
+          bg: 'bg-red-600',
+          ring: 'border-red-400 ring-8 ring-red-600/50',
+          title: 'MONSTRO FURIOSO COM SUA TRAIÇÃO',
+          horns: true,
+        };
+      case 'julgando':
+        return {
+          eyes: '¬_¬',
+          mouth: '〜',
+          bg: 'bg-amber-500',
+          ring: 'border-amber-300 ring-4 ring-amber-500/30',
+          title: 'Monstro Julgador',
+          horns: false,
+        };
+      case 'comemorando':
+        return {
+          eyes: '^ ▽ ^',
+          mouth: 'O',
+          bg: 'bg-purple-600',
+          ring: 'border-purple-300 ring-6 ring-purple-500/40',
+          title: 'Monstro Triunfante',
+          horns: true,
+        };
+      case 'dormindo':
+      default:
+        return {
+          eyes: '-.-',
+          mouth: 'zZ',
+          bg: 'bg-slate-700',
+          ring: 'border-slate-600 ring-2 ring-slate-700/20',
+          title: 'Monstro Hibernando',
+          horns: false,
+        };
+    }
+  };
+
+  const visual = getVisualConfig(mascotMood);
+
+  const handlePoke = () => {
+    soundEffects.playClick();
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center p-4 my-2 select-none w-full max-w-md">
+      {/* Balão de Diálogo do Mascote */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={mascotMessage}
+          initial={{ opacity: 0, y: 12, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -8, scale: 0.95 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="relative px-5 py-3 mb-6 bg-slate-900/90 border-2 border-slate-700 rounded-2xl text-center shadow-xl backdrop-blur-sm max-w-sm"
+        >
+          <p className="text-sm md:text-base font-bold text-slate-100 leading-snug">
+            {mascotMessage}
+          </p>
+          {/* Ponta do balão */}
+          <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-slate-900 border-r-2 border-b-2 border-slate-700 rotate-45" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Avatar do Monstrinho com Framer Motion */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.92 }}
+        onClick={handlePoke}
+        animate={
+          mascotMood === 'furioso'
+            ? {
+                x: [-6, 6, -6, 6, 0],
+                y: [-3, 3, -3, 3, 0],
+                transition: { repeat: Infinity, duration: 0.18 },
+              }
+            : mascotMood === 'focado'
+            ? {
+                y: [0, -8, 0],
+                transition: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' },
+              }
+            : mascotMood === 'comemorando'
+            ? {
+                rotate: [0, -12, 12, -12, 0],
+                scale: [1, 1.12, 1],
+                transition: { repeat: Infinity, duration: 0.9 },
+              }
+            : {}
+        }
+        className={`relative w-36 h-36 md:w-44 md:h-44 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.ring} border-4 transition-colors duration-500 shadow-2xl cursor-pointer`}
+      >
+        {/* Chifrinhos fofos/cômicos do monstrinho */}
+        {visual.horns && (
+          <>
+            <div className="absolute -top-3 left-4 w-4 h-6 bg-slate-900 rounded-t-full -rotate-12 border-2 border-slate-800" />
+            <div className="absolute -top-3 right-4 w-4 h-6 bg-slate-900 rounded-t-full rotate-12 border-2 border-slate-800" />
+          </>
+        )}
+
+        {/* Olhinhos expressivos */}
+        <span className="text-3xl md:text-4xl font-black text-white tracking-widest font-mono drop-shadow-md">
+          {visual.eyes}
+        </span>
+
+        {/* Boca expressiva */}
+        <span className="text-xl md:text-2xl font-black text-slate-950 mt-1">
+          {visual.mouth}
+        </span>
+      </motion.div>
+
+      {/* Indicador de infrações */}
+      {distractionStrikes > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mt-4 px-3 py-1 bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-black tracking-wider uppercase rounded-full shadow-inner"
+        >
+          🚨 {distractionStrikes} {distractionStrikes === 1 ? 'tentativa de fuga' : 'tentativas de fuga'}
+        </motion.div>
+      )}
+    </div>
+  );
+};
