@@ -277,25 +277,83 @@
     ];
 
     // ─────────────────────────────────────────────────────────────
+    const STORAGE_KEY = 'modo_foco_state_v2';
+
+    const loadSavedState = () => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        return null;
+      }
+    };
+
+    // ─────────────────────────────────────────────────────────────
     // Componente Principal: App
     // ─────────────────────────────────────────────────────────────
     function App() {
-      const [isActive, setIsActive] = useState(false);
-      const [isPenalized, setIsPenalized] = useState(false);
-      const [timeLeft, setTimeLeft] = useState(25 * 60);
-      const [initialDuration, setInitialDuration] = useState(25 * 60);
-      const [distractionStrikes, setDistractionStrikes] = useState(0);
-      const [mascotMood, setMascotMood] = useState('dormindo');
-      const [mascotMessage, setMascotMessage] = useState("Sistema em espera. Inicie uma sessão para ativar a supervisão.");
-      const [distractionsList, setDistractionsList] = useState(['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos']);
+      // Carregamento síncrono do estado salvo:
+      // Se a página for recarregada (F5) enquanto bloqueada OU durante uma sessão ativa,
+      // a tela de bloqueio é reativada instantaneamente!
+      const saved = loadSavedState();
+      const wasPenalizedOrReloadedDuringSession = Boolean(saved?.isPenalized || saved?.isActive);
+
+      const [isActive, setIsActive] = useState(saved ? Boolean(saved.isActive) : false);
+      const [isPenalized, setIsPenalized] = useState(wasPenalizedOrReloadedDuringSession);
+      const [timeLeft, setTimeLeft] = useState(saved?.timeLeft ?? 25 * 60);
+      const [initialDuration, setInitialDuration] = useState(saved?.initialDuration ?? 25 * 60);
+      const [distractionStrikes, setDistractionStrikes] = useState(
+        (saved?.distractionStrikes ?? 0) + (saved?.isActive && !saved?.isPenalized ? 1 : 0)
+      );
+      const [mascotMood, setMascotMood] = useState(
+        wasPenalizedOrReloadedDuringSession ? 'furioso' : (saved?.isActive ? 'focado' : 'dormindo')
+      );
+      const [mascotMessage, setMascotMessage] = useState(
+        wasPenalizedOrReloadedDuringSession
+          ? "Atenção: Validação de presença obrigatória pendente. Digite a frase para prosseguir."
+          : "Sistema em espera. Inicie uma sessão para ativar a supervisão."
+      );
+      const [distractionsList, setDistractionsList] = useState(
+        saved?.distractionsList ?? ['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos']
+      );
       const [newDistraction, setNewDistraction] = useState('');
       
-      const [penaltyChallenge, setPenaltyChallenge] = useState(PENALTY_PHRASES[0]);
+      const [penaltyChallenge, setPenaltyChallenge] = useState(saved?.penaltyChallenge || PENALTY_PHRASES[0]);
       const [typedPenalty, setTypedPenalty] = useState('');
-      const [penaltyTimer, setPenaltyTimer] = useState(10);
+      const [penaltyTimer, setPenaltyTimer] = useState(saved?.isPenalized ? (saved?.penaltyTimer ?? 0) : 0);
       const [cheatAttempt, setCheatAttempt] = useState(false);
       
       const titleIntervalRef = useRef(null);
+
+      // Persistência automática no localStorage a cada alteração crítica
+      useEffect(() => {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            isActive,
+            isPenalized,
+            timeLeft,
+            initialDuration,
+            distractionStrikes,
+            penaltyChallenge,
+            penaltyTimer,
+            distractionsList
+          }));
+        } catch (e) {}
+      }, [isActive, isPenalized, timeLeft, initialDuration, distractionStrikes, penaltyChallenge, penaltyTimer, distractionsList]);
+
+      // Alerta nativo de navegador caso tente fechar ou recarregar durante o foco ou penalidade
+      useEffect(() => {
+        const handleBeforeUnload = (e) => {
+          if (isActive || isPenalized) {
+            e.preventDefault();
+            e.returnValue = 'A sessão ainda está ativa ou sob validação pendente!';
+            return e.returnValue;
+          }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      }, [isActive, isPenalized]);
 
       // Sentinela de fuga da aba
       useEffect(() => {
@@ -355,9 +413,13 @@
               if (prev <= 1) {
                 clearInterval(interval);
                 setIsActive(false);
+                setIsPenalized(false);
                 setMascotMood('comemorando');
                 setMascotMessage("Meta atingida! Sessão de foco concluída integralmente com sucesso.");
                 sound.playCelebration();
+                try {
+                  localStorage.removeItem(STORAGE_KEY);
+                } catch(e) {}
                 return 0;
               }
               return prev - 1;
@@ -399,14 +461,26 @@
         setIsPenalized(false);
         setMascotMood('dormindo');
         setMascotMessage("Sessão finalizada prematuramente. O progresso foi interrompido.");
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch(e) {}
       };
 
       const resolvePenalty = () => {
         sound.stopEmergencySiren();
         sound.playClick();
         setIsPenalized(false);
+        setPenaltyTimer(0);
+        setTypedPenalty('');
         setMascotMood('focado');
         setMascotMessage("Compromisso validado. O cronômetro foi retomado com sucesso.");
+
+        try {
+          const current = loadSavedState() || {};
+          current.isPenalized = false;
+          current.penaltyTimer = 0;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+        } catch (e) {}
       };
 
       const addDistraction = (e) => {

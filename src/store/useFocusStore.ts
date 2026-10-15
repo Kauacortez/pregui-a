@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type MascotMood = 'dormindo' | 'focado' | 'julgando' | 'furioso' | 'comemorando';
 
@@ -39,7 +40,9 @@ const PENALTY_PHRASES = [
   "Meu mascote tem razão e eu voltei para trabalhar"
 ];
 
-export const useFocusStore = create<FocusState>((set, get) => ({
+export const useFocusStore = create<FocusState>()(
+  persist(
+    (set, get) => ({
   isActive: false,
   isPenalized: false,
   timeLeft: 25 * 60,
@@ -134,4 +137,9 @@ export const useFocusStore = create<FocusState>((set, get) => ({
       mascotMessage: message || state.mascotMessage
     }));
   }
-}));
+}),
+    {
+      name: 'modo_foco_zustand_storage',
+    }
+  )
+);
