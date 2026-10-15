@@ -1,38 +1,38 @@
-# 👾 Modo Monstro — Web App Anti-Procrastinação Gamificado
+# Modo Foco — Web App de Gestão Comportamental Anti-Procrastinação
 
-Aplicação web focada em quebrar ciclos de procrastinação através de humor agressivo, vigilância comportamental de foco no navegador, alarme estridente ininterrupto e mecânicas impiedosas de gamificação.
-
----
-
-## 🚀 Funcionalidades Principais
-
-* **👾 Mascote Reativo:** Reage em tempo real com estados de humor (*Dormindo*, *Focado*, *Julgando*, *Furioso*, *Comemorando*), tremores físicos com animações e balões sarcásticos.
-* **👁️ Sentinela de Foco (`Page Visibility API`):** Detecta no milissegundo em que o usuário troca de aba, abre outra janela ou tenta minimizar o navegador durante uma sessão de foco ativa.
-* **🚨 Sirene de Emergência Contínua (Web Audio API):** Som procedural modulado por osciladores (LFO) gerado direto pelo hardware de áudio do navegador, sem dependência de arquivos externos. Não engasga com *tab-throttling* e toca sem parar até o usuário voltar para a aba.
-* **🔒 Tela de Bloqueio e Redenção Anti-Trapaça:**
-  * Temporizador obrigatório de reflexão (10 segundos de castigo).
-  * Frase de compromisso **blindada contra seleção e cópia** (`user-select: none`, intercepção de `onCopy` e `onContextMenu`).
-  * Bloqueio estrito de colagem (`Ctrl+V` e `Drop`) no campo de texto com detecção sonora de trapaça.
-* **🎯 Gerenciador de Tentações Proibidas:** Lista visual de distrações cadastradas (Instagram, TikTok, Twitter/X, YouTube Shorts, etc.) com bloqueio de edição durante sessões ativas.
-* **⏱️ Cronômetro Pomodoro Circular:** Mostrador imersivo em SVG com indicador animado de progresso.
+Aplicação web focada em produtividade contínua, vigilância comportamental de presença no navegador, sinal sonoro ininterrupto e validação de retorno anti-trapaça.
 
 ---
 
-## 🛠️ Arquitetura e Tecnologias
+## Funcionalidades Principais
+
+* **Agente Reativo de Supervisão:** Reage em tempo real com estados de acompanhamento (*Em espera*, *Focado*, *Alerta*, *Crítico*, *Concluído*), tremores físicos com micro-interações e orientações de disciplina.
+* **Sentinela de Foco (Page Visibility API):** Detecta no milissegundo em que o usuário troca de aba, abre outra janela ou tenta minimizar o navegador durante uma sessão de foco ativa.
+* **Sinal Sonoro de Emergência Contínuo (Web Audio API):** Síntese procedural modulada por osciladores (LFO) gerada diretamente pelo hardware de áudio do navegador, sem dependência de arquivos externos. Imune ao estrangulamento de abas em segundo plano (*tab-throttling*).
+* **Tela de Bloqueio e Validação de Retorno Anti-Trapaça:**
+  * Temporizador obrigatório de estabilização (10 segundos de reflexão).
+  * Frase de compromisso blindada contra seleção e cópia (`user-select: none`, intercepção de `onCopy` e `onContextMenu`).
+  * Bloqueio estrito de colagem (`Ctrl+V` e `Drop`) no campo de texto com detecção sonora de violação.
+* **Gerenciador de Restrições:** Lista de distrações cadastradas (Redes Sociais, Notícias, Jogos, etc.) com bloqueio de edição durante sessões ativas.
+* **Cronômetro Pomodoro Circular:** Mostrador vetorial SVG com indicador animado de progresso.
+
+---
+
+## Arquitetura e Tecnologias
 
 * **Frontend:** React 18 / TypeScript
-* **Estilização:** Tailwind CSS (tema Dark/Neo-brutalist)
-* **Animações:** Framer Motion / CSS Keyframes
-* **Áudio:** Web Audio API nativa (síntese procedural)
+* **Estilização:** Tailwind CSS (Dark Theme minimalista e profissional)
+* **Ícones:** Vetores SVG nativos
+* **Áudio:** Web Audio API nativa (síntese procedural em tempo real)
 * **Gerenciamento de Estado:** Zustand
 * **Sentinela de Navegador:** `document.visibilitychange`
 
 ---
 
-## 💻 Como Executar
+## Como Executar
 
 ### Opção 1: Execução Imediata via Servidor Leve (Python)
-Caso você queira visualizar ou testar imediatamente sem compilação:
+Para visualização instantânea sem necessidade de build:
 ```bash
 python -m http.server 3000
 ```
@@ -48,7 +48,7 @@ Acesse: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 ├── index.html                  # Versão standalone pronta para servir diretamente
@@ -57,11 +57,11 @@ Acesse: [http://localhost:5173](http://localhost:5173)
 ├── tsconfig.json               # Configurações do TypeScript
 ├── src/
 │   ├── components/
-│   │   ├── BlacklistManager.tsx    # Gerenciador de distrações
+│   │   ├── BlacklistManager.tsx    # Gerenciador de restrições
 │   │   ├── DistractionDetector.tsx # Sentinela de fuga da aba
-│   │   ├── Mascot.tsx              # Mascote animado com expressões e falas
+│   │   ├── Mascot.tsx              # Agente reativo com micro-animações
 │   │   ├── MonsterTimer.tsx        # Cronômetro circular
-│   │   └── PenaltyLockScreen.tsx   # Modal de castigo e redenção anti-cópia
+│   │   └── PenaltyLockScreen.tsx   # Modal de validação e retenção anti-cópia
 │   ├── store/
 │   │   └── useFocusStore.ts        # Gerenciamento de estado global com Zustand
 │   ├── utils/

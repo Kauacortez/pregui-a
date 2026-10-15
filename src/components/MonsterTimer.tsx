@@ -111,18 +111,20 @@ export const MonsterTimer: React.FC = () => {
           </div>
           <button
             onClick={() => handleStart(25)}
-            className="w-full py-4 mt-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-lg shadow-lg shadow-emerald-500/25 active:scale-98 transition-all tracking-wide"
+            className="w-full py-4 mt-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-lg shadow-lg shadow-emerald-500/25 active:scale-98 transition-all tracking-wide flex items-center justify-center gap-2"
           >
-            🔥 ATIVAR MODO MONSTRO (25M)
+            <svg className="w-5 h-5 fill-slate-950" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+            <span>INICIAR SESSÃO DE FOCO (25M)</span>
           </button>
         </div>
       ) : (
         <div className="w-full max-w-sm mt-4">
           <button
             onClick={handleStop}
-            className="w-full py-4 bg-red-600/90 hover:bg-red-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30 active:scale-98 transition-all uppercase tracking-wider border border-red-500/50"
+            className="w-full py-4 bg-red-600/90 hover:bg-red-600 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30 active:scale-98 transition-all uppercase tracking-wider border border-red-500/50 flex items-center justify-center gap-2"
           >
-            🏳️ Desistir e Encarar o Julgamento
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+            <span>Interromper Sessão</span>
           </button>
         </div>
       )}

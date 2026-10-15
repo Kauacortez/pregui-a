@@ -27,14 +27,14 @@ export const App: React.FC = () => {
       {/* Barra Superior */}
       <header className="w-full max-w-xl flex justify-between items-center border-b border-slate-800/80 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
-            👾
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10">
+            <ShieldAlert size={18} />
           </div>
           <div>
             <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
-              MODO MONSTRO <span className="text-[10px] bg-red-500/90 text-white px-1.5 py-0.5 rounded font-black">ANTI-PROCRASTINAÇÃO</span>
+              MODO FOCO <span className="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded font-mono font-semibold">ANTI-PROCRASTINAÇÃO</span>
             </h1>
-            <p className="text-[11px] text-slate-400">Vigilante Comportamental de Foco</p>
+            <p className="text-[11px] text-slate-400">Vigilância Comportamental de Produtividade</p>
           </div>
         </div>
 

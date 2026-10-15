@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modo Monstro — Anti-Procrastinação Gamificado</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>">
+  <title>Modo Foco — Gestão Comportamental Anti-Procrastinação</title>
+  <!-- Favicon SVG Vetorial Profissional -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2310B981%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><circle cx=%2212%22 cy=%2212%22 r=%226%22/><circle cx=%2212%22 cy=%2212%22 r=%222%22/></svg>">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,8 +38,8 @@
               '50%': { transform: 'translateY(-6px) scale(1.02)' },
             },
             victory: {
-              '0%': { transform: 'scale(1) rotate(-6deg)' },
-              '100%': { transform: 'scale(1.1) rotate(6deg)' },
+              '0%': { transform: 'scale(1) rotate(-4deg)' },
+              '100%': { transform: 'scale(1.08) rotate(4deg)' },
             }
           }
         }
@@ -50,8 +51,6 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-[#0B0F19] text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-slate-950 font-sans antialiased">
   <div id="root"></div>
@@ -59,8 +58,82 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
+    // -------------------------------------------------------------
+    // Ícones Vetoriais SVG Nativos e Profissionais (Zero Emojis)
+    // -------------------------------------------------------------
+    const Icons = {
+      Target: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M22 12h-4" /><path d="M6 12H2" /><path d="M12 6V2" /><path d="M12 22v-4" />
+        </svg>
+      ),
+      Bell: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </svg>
+      ),
+      ShieldAlert: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      ),
+      ShieldCheck: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <polyline points="9 12 11 14 15 10" />
+        </svg>
+      ),
+      Volume2: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        </svg>
+      ),
+      Play: (props) => (
+        <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+          <polygon points="5 3 19 12 5 21 5 3" />
+        </svg>
+      ),
+      StopCircle: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+      ),
+      Ban: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        </svg>
+      ),
+      Check: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ),
+      Lock: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      ),
+      AlertTriangle: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+      ),
+    };
+
     // ─────────────────────────────────────────────────────────────
-    // 🔊 Síntese de Efeitos Sonoros com Sirene de Fuga Ininterrupta
+    // Síntese de Efeitos Sonoros com Sirene de Fuga Ininterrupta
     // ─────────────────────────────────────────────────────────────
     class SoundFX {
       constructor() {
@@ -78,14 +151,12 @@
         }
       }
 
-      // Inicia a sirene de fuga contínua (roda no hardware de áudio, sem engasgo por troca de aba)
       startEmergencySiren() {
         this.init();
         if (!this.ctx) return;
         this.stopEmergencySiren();
 
         const ctx = this.ctx;
-        
         const osc = ctx.createOscillator();
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(750, ctx.currentTime);
@@ -112,7 +183,6 @@
         this.sirenNodes = { osc, lfo, mainGain };
       }
 
-      // Silencia a sirene imediatamente assim que o usuário retorna à aba
       stopEmergencySiren() {
         if (this.sirenNodes && this.ctx) {
           try {
@@ -192,22 +262,22 @@
     const sound = new SoundFX();
 
     const TAUNTS = [
-      "Eu vi você abrindo outra aba! O feed não vai pagar seus boletos.",
-      "Flagrado em fuga! A dopamina barata te venceu de novo?",
-      "Mais 5 minutos no Instagram e seu cérebro vira pudim.",
-      "Alerta de traição! Foco zero, desculpas mil.",
-      "Olha lá o procrastinador... volte já para cá!"
+      "Interrupção detectada: a produtividade exige continuidade sem distrações.",
+      "Atenção: evasão de foco registrada. Retorne para cumprir sua meta.",
+      "Aviso: a dispersão compromete seus objetivos prioritários.",
+      "Foco interrompido. Retome a atividade imediatamente.",
+      "Registro de evasão em andamento. Volte para a sessão de trabalho."
     ];
 
     const PENALTY_PHRASES = [
       "Eu sou mais forte que a minha vontade de abrir redes sociais",
       "Procrastinar é roubar tempo do meu próprio futuro",
       "Fechei a outra aba e assumo meu compromisso de foco",
-      "Meu mascote tem razão e eu voltei para produzir"
+      "Retomo minha disciplina e compromisso com o trabalho"
     ];
 
     // ─────────────────────────────────────────────────────────────
-    // 👾 Componente Principal: App
+    // Componente Principal: App
     // ─────────────────────────────────────────────────────────────
     function App() {
       const [isActive, setIsActive] = useState(false);
@@ -216,11 +286,10 @@
       const [initialDuration, setInitialDuration] = useState(25 * 60);
       const [distractionStrikes, setDistractionStrikes] = useState(0);
       const [mascotMood, setMascotMood] = useState('dormindo');
-      const [mascotMessage, setMascotMessage] = useState("Estou dormindo. Não me acorde a menos que vá focar de verdade.");
+      const [mascotMessage, setMascotMessage] = useState("Sistema em espera. Inicie uma sessão para ativar a supervisão.");
       const [distractionsList, setDistractionsList] = useState(['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos']);
       const [newDistraction, setNewDistraction] = useState('');
       
-      // Estado da penalidade e anti-trapaça
       const [penaltyChallenge, setPenaltyChallenge] = useState(PENALTY_PHRASES[0]);
       const [typedPenalty, setTypedPenalty] = useState('');
       const [penaltyTimer, setPenaltyTimer] = useState(10);
@@ -228,7 +297,7 @@
       
       const titleIntervalRef = useRef(null);
 
-      // Sentinela de fuga da aba: dispara sirene ininterrupta até o retorno
+      // Sentinela de fuga da aba
       useEffect(() => {
         const handleVisibilityChange = () => {
           if (document.hidden && isActive) {
@@ -237,9 +306,9 @@
             if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
             let toggle = false;
             titleIntervalRef.current = setInterval(() => {
-              document.title = toggle ? "🚨 VOLTE JÁ AQUI! 🚨" : "⚠️ ALARME DE PROCRASTINAÇÃO! ⚠️";
+              document.title = toggle ? "[ALERTA] Retorne à Sessão de Foco" : "[INTERROMPIDO] Foco Descontinuado";
               toggle = !toggle;
-            }, 500);
+            }, 600);
 
             const randomTaunt = TAUNTS[Math.floor(Math.random() * TAUNTS.length)];
             const randomPhrase = PENALTY_PHRASES[Math.floor(Math.random() * PENALTY_PHRASES.length)];
@@ -251,11 +320,11 @@
             setCheatAttempt(false);
             setPenaltyChallenge(randomPhrase);
             setMascotMood('furioso');
-            setMascotMessage(`🚨 FLAGRADO: ${randomTaunt}`);
+            setMascotMessage(`Atenção: ${randomTaunt}`);
 
             if ('Notification' in window && Notification.permission === 'granted') {
-              new Notification('🚨 VOLTE JÁ PARA O TRABALHO!', {
-                body: 'Sirene ligada! O Monstro não vai parar de apitar até você voltar!',
+              new Notification('Alerta de Foco: Sessão Interrompida', {
+                body: 'Sinal sonoro ativo. Retorne à aba para prosseguir com a sessão.',
                 requireInteraction: true
               });
             }
@@ -265,7 +334,7 @@
               clearInterval(titleIntervalRef.current);
               titleIntervalRef.current = null;
             }
-            document.title = "Modo Monstro — Anti-Procrastinação Gamificado";
+            document.title = "Modo Foco — Gestão Comportamental Anti-Procrastinação";
           }
         };
 
@@ -287,7 +356,7 @@
                 clearInterval(interval);
                 setIsActive(false);
                 setMascotMood('comemorando');
-                setMascotMessage("🏆 MILAGRE! Você venceu a procrastinação e terminou a sessão!");
+                setMascotMessage("Meta atingida! Sessão de foco concluída integralmente com sucesso.");
                 sound.playCelebration();
                 return 0;
               }
@@ -298,7 +367,7 @@
         return () => clearInterval(interval);
       }, [isActive, isPenalized]);
 
-      // Timer da Penitência (10s de vergonha)
+      // Timer da Penitência
       useEffect(() => {
         let penaltyInterval = null;
         if (isPenalized && penaltyTimer > 0) {
@@ -318,18 +387,18 @@
         setIsActive(true);
         setIsPenalized(false);
         setMascotMood('focado');
-        setMascotMessage("Modo Monstro ATIVADO! Olhos na tela e mãos no trabalho.");
+        setMascotMessage("Sessão iniciada. Monitoramento de presença e disciplina ativado.");
       };
 
       const stopSession = () => {
         sound.stopEmergencySiren();
         if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
-        document.title = "Modo Monstro — Anti-Procrastinação Gamificado";
+        document.title = "Modo Foco — Gestão Comportamental Anti-Procrastinação";
         sound.playClick();
         setIsActive(false);
         setIsPenalized(false);
         setMascotMood('dormindo');
-        setMascotMessage("Desistiu? A preguiça venceu desta vez, humano.");
+        setMascotMessage("Sessão finalizada prematuramente. O progresso foi interrompido.");
       };
 
       const resolvePenalty = () => {
@@ -337,7 +406,7 @@
         sound.playClick();
         setIsPenalized(false);
         setMascotMood('focado');
-        setMascotMessage("Penitência aceita. Retomando o contador. Não ouse fugir de novo!");
+        setMascotMessage("Compromisso validado. O cronômetro foi retomado com sucesso.");
       };
 
       const addDistraction = (e) => {
@@ -383,34 +452,35 @@
 
       return (
         <div className="min-h-screen flex flex-col justify-between items-center p-4 sm:p-6 max-w-xl mx-auto">
-          {/* Header */}
+          {/* Header Profissional */}
           <header className="w-full flex justify-between items-center border-b border-slate-800 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/30">
-                👾
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10">
+                <Icons.Target className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
-                  MODO MONSTRO <span className="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded font-black">ANTI-PROCRASTINAÇÃO</span>
+                  MODO FOCO <span className="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded font-mono font-semibold">ANTI-PROCRASTINAÇÃO</span>
                 </h1>
-                <p className="text-xs text-slate-400">Vigilante Comportamental de Foco</p>
+                <p className="text-xs text-slate-400">Vigilância Comportamental de Produtividade</p>
               </div>
             </div>
             <button
               onClick={() => {
                 if ('Notification' in window) Notification.requestPermission();
               }}
-              className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 font-semibold"
+              className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 font-semibold flex items-center gap-1.5 transition-colors"
             >
-              🔔 Notificações
+              <Icons.Bell className="w-3.5 h-3.5 text-slate-400" />
+              <span>Notificações</span>
             </button>
           </header>
 
           {/* Dica da Sentinela */}
-          <div className="w-full mt-4 px-4 py-2.5 bg-red-950/40 border border-red-500/30 rounded-xl flex items-center gap-2 text-xs text-red-200">
-            <span className="text-red-400 text-base animate-pulse">🔊</span>
+          <div className="w-full mt-4 px-4 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl flex items-center gap-2.5 text-xs text-slate-300">
+            <Icons.Volume2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              <strong>Alerta Sonoro Impiedoso:</strong> Se você sair desta aba durante a sessão, a sirene toca sem parar e a frase de penitência é <strong>100% blindada contra cópia</strong>!
+              <strong>Protocolo de Presença:</strong> A saída desta aba durante o período de foco ativa o sinal sonoro ininterrupto até o retorno.
             </span>
           </div>
 
@@ -434,8 +504,9 @@
             </div>
 
             {distractionStrikes > 0 && (
-              <span className="mt-3 px-3 py-1 bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-black uppercase rounded-full">
-                🚨 {distractionStrikes} {distractionStrikes === 1 ? 'tentativa de fuga' : 'tentativas de fuga'}
+              <span className="mt-3 px-3 py-1 bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-semibold uppercase rounded-full flex items-center gap-1.5">
+                <Icons.AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                {distractionStrikes} {distractionStrikes === 1 ? 'interrupção registrada' : 'interrupções registradas'}
               </span>
             )}
           </div>
@@ -459,12 +530,12 @@
                 {formatTime(timeLeft)}
               </span>
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
-                {isActive ? 'Foco em Andamento' : 'Pronto para Ativar'}
+                {isActive ? 'Sessão em Andamento' : 'Pronto para Ativar'}
               </span>
             </div>
           </div>
 
-          {/* Botões de Ação */}
+          {/* Botões de Ação Profissionais */}
           <div className="w-full max-w-sm flex flex-col gap-3">
             {!isActive ? (
               <div className="flex flex-col gap-2">
@@ -481,34 +552,38 @@
                 </div>
                 <button
                   onClick={() => startSession(25)}
-                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all"
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2"
                 >
-                  🔥 ATIVAR MODO MONSTRO (25M)
+                  <Icons.Play className="w-4 h-4 fill-slate-950" />
+                  <span>INICIAR SESSÃO DE FOCO (25M)</span>
                 </button>
               </div>
             ) : (
               <button
                 onClick={stopSession}
-                className="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30 transition-all uppercase tracking-wider"
+                className="w-full py-3.5 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold rounded-xl text-sm shadow-lg shadow-red-600/30 transition-all uppercase tracking-wider flex items-center justify-center gap-2"
               >
-                🏳️ Desistir e Encarar a Vergonha
+                <Icons.StopCircle className="w-4 h-4" />
+                <span>Interromper Sessão</span>
               </button>
             )}
           </div>
 
-          {/* Tentações Proibidas */}
+          {/* Restrições Cadastradas */}
           <div className="w-full max-w-md p-4 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl mt-6">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-300">
-                🚫 Tentações Proibidas ({distractionsList.length})
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <Icons.Ban className="w-3.5 h-3.5 text-slate-400" />
+                <span>Restrições Configuradas ({distractionsList.length})</span>
               </h3>
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {distractionsList.map((d) => (
-                <span key={d} className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-800 text-red-300 border border-red-900/40 rounded-lg text-xs font-semibold">
-                  🚫 {d}
+                <span key={d} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                  {d}
                   {!isActive && (
-                    <button onClick={() => removeDistraction(d)} className="hover:text-red-100 ml-1 text-xs">×</button>
+                    <button onClick={() => removeDistraction(d)} className="hover:text-red-300 ml-1 text-xs">×</button>
                   )}
                 </span>
               ))}
@@ -519,43 +594,52 @@
                   type="text"
                   value={newDistraction}
                   onChange={(e) => setNewDistraction(e.target.value)}
-                  placeholder="Ex: Reddit, Shopee, Anime..."
+                  placeholder="Adicionar restrição (ex: Rede Social, Notícias)..."
                   className="flex-1 px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
                 />
                 <button type="submit" className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold">
-                  + Adicionar
+                  Adicionar
                 </button>
               </form>
             )}
           </div>
 
-          {/* Modal de Bloqueio e Redenção com Proteção Anti-Cópia */}
+          {/* Modal de Bloqueio e Validação de Retorno */}
           {isPenalized && (
             <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-              <div className="bg-slate-900 border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 text-center shadow-2xl shadow-red-500/30">
-                <div className="text-4xl mb-2 animate-bounce">⚠️</div>
-                <h2 className="text-2xl font-black text-red-500 uppercase tracking-tight">
-                  FLAGRADO EM FUGA!
+              <div className="bg-slate-900 border-2 border-red-500/80 rounded-2xl max-w-lg w-full p-6 text-center shadow-2xl shadow-red-500/20">
+                <div className="w-14 h-14 bg-red-500/10 border-2 border-red-500/40 rounded-2xl mx-auto flex items-center justify-center text-red-500 mb-3 shadow-lg shadow-red-500/10">
+                  <Icons.ShieldAlert className="w-7 h-7" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-red-500 uppercase tracking-tight">
+                  Sessão Interrompida
                 </h2>
                 <p className="text-xs text-slate-300 mt-1">
-                  Você abandonou a aba de foco ({distractionStrikes}ª infração). Cumpra a penitência para destravar:
+                  Evasão de tela detectada ({distractionStrikes}ª ocorrência). Conclua a validação para retomar o cronômetro:
                 </p>
 
                 <div className="my-4 p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                  <span className="text-xs uppercase text-slate-400 font-bold block mb-1">Tempo de reflexão forçado:</span>
-                  <span className="text-2xl font-mono font-black text-amber-400">
-                    {penaltyTimer > 0 ? `${penaltyTimer}s de castigo` : '✓ Tempo cumprido'}
+                  <span className="text-xs uppercase text-slate-400 font-bold block mb-1">Período de estabilização forçado:</span>
+                  <span className="text-2xl font-mono font-black text-amber-400 flex items-center justify-center gap-1.5">
+                    {penaltyTimer > 0 ? (
+                      <span>{penaltyTimer}s restantes</span>
+                    ) : (
+                      <span className="text-emerald-400 flex items-center gap-1">
+                        <Icons.Check className="w-5 h-5 text-emerald-400" />
+                        Tempo cumprido
+                      </span>
+                    )}
                   </span>
                 </div>
 
                 <div className="text-left my-4">
                   <div className="mb-1">
                     <label className="text-xs text-slate-400 font-bold block">
-                      Digite a frase abaixo para comprovar arrependimento:
+                      Digite a frase de compromisso abaixo:
                     </label>
                   </div>
 
-                  {/* CAIXA DE TEXTO TOTALMENTE BLINDADA CONTRA CÓPIA */}
+                  {/* CAIXA DE TEXTO BLINDADA CONTRA CÓPIA */}
                   <div
                     onCopy={(e) => { e.preventDefault(); sound.playBuzzer(); setCheatAttempt(true); }}
                     onCut={(e) => e.preventDefault()}
@@ -568,12 +652,12 @@
                       MozUserSelect: 'none',
                       msUserSelect: 'none'
                     }}
-                    className="p-3 bg-red-950/50 border-2 border-red-800/80 rounded-xl text-xs sm:text-sm font-semibold text-red-200 select-none cursor-not-allowed mb-2 font-mono tracking-wide shadow-inner text-center"
+                    className="p-3 bg-red-950/40 border border-red-900/60 rounded-xl text-xs sm:text-sm font-semibold text-red-200 select-none cursor-not-allowed mb-2 font-mono tracking-wide shadow-inner text-center"
                   >
                     "{penaltyChallenge}"
                   </div>
 
-                  {/* CAMPO DE DIGITAÇÃO COM BLOQUEIO DE CTRL+V E DROP */}
+                  {/* CAMPO DE DIGITAÇÃO COM TRAVA DE CTRL+V */}
                   <input
                     type="text"
                     value={typedPenalty}
@@ -592,17 +676,15 @@
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
-                    placeholder="Digite a frase aqui para provar sua redenção..."
+                    placeholder="Digite a frase aqui para validar o retorno..."
                     className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 rounded-xl text-slate-100 placeholder-slate-600 focus:outline-none text-xs font-mono transition-all"
                   />
 
                   {cheatAttempt && (
-                    <div className="mt-2 p-2 bg-red-950 border border-red-600 rounded-lg text-center animate-shake">
-                      <p className="text-xs text-red-300 font-black">
-                        🚨 TENTATIVA DE TRAPAÇA DETECTADA!
-                      </p>
-                      <p className="text-[11px] text-red-400">
-                        É proibido colar texto. Digite cada letra manualmente para pagar o castigo!
+                    <div className="mt-2 p-2 bg-red-950 border border-red-600 rounded-lg text-center animate-shake flex items-center justify-center gap-2">
+                      <Icons.ShieldAlert className="w-4 h-4 text-red-400 shrink-0" />
+                      <p className="text-xs text-red-300 font-semibold">
+                        Ação bloqueada: a colagem de texto não é permitida. Digite a frase manualmente.
                       </p>
                     </div>
                   )}
@@ -621,14 +703,14 @@
                     ? `AGUARDE ${penaltyTimer}S...`
                     : typedPenalty.trim().toLowerCase() !== penaltyChallenge.trim().toLowerCase()
                     ? 'DIGITE A FRASE COMPLETA'
-                    : 'RETOMAR O FOCO (NÃO ERRE DE NOVO)'}
+                    : 'RETOMAR SESSÃO DE FOCO'}
                 </button>
               </div>
             </div>
           )}
 
           <footer className="w-full text-center border-t border-slate-800/80 pt-4 text-[11px] text-slate-500 mt-6">
-            Aba aberta e visível = Monstro focado. Trocou de aba = Sirene contínua estridente.
+            Sessão monitorada por presença de aba. Continuidade garante o resultado.
           </footer>
         </div>
       );

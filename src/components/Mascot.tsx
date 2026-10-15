@@ -134,9 +134,14 @@ export const Mascot: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="mt-4 px-3 py-1 bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-black tracking-wider uppercase rounded-full shadow-inner"
+          className="mt-4 px-3 py-1 bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-semibold tracking-wider uppercase rounded-full shadow-inner flex items-center gap-1.5"
         >
-          🚨 {distractionStrikes} {distractionStrikes === 1 ? 'tentativa de fuga' : 'tentativas de fuga'}
+          <svg className="w-3.5 h-3.5 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span>{distractionStrikes} {distractionStrikes === 1 ? 'interrupção registrada' : 'interrupções registradas'}</span>
         </motion.div>
       )}
     </div>

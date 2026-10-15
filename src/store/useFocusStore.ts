@@ -82,7 +82,7 @@ export const useFocusStore = create<FocusState>((set, get) => ({
         timeLeft: 0,
         isActive: false,
         mascotMood: 'comemorando',
-        mascotMessage: "🏆 ÉPICO! Você venceu a procrastinação e concluiu a sessão inteira!"
+        mascotMessage: "Meta atingida! Sessão de foco concluída integralmente com sucesso."
       });
     } else {
       set({ timeLeft: timeLeft - 1 });
@@ -100,7 +100,7 @@ export const useFocusStore = create<FocusState>((set, get) => ({
       isPenalized: true,
       distractionStrikes: distractionStrikes + 1,
       mascotMood: 'furioso',
-      mascotMessage: `🚨 FLAGRADO (${distractionStrikes + 1}ª traição): ${randomTaunt}`,
+      mascotMessage: `Atenção (${distractionStrikes + 1}ª ocorrência): ${randomTaunt}`,
       penaltyChallenge: randomPhrase
     });
   },

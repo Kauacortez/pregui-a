@@ -16,17 +16,17 @@ export const DistractionDetector: React.FC = () => {
         if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
         let toggle = false;
         titleIntervalRef.current = window.setInterval(() => {
-          document.title = toggle ? "🚨 VOLTE JÁ AQUI! 🚨" : "⚠️ ALARME DE PROCRASTINAÇÃO! ⚠️";
+          document.title = toggle ? "[ALERTA] Retorne à Sessão de Foco" : "[INTERROMPIDO] Foco Descontinuado";
           toggle = !toggle;
-        }, 500);
+        }, 600);
 
         // 3. Registra a traição
         registerBetrayal();
 
         // 4. Notificação push com requisição de interação
         if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('🚨 VOLTE JÁ PARA O FOCO!', {
-            body: 'O alarme não vai parar de tocar até você voltar para a aba!',
+          new Notification('Alerta de Foco: Sessão Interrompida', {
+            body: 'Sinal sonoro ativo. Retorne à aba para prosseguir com a sessão.',
             requireInteraction: true,
           });
         }
@@ -37,7 +37,7 @@ export const DistractionDetector: React.FC = () => {
           clearInterval(titleIntervalRef.current);
           titleIntervalRef.current = null;
         }
-        document.title = "Modo Monstro — Anti-Procrastinação Gamificado";
+        document.title = "Modo Foco — Gestão Comportamental Anti-Procrastinação";
       }
     };
 
