@@ -91,7 +91,7 @@ export const MonsterTimer: React.FC = () => {
 
         {/* Mostrador Numérico no Centro: HH:MM:SS */}
         <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-4xl sm:text-5xl font-mono font-black text-slate-100 tracking-tight drop-shadow-lg">
+          <span className="text-3xl sm:text-3xl font-mono font-black text-slate-100 tracking-normal drop-shadow-lg">
             {formatTime(timeLeft)}
           </span>
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
