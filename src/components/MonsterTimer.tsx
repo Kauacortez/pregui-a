@@ -49,9 +49,21 @@ export const MonsterTimer: React.FC = () => {
   const strokeDashoffset = 440 - (440 * progressPercent) / 100;
 
   const handleStart = (h: number, m: number, s: number) => {
+    const total = (h * 3600) + (m * 60) + s;
+    if (total <= 0) {
+      soundEffects.playBuzzer();
+      return;
+    }
     soundEffects.playClick();
-    const totalMinutes = Math.max(1, Math.round(((h * 3600) + (m * 60) + s) / 60));
+    const totalMinutes = Math.max(1, Math.round(total / 60));
     startSession(totalMinutes);
+  };
+
+  const handleReset = () => {
+    soundEffects.playClick();
+    setCustomHours(0);
+    setCustomMinutes(0);
+    setCustomSeconds(0);
   };
 
   const handleStop = () => {
@@ -92,7 +104,7 @@ export const MonsterTimer: React.FC = () => {
         {/* Mostrador Numérico no Centro: HH:MM:SS */}
         <div className="absolute flex flex-col items-center justify-center">
           <span className="text-3xl sm:text-3xl font-mono font-black text-slate-100 tracking-normal drop-shadow-lg">
-            {formatTime(timeLeft)}
+            {formatTime(isActive ? timeLeft : currentConfiguredSecs)}
           </span>
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
             {isActive ? 'Foco em Andamento' : 'Pronto para Ativar'}
@@ -179,13 +191,26 @@ export const MonsterTimer: React.FC = () => {
             </div>
           </div>
 
+          {/* Botão de Zerar Cronômetro */}
+          <button
+            type="button"
+            onClick={handleReset}
+            className="w-full py-2.5 px-3 bg-slate-900/90 hover:bg-slate-800 active:scale-98 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-bold tracking-wider transition-all flex items-center justify-center gap-2 group"
+          >
+            <svg className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 4v6h6" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+            </svg>
+            <span>ZERAR CRONÔMETRO</span>
+          </button>
+
           {/* Botão Principal */}
           <button
             onClick={() => handleStart(customHours, customMinutes, customSeconds)}
             className="w-full py-4 mt-1 bg-emerald-500 hover:bg-emerald-400 active:scale-98 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all tracking-wide flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5 fill-slate-950" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-            <span>INICIAR SESSÃO ({formatTime(currentConfiguredSecs > 0 ? currentConfiguredSecs : 25 * 60)})</span>
+            <span>INICIAR SESSÃO ({formatTime(currentConfiguredSecs)})</span>
           </button>
         </div>
       ) : (
