@@ -314,8 +314,15 @@
           ? "Atenção: Validação de presença obrigatória pendente. Digite a frase para prosseguir."
           : "Sistema em espera. Inicie uma sessão para ativar a supervisão."
       );
+      const initialTotalSecs = saved?.timeLeft ?? 25 * 60;
+      const [customHours, setCustomHours] = useState(
+        Math.floor(initialTotalSecs / 3600)
+      );
       const [customMinutes, setCustomMinutes] = useState(
-        Math.max(1, Math.round((saved?.timeLeft ?? 25 * 60) / 60))
+        Math.floor((initialTotalSecs % 3600) / 60)
+      );
+      const [customSeconds, setCustomSeconds] = useState(
+        initialTotalSecs % 60
       );
       const [distractionsList, setDistractionsList] = useState(
         saved?.distractionsList ?? ['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos']
@@ -443,26 +450,34 @@
         return () => clearInterval(penaltyInterval);
       }, [isPenalized, penaltyTimer]);
 
-      const selectDuration = (mins) => {
+      const selectPreset = (h, m, s) => {
         sound.playClick();
-        setCustomMinutes(mins);
-        setTimeLeft(mins * 60);
-        setInitialDuration(mins * 60);
+        setCustomHours(h);
+        setCustomMinutes(m);
+        setCustomSeconds(s);
+        const total = (h * 3600) + (m * 60) + s;
+        setTimeLeft(total);
+        setInitialDuration(total);
       };
 
-      const handleCustomDurationChange = (e) => {
-        const val = e.target.value;
-        setCustomMinutes(val);
-        const num = parseInt(val, 10);
-        if (!isNaN(num) && num > 0) {
-          setTimeLeft(num * 60);
-          setInitialDuration(num * 60);
+      const updateTimeField = (hVal, mVal, sVal) => {
+        setCustomHours(hVal);
+        setCustomMinutes(mVal);
+        setCustomSeconds(sVal);
+
+        const h = Math.max(0, Math.min(23, parseInt(hVal, 10) || 0));
+        const m = Math.max(0, Math.min(59, parseInt(mVal, 10) || 0));
+        const s = Math.max(0, Math.min(59, parseInt(sVal, 10) || 0));
+        const total = (h * 3600) + (m * 60) + s;
+        if (total > 0) {
+          setTimeLeft(total);
+          setInitialDuration(total);
         }
       };
 
-      const startSession = (minutes) => {
+      const startSession = (totalSeconds) => {
         sound.playClick();
-        const duration = minutes * 60;
+        const duration = Math.max(1, totalSeconds);
         setTimeLeft(duration);
         setInitialDuration(duration);
         setDistractionStrikes(0);
@@ -473,8 +488,11 @@
       };
 
       const handleStartCurrentSession = () => {
-        const mins = Math.max(1, Math.min(360, parseInt(customMinutes, 10) || 25));
-        startSession(mins);
+        const h = Math.max(0, Math.min(23, parseInt(customHours, 10) || 0));
+        const m = Math.max(0, Math.min(59, parseInt(customMinutes, 10) || 0));
+        const s = Math.max(0, Math.min(59, parseInt(customSeconds, 10) || 0));
+        const total = (h * 3600) + (m * 60) + s;
+        startSession(total > 0 ? total : 25 * 60);
       };
 
       const stopSession = () => {
@@ -525,9 +543,10 @@
       };
 
       const formatTime = (secs) => {
-        const m = Math.floor(secs / 60);
+        const h = Math.floor(secs / 3600);
+        const m = Math.floor((secs % 3600) / 60);
         const s = secs % 60;
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       };
 
       const progressPercent = initialDuration > 0 ? ((initialDuration - timeLeft) / initialDuration) * 100 : 0;
@@ -625,7 +644,7 @@
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-5xl font-mono font-black text-white tracking-tight">
+              <span className="text-4xl sm:text-5xl font-mono font-black text-white tracking-tight">
                 {formatTime(timeLeft)}
               </span>
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
@@ -634,46 +653,82 @@
             </div>
           </div>
 
-          {/* Botões de Ação com Tempo Manual e Presets */}
+          {/* Botões de Ação com Ajuste de Horas, Minutos e Segundos */}
           <div className="w-full max-w-sm flex flex-col gap-3">
             {!isActive ? (
               <div className="flex flex-col gap-3">
                 {/* Predefinições Rápidas */}
                 <div className="grid grid-cols-4 gap-2">
-                  {[15, 25, 45, 60].map((mins) => (
-                    <button
-                      key={mins}
-                      type="button"
-                      onClick={() => selectDuration(mins)}
-                      className={`py-2 border rounded-xl font-bold text-xs transition-all ${
-                        parseInt(customMinutes, 10) === mins
-                          ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-sm'
-                          : 'bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border-slate-700 text-slate-300'
-                      }`}
-                    >
-                      {mins} min
-                    </button>
-                  ))}
+                  {[
+                    { label: '15 min', h: 0, m: 15, s: 0 },
+                    { label: '25 min', h: 0, m: 25, s: 0 },
+                    { label: '45 min', h: 0, m: 45, s: 0 },
+                    { label: '1 hora', h: 1, m: 0, s: 0 }
+                  ].map((p) => {
+                    const totalSecs = (p.h * 3600) + (p.m * 60) + p.s;
+                    const isSelected = timeLeft === totalSecs && !isActive;
+                    return (
+                      <button
+                        key={p.label}
+                        type="button"
+                        onClick={() => selectPreset(p.h, p.m, p.s)}
+                        className={`py-2 border rounded-xl font-bold text-xs transition-all ${
+                          isSelected
+                            ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-sm'
+                            : 'bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border-slate-700 text-slate-300'
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {/* Campo para Digitar Tempo Personalizado */}
-                <div className="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5">
-                  <label htmlFor="custom-duration-input" className="text-xs text-slate-300 font-semibold flex items-center gap-2">
-                    <Icons.Target className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Definir tempo manual:</span>
-                  </label>
-                  <div className="flex items-center gap-1.5">
-                    <input
-                      id="custom-duration-input"
-                      type="number"
-                      min="1"
-                      max="360"
-                      value={customMinutes}
-                      onChange={handleCustomDurationChange}
-                      className="w-16 px-2 py-1 bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg text-center font-mono font-bold text-emerald-400 text-sm focus:outline-none transition-all"
-                      placeholder="25"
-                    />
-                    <span className="text-xs text-slate-400 font-medium">min</span>
+                {/* Painel de Ajuste Manual: Horas, Minutos e Segundos */}
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col gap-2">
+                  <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
+                    <span className="flex items-center gap-1.5">
+                      <Icons.Target className="w-3.5 h-3.5 text-slate-400" />
+                      Ajuste manual de tempo:
+                    </span>
+                    <span className="text-[11px] font-mono text-emerald-400 font-bold">
+                      {formatTime(timeLeft)}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
+                      <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Horas</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="23"
+                        value={customHours}
+                        onChange={(e) => updateTimeField(e.target.value, customMinutes, customSeconds)}
+                        className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
+                      <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Minutos</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={customMinutes}
+                        onChange={(e) => updateTimeField(customHours, e.target.value, customSeconds)}
+                        className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
+                      <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Segundos</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="59"
+                        value={customSeconds}
+                        onChange={(e) => updateTimeField(customHours, customMinutes, e.target.value)}
+                        className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -683,7 +738,7 @@
                   className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2"
                 >
                   <Icons.Play className="w-4 h-4 fill-slate-950" />
-                  <span>INICIAR SESSÃO ({parseInt(customMinutes, 10) || 25}M)</span>
+                  <span>INICIAR SESSÃO ({formatTime(timeLeft)})</span>
                 </button>
               </div>
             ) : (
