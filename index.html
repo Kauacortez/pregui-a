@@ -574,7 +574,14 @@
       const getMascotVisual = () => {
         switch (mascotMood) {
           case 'focado':
-            return { eyes: 'ò_ó', mouth: '—', bg: 'bg-emerald-500', anim: 'animate-breathe', ring: 'ring-emerald-500/40' };
+            return {
+              eyes: '(ง •̀_•́)ง',
+              mouth: '',
+              eyesClass: 'text-2xl sm:text-3xl tracking-normal',
+              bg: 'bg-emerald-500',
+              anim: 'animate-breathe',
+              ring: 'ring-emerald-500/40'
+            };
           case 'furioso':
             return { eyes: 'ಠ益ಠ', mouth: '▲', bg: 'bg-red-600', anim: 'animate-shake', ring: 'ring-red-600/60' };
           case 'comemorando':
@@ -643,9 +650,11 @@
               <span className={`font-black text-white font-mono drop-shadow-md ${visual.eyesClass || 'text-4xl tracking-widest'}`}>
                 {visual.eyes}
               </span>
-              <span className={`font-black mt-1 ${visual.mouthClass || 'text-2xl text-slate-950'}`}>
-                {visual.mouth}
-              </span>
+              {visual.mouth && (
+                <span className={`font-black mt-1 ${visual.mouthClass || 'text-2xl text-slate-950'}`}>
+                  {visual.mouth}
+                </span>
+              )}
             </div>
 
             {distractionStrikes > 0 && (

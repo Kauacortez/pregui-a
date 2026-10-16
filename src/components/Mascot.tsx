@@ -10,8 +10,9 @@ export const Mascot: React.FC = () => {
     switch (mood) {
       case 'focado':
         return {
-          eyes: 'ò_ó',
-          mouth: '—',
+          eyes: '(ง •̀_•́)ง',
+          mouth: '',
+          eyesClass: 'text-2xl md:text-3xl tracking-normal',
           bg: 'bg-emerald-500',
           ring: 'border-emerald-300 ring-4 ring-emerald-500/30',
           title: 'Monstro Concentrado',
@@ -126,9 +127,11 @@ export const Mascot: React.FC = () => {
         </span>
 
         {/* Boca expressiva */}
-        <span className={`font-black mt-1 ${(visual as any).mouthClass || 'text-xl md:text-2xl text-slate-950'}`}>
-          {visual.mouth}
-        </span>
+        {visual.mouth && (
+          <span className={`font-black mt-1 ${(visual as any).mouthClass || 'text-xl md:text-2xl text-slate-950'}`}>
+            {visual.mouth}
+          </span>
+        )}
       </motion.div>
 
       {/* Indicador de infrações */}
