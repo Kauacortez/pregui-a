@@ -10,9 +10,12 @@ export const Mascot: React.FC = () => {
     switch (mood) {
       case 'focado':
         return {
+          isBoxing: true,
+          fistLeft: '(ง',
+          face: '•̀_•́',
+          fistRight: ')ง',
           eyes: '(ง •̀_•́)ง',
           mouth: '',
-          eyesClass: 'text-2xl md:text-3xl tracking-normal',
           bg: 'bg-emerald-500',
           ring: 'border-emerald-300 ring-4 ring-emerald-500/30',
           title: 'Monstro Concentrado',
@@ -101,8 +104,10 @@ export const Mascot: React.FC = () => {
               }
             : mascotMood === 'focado'
             ? {
-                y: [0, -8, 0],
-                transition: { repeat: Infinity, duration: 2.2, ease: 'easeInOut' },
+                x: [0, -4, 0, 4, 0],
+                y: [0, -3, 0, -3, 0],
+                rotate: [0, -2, 0, 2, 0],
+                transition: { repeat: Infinity, duration: 0.8, ease: 'easeInOut' },
               }
             : mascotMood === 'comemorando'
             ? {
@@ -123,9 +128,23 @@ export const Mascot: React.FC = () => {
         )}
 
         {/* Olhinhos expressivos */}
-        <span className={`font-black text-white font-mono drop-shadow-md ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest'}`}>
-          {visual.eyes}
-        </span>
+        {(visual as any).isBoxing ? (
+          <div className="flex items-center justify-center font-mono font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
+            <span className="inline-block animate-punch-left origin-right text-emerald-100">
+              {(visual as any).fistLeft}
+            </span>
+            <span className="inline-block px-1">
+              {(visual as any).face}
+            </span>
+            <span className="inline-block animate-punch-right origin-left text-emerald-100">
+              {(visual as any).fistRight}
+            </span>
+          </div>
+        ) : (
+          <span className={`font-black text-white font-mono drop-shadow-md ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest'}`}>
+            {visual.eyes}
+          </span>
+        )}
 
         {/* Boca expressiva */}
         {visual.mouth && (

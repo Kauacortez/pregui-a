@@ -26,6 +26,9 @@
             'shake': 'shake 0.25s infinite',
             'breathe': 'breathe 2.5s infinite ease-in-out',
             'victory': 'victory 0.8s infinite alternate ease-in-out',
+            'boxing-body': 'boxingBody 0.8s infinite ease-in-out',
+            'punch-left': 'punchLeft 0.8s infinite ease-in-out',
+            'punch-right': 'punchRight 0.8s infinite ease-in-out',
           },
           keyframes: {
             shake: {
@@ -40,7 +43,25 @@
             victory: {
               '0%': { transform: 'scale(1) rotate(-4deg)' },
               '100%': { transform: 'scale(1.08) rotate(4deg)' },
-            }
+            },
+            boxingBody: {
+              '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+              '25%': { transform: 'translateX(-4px) translateY(-2px) rotate(-2deg)' },
+              '50%': { transform: 'translateY(0) rotate(0deg)' },
+              '75%': { transform: 'translateX(4px) translateY(-2px) rotate(2deg)' },
+            },
+            punchLeft: {
+              '0%, 100%': { transform: 'translateX(0) scale(1)' },
+              '15%': { transform: 'translateX(-10px) translateY(-2px) scale(1.22) rotate(-6deg)' },
+              '30%': { transform: 'translateX(0) scale(1) rotate(0deg)' },
+              '60%': { transform: 'translateX(2px) scale(0.96)' },
+            },
+            punchRight: {
+              '0%, 100%': { transform: 'translateX(0) scale(1)' },
+              '50%': { transform: 'translateX(2px) scale(0.96)' },
+              '65%': { transform: 'translateX(10px) translateY(-2px) scale(1.22) rotate(6deg)' },
+              '80%': { transform: 'translateX(0) scale(1) rotate(0deg)' },
+            },
           }
         }
       }
@@ -575,11 +596,14 @@
         switch (mascotMood) {
           case 'focado':
             return {
+              isBoxing: true,
+              fistLeft: '(ง',
+              face: '•̀_•́',
+              fistRight: ')ง',
               eyes: '(ง •̀_•́)ง',
               mouth: '',
-              eyesClass: 'text-2xl sm:text-3xl tracking-normal',
               bg: 'bg-emerald-500',
-              anim: 'animate-breathe',
+              anim: 'animate-boxing-body',
               ring: 'ring-emerald-500/40'
             };
           case 'furioso':
@@ -654,9 +678,23 @@
               onClick={() => sound.playClick()}
               className={`w-40 h-40 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.anim} ring-8 ${visual.ring} border-4 border-slate-900 shadow-2xl cursor-pointer select-none transition-colors duration-500`}
             >
-              <span className={`font-black text-white font-mono drop-shadow-md ${visual.eyesClass || 'text-4xl tracking-widest'}`}>
-                {visual.eyes}
-              </span>
+              {visual.isBoxing ? (
+                <div className="flex items-center justify-center font-mono font-black text-white text-3xl drop-shadow-md select-none tracking-normal">
+                  <span className="inline-block animate-punch-left origin-right text-emerald-100">
+                    {visual.fistLeft}
+                  </span>
+                  <span className="inline-block px-1">
+                    {visual.face}
+                  </span>
+                  <span className="inline-block animate-punch-right origin-left text-emerald-100">
+                    {visual.fistRight}
+                  </span>
+                </div>
+              ) : (
+                <span className={`font-black text-white font-mono drop-shadow-md ${visual.eyesClass || 'text-4xl tracking-widest'}`}>
+                  {visual.eyes}
+                </span>
+              )}
               {visual.mouth && (
                 <span className={`font-black mt-1 ${visual.mouthClass || 'text-2xl text-slate-950'}`}>
                   {visual.mouth}
