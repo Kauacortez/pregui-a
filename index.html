@@ -51,16 +51,16 @@
               '75%': { transform: 'translateX(4px) translateY(-2px) rotate(2deg)' },
             },
             punchLeft: {
-              '0%, 100%': { transform: 'translateX(0) scale(1)' },
-              '15%': { transform: 'translateX(-10px) translateY(-2px) scale(1.22) rotate(-6deg)' },
-              '30%': { transform: 'translateX(0) scale(1) rotate(0deg)' },
-              '60%': { transform: 'translateX(2px) scale(0.96)' },
+              '0%, 100%': { transform: 'translateX(0) translateY(0) scale(1)' },
+              '15%': { transform: 'translateX(-6px) translateY(-3px) scale(1.2) rotate(-8deg)' },
+              '30%': { transform: 'translateX(0) translateY(0) scale(1) rotate(0deg)' },
+              '60%': { transform: 'scale(0.96)' },
             },
             punchRight: {
-              '0%, 100%': { transform: 'translateX(0) scale(1)' },
-              '50%': { transform: 'translateX(2px) scale(0.96)' },
-              '65%': { transform: 'translateX(10px) translateY(-2px) scale(1.22) rotate(6deg)' },
-              '80%': { transform: 'translateX(0) scale(1) rotate(0deg)' },
+              '0%, 100%': { transform: 'translateX(0) translateY(0) scale(1)' },
+              '50%': { transform: 'scale(0.96)' },
+              '65%': { transform: 'translateX(6px) translateY(-3px) scale(1.2) rotate(8deg)' },
+              '80%': { transform: 'translateX(0) translateY(0) scale(1) rotate(0deg)' },
             },
           }
         }
@@ -597,13 +597,13 @@
           case 'focado':
             return {
               isBoxing: true,
-              fistLeft: '(ง',
-              face: '•̀_•́',
-              fistRight: ')ง',
+              armLeft: 'ง',
+              faceCenter: ' •̀_•́ ',
+              armRight: 'ง',
               eyes: '(ง •̀_•́)ง',
               mouth: '',
               bg: 'bg-emerald-500',
-              anim: 'animate-boxing-body',
+              anim: 'animate-breathe',
               ring: 'ring-emerald-500/40'
             };
           case 'furioso':
@@ -680,14 +680,16 @@
             >
               {visual.isBoxing ? (
                 <div className="flex items-center justify-center font-mono font-black text-white text-3xl drop-shadow-md select-none tracking-normal">
-                  <span className="inline-block animate-punch-left origin-right text-emerald-100">
-                    {visual.fistLeft}
+                  <span className="text-white select-none">(</span>
+                  <span className="inline-block animate-punch-left origin-center text-emerald-100">
+                    {visual.armLeft}
                   </span>
-                  <span className="inline-block px-1">
-                    {visual.face}
+                  <span className="inline-block select-none px-0.5">
+                    {visual.faceCenter}
                   </span>
-                  <span className="inline-block animate-punch-right origin-left text-emerald-100">
-                    {visual.fistRight}
+                  <span className="text-white select-none">)</span>
+                  <span className="inline-block animate-punch-right origin-center text-emerald-100">
+                    {visual.armRight}
                   </span>
                 </div>
               ) : (

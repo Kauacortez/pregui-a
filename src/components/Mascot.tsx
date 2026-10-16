@@ -11,9 +11,9 @@ export const Mascot: React.FC = () => {
       case 'focado':
         return {
           isBoxing: true,
-          fistLeft: '(ง',
-          face: '•̀_•́',
-          fistRight: ')ง',
+          armLeft: 'ง',
+          faceCenter: ' •̀_•́ ',
+          armRight: 'ง',
           eyes: '(ง •̀_•́)ง',
           mouth: '',
           bg: 'bg-emerald-500',
@@ -104,10 +104,8 @@ export const Mascot: React.FC = () => {
               }
             : mascotMood === 'focado'
             ? {
-                x: [0, -4, 0, 4, 0],
-                y: [0, -3, 0, -3, 0],
-                rotate: [0, -2, 0, 2, 0],
-                transition: { repeat: Infinity, duration: 0.8, ease: 'easeInOut' },
+                y: [0, -4, 0],
+                transition: { repeat: Infinity, duration: 2.0, ease: 'easeInOut' },
               }
             : mascotMood === 'comemorando'
             ? {
@@ -130,14 +128,16 @@ export const Mascot: React.FC = () => {
         {/* Olhinhos expressivos */}
         {(visual as any).isBoxing ? (
           <div className="flex items-center justify-center font-mono font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
-            <span className="inline-block animate-punch-left origin-right text-emerald-100">
-              {(visual as any).fistLeft}
+            <span className="text-white select-none">(</span>
+            <span className="inline-block animate-punch-left origin-center text-emerald-100">
+              {(visual as any).armLeft}
             </span>
-            <span className="inline-block px-1">
-              {(visual as any).face}
+            <span className="inline-block select-none px-0.5">
+              {(visual as any).faceCenter}
             </span>
-            <span className="inline-block animate-punch-right origin-left text-emerald-100">
-              {(visual as any).fistRight}
+            <span className="text-white select-none">)</span>
+            <span className="inline-block animate-punch-right origin-center text-emerald-100">
+              {(visual as any).armRight}
             </span>
           </div>
         ) : (
