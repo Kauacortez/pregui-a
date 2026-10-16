@@ -47,8 +47,10 @@ export const Mascot: React.FC = () => {
       case 'dormindo':
       default:
         return {
-          eyes: '-.-',
-          mouth: 'zZ',
+          eyes: '(¯﹃¯)',
+          mouth: 'ᶻ 𝗓 𐰁',
+          eyesClass: 'text-2xl md:text-3xl tracking-normal',
+          mouthClass: 'text-lg md:text-xl text-slate-300 font-bold',
           bg: 'bg-slate-700',
           ring: 'border-slate-600 ring-2 ring-slate-700/20',
           title: 'Monstro Hibernando',
@@ -119,12 +121,12 @@ export const Mascot: React.FC = () => {
         )}
 
         {/* Olhinhos expressivos */}
-        <span className="text-3xl md:text-4xl font-black text-white tracking-widest font-mono drop-shadow-md">
+        <span className={`font-black text-white font-mono drop-shadow-md ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest'}`}>
           {visual.eyes}
         </span>
 
         {/* Boca expressiva */}
-        <span className="text-xl md:text-2xl font-black text-slate-950 mt-1">
+        <span className={`font-black mt-1 ${(visual as any).mouthClass || 'text-xl md:text-2xl text-slate-950'}`}>
           {visual.mouth}
         </span>
       </motion.div>

@@ -580,7 +580,15 @@
           case 'comemorando':
             return { eyes: '^ ▽ ^', mouth: 'O', bg: 'bg-purple-600', anim: 'animate-victory', ring: 'ring-purple-600/50' };
           default:
-            return { eyes: '-.-', mouth: 'zZ', bg: 'bg-slate-700', anim: '', ring: 'ring-slate-700/30' };
+            return {
+              eyes: '(¯﹃¯)',
+              mouth: 'ᶻ 𝗓 𐰁',
+              eyesClass: 'text-3xl tracking-normal',
+              mouthClass: 'text-xl text-slate-300 font-bold',
+              bg: 'bg-slate-700',
+              anim: '',
+              ring: 'ring-slate-700/30'
+            };
         }
       };
       const visual = getMascotVisual();
@@ -632,10 +640,10 @@
               onClick={() => sound.playClick()}
               className={`w-40 h-40 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.anim} ring-8 ${visual.ring} border-4 border-slate-900 shadow-2xl cursor-pointer select-none transition-colors duration-500`}
             >
-              <span className="text-4xl font-black text-white font-mono tracking-widest drop-shadow-md">
+              <span className={`font-black text-white font-mono drop-shadow-md ${visual.eyesClass || 'text-4xl tracking-widest'}`}>
                 {visual.eyes}
               </span>
-              <span className="text-2xl font-black text-slate-950 mt-1">
+              <span className={`font-black mt-1 ${visual.mouthClass || 'text-2xl text-slate-950'}`}>
                 {visual.mouth}
               </span>
             </div>
