@@ -38,8 +38,9 @@ export const Mascot: React.FC = () => {
         };
       case 'comemorando':
         return {
-          eyes: '^ ▽ ^',
-          mouth: 'O',
+          eyes: '(。•̀ᴗ-)✧',
+          mouth: '',
+          eyesClass: 'text-2xl md:text-3xl tracking-normal',
           bg: 'bg-purple-600',
           ring: 'border-purple-300 ring-6 ring-purple-500/40',
           title: 'Monstro Triunfante',
