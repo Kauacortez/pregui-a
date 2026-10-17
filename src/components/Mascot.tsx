@@ -127,21 +127,21 @@ export const Mascot: React.FC = () => {
 
         {/* Olhinhos expressivos */}
         {(visual as any).isBoxing ? (
-          <div className="flex items-center justify-center font-mono font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
+          <div className="flex items-center justify-center font-['Arial',sans-serif] font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
             <span className="text-white select-none mr-2">(</span>
-            <span className="inline-block animate-punch-left origin-bottom text-emerald-100 will-change-transform">
+            <span className="inline-block animate-punch-left origin-center text-emerald-100 will-change-transform">
               {(visual as any).armLeft}
             </span>
-            <span className="inline-block select-none px-2">
+            <span className="inline-block select-none px-2 font-['Arial',sans-serif]">
               {(visual as any).faceCenter}
             </span>
             <span className="text-white select-none mr-1.5">)</span>
-            <span className="inline-block animate-punch-right origin-bottom text-emerald-100 will-change-transform">
+            <span className="inline-block animate-punch-right origin-center text-emerald-100 will-change-transform">
               {(visual as any).armRight}
             </span>
           </div>
         ) : (
-          <span className={`font-black text-white font-mono drop-shadow-md ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest'}`}>
+          <span className={`font-black text-white font-['Arial',sans-serif] drop-shadow-md ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest'}`}>
             {visual.eyes}
           </span>
         )}
