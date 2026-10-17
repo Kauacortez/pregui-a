@@ -16,8 +16,8 @@ export const Mascot: React.FC = () => {
           armRight: 'ง',
           eyes: '(ง •̀_•́)ง',
           mouth: '',
-          bg: 'bg-emerald-500',
-          ring: 'border-emerald-300 ring-4 ring-emerald-500/30',
+          bg: 'bg-amber-600',
+          ring: 'border-amber-400 ring-4 ring-amber-500/40',
           title: 'Monstro Concentrado',
           horns: true,
         };
@@ -54,10 +54,10 @@ export const Mascot: React.FC = () => {
         return {
           eyes: '(¯﹃¯)',
           mouth: 'ᶻ 𝗓 𐰁',
-          eyesClass: 'text-2xl md:text-3xl tracking-normal',
-          mouthClass: 'text-lg md:text-xl text-slate-300 font-bold',
-          bg: 'bg-slate-700',
-          ring: 'border-slate-600 ring-2 ring-slate-700/20',
+          eyesClass: 'text-2xl md:text-3xl tracking-normal text-amber-950',
+          mouthClass: 'text-lg md:text-xl text-amber-900 font-bold',
+          bg: 'bg-amber-300',
+          ring: 'border-amber-400 ring-2 ring-amber-400/30',
           title: 'Monstro Hibernando',
           horns: false,
         };
@@ -80,13 +80,13 @@ export const Mascot: React.FC = () => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.95 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative px-5 py-3 mb-6 bg-slate-900/90 border-2 border-slate-700 rounded-2xl text-center shadow-xl backdrop-blur-sm max-w-sm"
+          className="relative px-5 py-3 mb-6 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm"
         >
-          <p className="text-sm md:text-base font-bold text-slate-100 leading-snug">
+          <p className="text-sm md:text-base font-bold text-slate-900 leading-snug">
             {mascotMessage}
           </p>
           {/* Ponta do balão */}
-          <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-slate-900 border-r-2 border-b-2 border-slate-700 rotate-45" />
+          <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-[#FFFDF7] border-r-2 border-b-2 border-amber-300 rotate-45" />
         </motion.div>
       </AnimatePresence>
 
@@ -115,7 +115,7 @@ export const Mascot: React.FC = () => {
               }
             : {}
         }
-        className={`relative w-36 h-36 md:w-44 md:h-44 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.ring} border-4 transition-colors duration-500 shadow-2xl cursor-pointer`}
+        className={`relative w-36 h-36 md:w-44 md:h-44 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.ring} border-4 border-amber-900/80 transition-colors duration-500 shadow-2xl cursor-pointer`}
       >
         {/* Chifrinhos fofos/cômicos do monstrinho */}
         {visual.horns && (
@@ -129,14 +129,14 @@ export const Mascot: React.FC = () => {
         {(visual as any).isBoxing ? (
           <div className="flex items-center justify-center font-['Arial',sans-serif] font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
             <span className="text-white select-none mr-2">(</span>
-            <span className="inline-block animate-punch-left origin-center text-emerald-100 will-change-transform">
+            <span className="inline-block animate-punch-left origin-center text-amber-100 will-change-transform">
               {(visual as any).armLeft}
             </span>
             <span className="inline-block select-none px-2 font-['Arial',sans-serif]">
               {(visual as any).faceCenter}
             </span>
             <span className="text-white select-none mr-1.5">)</span>
-            <span className="inline-block animate-punch-right origin-center text-emerald-100 will-change-transform">
+            <span className="inline-block animate-punch-right origin-center text-amber-100 will-change-transform">
               {(visual as any).armRight}
             </span>
           </div>

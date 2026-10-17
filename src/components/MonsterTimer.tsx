@@ -82,7 +82,7 @@ export const MonsterTimer: React.FC = () => {
             cx="80"
             cy="80"
             r="70"
-            className="stroke-slate-800"
+            className="stroke-amber-200/90"
             strokeWidth="10"
             fill="transparent"
           />
@@ -91,7 +91,7 @@ export const MonsterTimer: React.FC = () => {
             cy="80"
             r="70"
             className={`transition-all duration-1000 ease-linear ${
-              isActive ? 'stroke-emerald-400' : 'stroke-slate-600'
+              isActive ? 'stroke-amber-600' : 'stroke-amber-300'
             }`}
             strokeWidth="10"
             strokeDasharray="440"
@@ -103,10 +103,10 @@ export const MonsterTimer: React.FC = () => {
 
         {/* Mostrador Numérico no Centro: HH:MM:SS */}
         <div className="absolute flex flex-col items-center justify-center">
-          <span className="text-3xl sm:text-3xl font-mono font-black text-slate-100 tracking-normal drop-shadow-lg">
+          <span className="text-3xl sm:text-3xl font-mono font-black text-slate-900 tracking-normal drop-shadow-sm">
             {formatTime(isActive ? timeLeft : currentConfiguredSecs)}
           </span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 mt-1">
+          <span className="text-xs font-semibold uppercase tracking-wider text-amber-900/70 mt-1">
             {isActive ? 'Foco em Andamento' : 'Pronto para Ativar'}
           </span>
         </div>
@@ -136,8 +136,8 @@ export const MonsterTimer: React.FC = () => {
                   }}
                   className={`py-2 border rounded-xl font-bold text-xs transition-all ${
                     isSelected
-                      ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-sm'
-                      : 'bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border-slate-700 text-slate-300'
+                      ? 'bg-amber-600 border-amber-700 text-white shadow-md'
+                      : 'bg-amber-100/70 hover:bg-amber-200/80 active:bg-amber-300 border-amber-300/80 text-amber-950'
                   }`}
                 >
                   {p.label}
@@ -147,45 +147,45 @@ export const MonsterTimer: React.FC = () => {
           </div>
 
           {/* Painel de Ajuste Manual: Horas, Minutos e Segundos */}
-          <div className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col gap-2">
-            <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
+          <div className="w-full bg-[#FFFDF7] border border-amber-200/90 rounded-xl p-3 flex flex-col gap-2 shadow-sm">
+            <div className="flex items-center justify-between text-xs text-amber-950 font-semibold">
               <span>Ajuste manual de tempo:</span>
-              <span className="font-mono text-emerald-400 font-bold">
+              <span className="font-mono text-amber-700 font-bold">
                 {formatTime(currentConfiguredSecs)}
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
-                <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Horas</label>
+              <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
+                <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Horas</label>
                 <input
                   type="number"
                   min="0"
                   max="23"
                   value={customHours}
                   onChange={(e) => setCustomHours(Math.max(0, Math.min(23, parseInt(e.target.value, 10) || 0)))}
-                  className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                  className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
                 />
               </div>
-              <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
-                <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Minutos</label>
+              <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
+                <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Minutos</label>
                 <input
                   type="number"
                   min="0"
                   max="59"
                   value={customMinutes}
                   onChange={(e) => setCustomMinutes(Math.max(0, Math.min(59, parseInt(e.target.value, 10) || 0)))}
-                  className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                  className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
                 />
               </div>
-              <div className="flex flex-col items-center bg-slate-950 border border-slate-800 rounded-lg p-1.5 focus-within:border-emerald-500 transition-colors">
-                <label className="text-[10px] text-slate-400 uppercase font-mono font-bold mb-0.5">Segundos</label>
+              <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
+                <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Segundos</label>
                 <input
                   type="number"
                   min="0"
                   max="59"
                   value={customSeconds}
                   onChange={(e) => setCustomSeconds(Math.max(0, Math.min(59, parseInt(e.target.value, 10) || 0)))}
-                  className="w-full bg-transparent text-center font-mono font-black text-emerald-400 text-lg focus:outline-none"
+                  className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
                 />
               </div>
             </div>
@@ -195,9 +195,9 @@ export const MonsterTimer: React.FC = () => {
           <button
             type="button"
             onClick={handleReset}
-            className="w-full py-2.5 px-3 bg-slate-900/90 hover:bg-slate-800 active:scale-98 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-bold tracking-wider transition-all flex items-center justify-center gap-2 group"
+            className="w-full py-2.5 px-3 bg-amber-100/70 hover:bg-amber-200/80 active:scale-98 border border-amber-300/80 hover:border-amber-400 text-amber-950 rounded-xl text-xs font-bold tracking-wider transition-all flex items-center justify-center gap-2 group shadow-sm"
           >
-            <svg className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-3.5 h-3.5 text-amber-800 group-hover:text-amber-600 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 4v6h6" />
               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
             </svg>
@@ -207,9 +207,9 @@ export const MonsterTimer: React.FC = () => {
           {/* Botão Principal */}
           <button
             onClick={() => handleStart(customHours, customMinutes, customSeconds)}
-            className="w-full py-4 mt-1 bg-emerald-500 hover:bg-emerald-400 active:scale-98 text-slate-950 font-black rounded-xl text-base shadow-lg shadow-emerald-500/25 transition-all tracking-wide flex items-center justify-center gap-2"
+            className="w-full py-4 mt-1 bg-amber-600 hover:bg-amber-500 active:scale-98 text-white font-black rounded-xl text-base shadow-lg shadow-amber-600/30 transition-all tracking-wide flex items-center justify-center gap-2"
           >
-            <svg className="w-5 h-5 fill-slate-950" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+            <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
             <span>INICIAR SESSÃO ({formatTime(currentConfiguredSecs)})</span>
           </button>
         </div>
