@@ -135,86 +135,31 @@
         transform: translateY(-5px) scale(1.025);
       }
     }
-    @keyframes droolGrow {
+    @keyframes droolBreathSoft {
       0%, 100% {
-        transform: scale(1, 1) translateY(0);
-      }
-      32% {
-        transform: scale(1.04, 1.3) translateY(1px);
+        transform: scaleY(1);
       }
       50% {
-        /* Baba estica e fica bem maior */
-        transform: scale(1.08, 1.7) translateY(3px);
-      }
-      55% {
-        /* Recuo elástico assim que a gota pinga */
-        transform: scale(0.95, 0.95) translateY(-0.5px);
-      }
-      68% {
-        transform: scale(1.02, 1.05) translateY(0.5px);
-      }
-      80% {
-        transform: scale(1, 1) translateY(0);
-      }
-    }
-    @keyframes droolDrip {
-      0%, 26% {
-        opacity: 0;
-        transform: translateY(0) scale(0);
-      }
-      38% {
-        /* Gota acumula na ponta da baba */
-        opacity: 0.95;
-        transform: translateY(3px) scale(0.85);
-      }
-      50% {
-        /* Gota atinge o volume máximo */
-        opacity: 1;
-        transform: translateY(7px) scale(1.1, 1.25);
-      }
-      54% {
-        /* Começa a se soltar */
-        opacity: 1;
-        transform: translateY(11px) scale(0.9, 1.45);
-      }
-      65% {
-        /* Pingando em queda acelerada */
-        opacity: 0.95;
-        transform: translateY(22px) scale(0.75, 1.6);
-      }
-      76% {
-        /* Desvanece após o pingo */
-        opacity: 0;
-        transform: translateY(32px) scale(0.4, 1.6);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(0) scale(0);
+        /* Apenas a baba estica suavemente acompanhando a respiração */
+        transform: scaleY(3.4);
       }
     }
     .anim-sleep-box {
       animation: sleepBreathe 3.4s infinite ease-in-out;
       will-change: transform;
     }
-    .anim-drool {
-      display: inline-block;
-      color: #78350f;
-      animation: droolGrow 3.4s infinite cubic-bezier(0.45, 0.05, 0.25, 1);
-      transform-origin: 30% 12%;
-      will-change: transform;
-    }
-    .anim-drool-drop {
+    .anim-drool-strand {
       position: absolute;
-      right: 5px;
-      bottom: 6px;
-      width: 7px;
-      height: 9px;
-      background: radial-gradient(circle at 40% 30%, #d97706 0%, #78350f 85%);
-      border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+      left: 24.5px;
+      top: 15.5px;
+      width: 3.2px;
+      height: 3px;
+      background-color: #78350f;
+      border-radius: 0 0 1.5px 1.5px;
+      transform-origin: top center;
+      animation: droolBreathSoft 3.4s infinite ease-in-out;
+      will-change: transform;
       pointer-events: none;
-      animation: droolDrip 3.4s infinite cubic-bezier(0.45, 0.05, 0.25, 1);
-      will-change: transform, opacity;
-      box-shadow: 0 1px 2px rgba(120, 53, 15, 0.25);
     }
     @keyframes innerFloatZ1 {
       0% { opacity: 0; transform: translate(10px, 40px) scale(0.6); }
@@ -1007,12 +952,12 @@
                     <span className="anim-sparkle inline-block origin-center ml-0.5 text-sky-800 will-change-transform">✧</span>
                   </div>
                 ) : visual.isSleeping ? (
-                  /* Rosto adormecido com baba animada crescendo e pingando */
+                  /* Rosto adormecido com baba que estica suavemente acompanhando a respiração */
                   <div className="flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-3xl tracking-normal select-none">
                     <span>(¯</span>
                     <span className="relative inline-block mx-0.5">
-                      <span className="anim-drool text-amber-900">﹃</span>
-                      <span className="anim-drool-drop"></span>
+                      <span className="text-amber-900 inline-block">﹃</span>
+                      <span className="anim-drool-strand"></span>
                     </span>
                     <span>¯)</span>
                   </div>
