@@ -561,6 +561,25 @@
       
       const titleIntervalRef = useRef(null);
 
+      // Protocolo de Presença: exibido por apenas 7 segundos ao entrar no site
+      const [showPresenceProtocol, setShowPresenceProtocol] = useState(true);
+      const [presenceFading, setPresenceFading] = useState(false);
+
+      useEffect(() => {
+        const fadeTimer = setTimeout(() => {
+          setPresenceFading(true);
+        }, 7000);
+
+        const removeTimer = setTimeout(() => {
+          setShowPresenceProtocol(false);
+        }, 7600);
+
+        return () => {
+          clearTimeout(fadeTimer);
+          clearTimeout(removeTimer);
+        };
+      }, []);
+
       // Persistência automática no localStorage a cada alteração crítica
       useEffect(() => {
         try {
@@ -860,13 +879,15 @@
             </button>
           </header>
 
-          {/* Dica da Sentinela */}
-          <div className="w-full mt-4 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2.5 text-xs text-slate-800">
-            <Icons.Volume2 className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>
-              <strong>Protocolo de Presença:</strong> A saída desta aba durante o período de foco ativa o sinal sonoro ininterrupto até o retorno.
-            </span>
-          </div>
+          {/* Dica da Sentinela: Protocolo de Presença exibido por 7 segundos ao entrar */}
+          {showPresenceProtocol && (
+            <div className={`w-full mt-4 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2.5 text-xs text-slate-800 transition-all duration-500 ease-in-out ${presenceFading ? 'opacity-0 -translate-y-2 max-h-0 py-0 my-0 overflow-hidden' : 'opacity-100 max-h-24'}`}>
+              <Icons.Volume2 className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>
+                <strong>Protocolo de Presença:</strong> A saída desta aba durante o período de foco ativa o sinal sonoro ininterrupto até o retorno.
+              </span>
+            </div>
+          )}
 
           {/* Área do Mascote */}
           <div className="flex flex-col items-center justify-center my-4 w-full">

@@ -11,6 +11,22 @@ export const App: React.FC = () => {
     typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted'
   );
 
+  const [showPresenceProtocol, setShowPresenceProtocol] = useState(true);
+  const [presenceFading, setPresenceFading] = useState(false);
+
+  React.useEffect(() => {
+    const fadeTimer = setTimeout(() => {
+      setPresenceFading(true);
+    }, 7000);
+    const removeTimer = setTimeout(() => {
+      setShowPresenceProtocol(false);
+    }, 7600);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
+
   const requestNotifications = async () => {
     if ('Notification' in window) {
       const permission = await Notification.requestPermission();
@@ -57,13 +73,15 @@ export const App: React.FC = () => {
 
       {/* Conteúdo Central */}
       <main className="w-full max-w-xl flex flex-col items-center justify-center my-6">
-        {/* Aviso de como funciona a vigilância */}
-        <div className="w-full mb-2 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2 text-xs text-slate-800">
-          <ShieldAlert size={16} className="text-amber-600 shrink-0" />
-          <span>
-            <strong>Regra de Ouro:</strong> Se você trocar de aba ou minimizar a tela durante a sessão, o monstro vai soar o alarme e travar a aplicação!
-          </span>
-        </div>
+        {/* Protocolo de Presença exibido por 7 segundos ao entrar */}
+        {showPresenceProtocol && (
+          <div className={`w-full mb-2 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2 text-xs text-slate-800 transition-all duration-500 ease-in-out ${presenceFading ? 'opacity-0 -translate-y-2 max-h-0 py-0 my-0 overflow-hidden' : 'opacity-100 max-h-24'}`}>
+            <ShieldAlert size={16} className="text-amber-600 shrink-0" />
+            <span>
+              <strong>Protocolo de Presença:</strong> A saída desta aba durante o período de foco ativa o sinal sonoro ininterrupto até o retorno.
+            </span>
+          </div>
+        )}
 
         {/* Mascote Reativo */}
         <Mascot />
