@@ -94,6 +94,37 @@
       animation: popBurst 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, floatShimmer 2.2s ease-in-out infinite 0.6s;
       will-change: transform, opacity;
     }
+
+    /* Animações da Piscadinha e Piscar do Kaomoji de Celebração */
+    @keyframes rightEyeOpen {
+      0%, 35%, 55%, 75%, 90%, 100% { opacity: 1; transform: scaleY(1); }
+      40%, 50% { opacity: 0; transform: scaleY(0.1); }
+      80%, 85% { opacity: 0; transform: scaleY(0.1); }
+    }
+    @keyframes rightEyeClosed {
+      0%, 35%, 55%, 75%, 90%, 100% { opacity: 0; transform: scaleY(0.1); }
+      40%, 50% { opacity: 1; transform: scaleY(1); }
+      80%, 85% { opacity: 1; transform: scaleY(1); }
+    }
+    @keyframes leftEyeOpen {
+      0%, 75%, 90%, 100% { opacity: 1; transform: scaleY(1); }
+      80%, 85% { opacity: 0; transform: scaleY(0.1); }
+    }
+    @keyframes leftEyeClosed {
+      0%, 75%, 90%, 100% { opacity: 0; transform: scaleY(0.1); }
+      80%, 85% { opacity: 1; transform: scaleY(1); }
+    }
+    @keyframes sparkleTwinkle {
+      0%, 35%, 55%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+      42% { transform: scale(1.6) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 12px rgba(14,165,233,1)); color: #0284c7; }
+      48% { transform: scale(1.3) rotate(20deg); opacity: 1; filter: drop-shadow(0 0 8px rgba(14,165,233,0.7)); }
+      52% { transform: scale(1) rotate(0deg); opacity: 0.85; }
+    }
+    .anim-r-open { animation: rightEyeOpen 4s infinite ease-in-out; }
+    .anim-r-closed { animation: rightEyeClosed 4s infinite ease-in-out; }
+    .anim-l-open { animation: leftEyeOpen 4s infinite ease-in-out; }
+    .anim-l-closed { animation: leftEyeClosed 4s infinite ease-in-out; }
+    .anim-sparkle { animation: sparkleTwinkle 4s infinite ease-in-out; }
   </style>
 </head>
 <body class="bg-[#FEF7CD] text-slate-900 min-h-screen selection:bg-amber-500 selection:text-white font-sans antialiased">
@@ -718,6 +749,7 @@
             return { eyes: 'ಠ益ಠ', mouth: '▲', bg: 'bg-red-600', anim: 'animate-shake', ring: 'ring-red-600/60' };
           case 'comemorando':
             return {
+              isWinking: true,
               eyes: '(。•̀ᴗ-)✧',
               mouth: '',
               eyesClass: 'text-2xl sm:text-3xl tracking-normal text-sky-950',
@@ -804,6 +836,29 @@
                     <span className="inline-block animate-punch-right origin-center text-amber-100 will-change-transform">
                       {visual.armRight}
                     </span>
+                  </div>
+                ) : visual.isWinking ? (
+                  <div className="flex items-center justify-center font-['Arial',sans-serif] font-black text-sky-950 text-2xl sm:text-3xl tracking-normal select-none drop-shadow-sm">
+                    <span className="select-none">(。</span>
+                    
+                    {/* Olho Esquerdo (Abre e pisca sutil) */}
+                    <span className="inline-block relative w-[1.1ch] h-[1.2em] overflow-visible text-center align-middle">
+                      <span className="anim-l-open inline-block absolute inset-0 text-center">•̀</span>
+                      <span className="anim-l-closed inline-block absolute inset-0 text-center text-2xl sm:text-3xl leading-tight font-black">-</span>
+                    </span>
+
+                    <span className="select-none mx-0.5">ᴗ</span>
+
+                    {/* Olho Direito (Piscadinha charmosa de comemoração) */}
+                    <span className="inline-block relative w-[1.1ch] h-[1.2em] overflow-visible text-center align-middle">
+                      <span className="anim-r-open inline-block absolute inset-0 text-center">•̀</span>
+                      <span className="anim-r-closed inline-block absolute inset-0 text-center text-2xl sm:text-3xl leading-tight font-black">-</span>
+                    </span>
+
+                    <span className="select-none">)</span>
+
+                    {/* Estrelinha que brilha intensamente na piscadinha */}
+                    <span className="anim-sparkle inline-block origin-center ml-0.5 text-sky-800 will-change-transform">✧</span>
                   </div>
                 ) : (
                   <span className={`font-black font-['Arial',sans-serif] drop-shadow-sm ${visual.eyesClass || 'text-4xl tracking-widest text-white'}`}>

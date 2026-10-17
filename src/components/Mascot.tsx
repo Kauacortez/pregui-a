@@ -41,6 +41,7 @@ export const Mascot: React.FC = () => {
         };
       case 'comemorando':
         return {
+          isWinking: true,
           eyes: '(。•̀ᴗ-)✧',
           mouth: '',
           eyesClass: 'text-2xl md:text-3xl tracking-normal text-sky-950',
@@ -233,6 +234,29 @@ const CelebrationParticles: React.FC = () => {
               <span className="inline-block animate-punch-right origin-center text-amber-100 will-change-transform">
                 {(visual as any).armRight}
               </span>
+            </div>
+          ) : (visual as any).isWinking ? (
+            <div className="flex items-center justify-center font-['Arial',sans-serif] font-black text-sky-950 text-2xl md:text-3xl tracking-normal select-none drop-shadow-sm">
+              <span className="select-none">(。</span>
+              
+              {/* Olho Esquerdo */}
+              <span className="inline-block relative w-[1.1ch] h-[1.2em] overflow-visible text-center align-middle">
+                <span className="anim-l-open inline-block absolute inset-0 text-center">•̀</span>
+                <span className="anim-l-closed inline-block absolute inset-0 text-center text-2xl md:text-3xl leading-tight font-black">-</span>
+              </span>
+
+              <span className="select-none mx-0.5">ᴗ</span>
+
+              {/* Olho Direito (Piscadinha charmosa) */}
+              <span className="inline-block relative w-[1.1ch] h-[1.2em] overflow-visible text-center align-middle">
+                <span className="anim-r-open inline-block absolute inset-0 text-center">•̀</span>
+                <span className="anim-r-closed inline-block absolute inset-0 text-center text-2xl md:text-3xl leading-tight font-black">-</span>
+              </span>
+
+              <span className="select-none">)</span>
+
+              {/* Estrelinha que brilha intensamente na piscadinha */}
+              <span className="anim-sparkle inline-block origin-center ml-0.5 text-sky-800 will-change-transform">✧</span>
             </div>
           ) : (
             <span className={`font-black font-['Arial',sans-serif] drop-shadow-sm ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest text-white'}`}>
