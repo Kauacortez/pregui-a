@@ -4,6 +4,131 @@
 
 @layer base {
   body {
-    @apply m-0 p-0 overflow-x-hidden min-h-screen bg-[#0B0F19];
+    @apply m-0 p-0 overflow-x-hidden min-h-screen bg-[#FEF7CD];
   }
+}
+
+@keyframes droolGrow {
+  0%, 100% {
+    transform: scale(1, 1) translateY(0);
+  }
+  32% {
+    transform: scale(1.04, 1.3) translateY(1px);
+  }
+  50% {
+    transform: scale(1.08, 1.7) translateY(3px);
+  }
+  55% {
+    transform: scale(0.95, 0.95) translateY(-0.5px);
+  }
+  68% {
+    transform: scale(1.02, 1.05) translateY(0.5px);
+  }
+  80% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@keyframes droolDrip {
+  0%, 26% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  38% {
+    opacity: 0.95;
+    transform: translateY(3px) scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(7px) scale(1.1, 1.25);
+  }
+  54% {
+    opacity: 1;
+    transform: translateY(11px) scale(0.9, 1.45);
+  }
+  65% {
+    opacity: 0.95;
+    transform: translateY(22px) scale(0.75, 1.6);
+  }
+  76% {
+    opacity: 0;
+    transform: translateY(32px) scale(0.4, 1.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+}
+
+.anim-drool {
+  display: inline-block;
+  color: #78350f;
+  animation: droolGrow 3.4s infinite cubic-bezier(0.45, 0.05, 0.25, 1);
+  transform-origin: 30% 12%;
+  will-change: transform;
+}
+
+.anim-drool-drop {
+  position: absolute;
+  right: 5px;
+  bottom: 6px;
+  width: 7px;
+  height: 9px;
+  background: radial-gradient(circle at 40% 30%, #d97706 0%, #78350f 85%);
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+  pointer-events: none;
+  animation: droolDrip 3.4s infinite cubic-bezier(0.45, 0.05, 0.25, 1);
+  will-change: transform, opacity;
+  box-shadow: 0 1px 2px rgba(120, 53, 15, 0.25);
+}
+
+@keyframes innerFloatZ1 {
+  0% { opacity: 0; transform: translate(10px, 40px) scale(0.6); }
+  30% { opacity: 0.9; transform: translate(14px, 28px) scale(0.85); }
+  80% { opacity: 0.7; transform: translate(18px, 14px) scale(1.0); }
+  100% { opacity: 0; transform: translate(22px, 4px) scale(1.1); }
+}
+
+@keyframes innerFloatZ2 {
+  0% { opacity: 0; transform: translate(6px, 42px) scale(0.65); }
+  30% { opacity: 0.9; transform: translate(12px, 26px) scale(0.95); }
+  80% { opacity: 0.75; transform: translate(18px, 10px) scale(1.15); }
+  100% { opacity: 0; transform: translate(24px, 0px) scale(1.25); }
+}
+
+@keyframes innerFloatZ3 {
+  0% { opacity: 0; transform: translate(4px, 44px) scale(0.7); }
+  30% { opacity: 0.95; transform: translate(10px, 24px) scale(1.1); }
+  80% { opacity: 0.75; transform: translate(16px, 8px) scale(1.3); }
+  100% { opacity: 0; transform: translate(20px, -2px) scale(1.4); }
+}
+
+.inner-z1 {
+  position: absolute;
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  color: #92400e;
+  pointer-events: none;
+  animation: innerFloatZ1 3s infinite ease-out;
+  will-change: transform, opacity;
+}
+
+.inner-z2 {
+  position: absolute;
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  color: #b45309;
+  pointer-events: none;
+  animation: innerFloatZ2 3s infinite ease-out 1s;
+  will-change: transform, opacity;
+}
+
+.inner-z3 {
+  position: absolute;
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  color: #d97706;
+  pointer-events: none;
+  animation: innerFloatZ3 3s infinite ease-out 2s;
+  will-change: transform, opacity;
 }
