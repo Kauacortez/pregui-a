@@ -97,34 +97,34 @@ export const Mascot: React.FC = () => {
 const CelebrationParticles: React.FC = () => {
   const particles = [
     // Brilhinhos (4-point sparkle)
-    { type: 'sparkle', angle: 30, dist: 112, size: 20, color: '#38BDF8', delay: 0 },
-    { type: 'sparkle', angle: 120, dist: 118, size: 18, color: '#F59E0B', delay: 0.1 },
-    { type: 'sparkle', angle: 210, dist: 110, size: 22, color: '#7DD3FC', delay: 0.15 },
-    { type: 'sparkle', angle: 300, dist: 122, size: 19, color: '#FBBF24', delay: 0.05 },
-    { type: 'sparkle', angle: 75, dist: 128, size: 16, color: '#0284C7', delay: 0.2 },
-    { type: 'sparkle', angle: 255, dist: 125, size: 17, color: '#D97706', delay: 0.12 },
+    { type: 'sparkle', angle: 30, dist: 112, size: 20, color: '#3B82F6', delay: 0 },
+    { type: 'sparkle', angle: 75, dist: 128, size: 16, color: '#FACC15', delay: 0.2 },
+    { type: 'sparkle', angle: 120, dist: 118, size: 18, color: '#EC4899', delay: 0.1 },
+    { type: 'sparkle', angle: 210, dist: 110, size: 22, color: '#10B981', delay: 0.15 },
+    { type: 'sparkle', angle: 255, dist: 125, size: 17, color: '#A855F7', delay: 0.12 },
+    { type: 'sparkle', angle: 300, dist: 122, size: 19, color: '#3B82F6', delay: 0.05 },
 
     // Estrelinhas (5-point stars)
-    { type: 'star', angle: 0, dist: 120, size: 18, color: '#F59E0B', delay: 0.05 },
-    { type: 'star', angle: 60, dist: 112, size: 16, color: '#38BDF8', delay: 0.18 },
-    { type: 'star', angle: 150, dist: 120, size: 20, color: '#FBBF24', delay: 0.1 },
-    { type: 'star', angle: 180, dist: 115, size: 17, color: '#0284C7', delay: 0.22 },
-    { type: 'star', angle: 270, dist: 118, size: 19, color: '#F59E0B', delay: 0.08 },
-    { type: 'star', angle: 330, dist: 115, size: 16, color: '#7DD3FC', delay: 0.14 },
+    { type: 'star', angle: 0, dist: 120, size: 18, color: '#FACC15', delay: 0.05 },
+    { type: 'star', angle: 60, dist: 112, size: 16, color: '#10B981', delay: 0.18 },
+    { type: 'star', angle: 150, dist: 120, size: 20, color: '#3B82F6', delay: 0.1 },
+    { type: 'star', angle: 180, dist: 115, size: 17, color: '#A855F7', delay: 0.22 },
+    { type: 'star', angle: 270, dist: 118, size: 19, color: '#EC4899', delay: 0.08 },
+    { type: 'star', angle: 330, dist: 115, size: 16, color: '#A855F7', delay: 0.14 },
 
     // Confetes (pequenos retângulos e círculos coloridos)
-    { type: 'confetti', angle: 15, dist: 98, w: 10, h: 5, color: '#38BDF8', rot: 25, delay: 0 },
-    { type: 'confetti', angle: 45, dist: 130, w: 8, h: 8, color: '#F59E0B', rot: 45, delay: 0.1 },
-    { type: 'confetti', angle: 90, dist: 108, w: 12, h: 5, color: '#F472B6', rot: -30, delay: 0.05 },
-    { type: 'confetti', angle: 105, dist: 126, w: 7, h: 7, color: '#7DD3FC', rot: 60, delay: 0.15 },
-    { type: 'confetti', angle: 135, dist: 102, w: 10, h: 4, color: '#FBBF24', rot: 15, delay: 0.08 },
-    { type: 'confetti', angle: 165, dist: 130, w: 8, h: 6, color: '#34D399', rot: -50, delay: 0.2 },
-    { type: 'confetti', angle: 195, dist: 102, w: 11, h: 5, color: '#38BDF8', rot: 35, delay: 0.06 },
-    { type: 'confetti', angle: 225, dist: 126, w: 9, h: 9, color: '#D97706', rot: -20, delay: 0.14 },
-    { type: 'confetti', angle: 240, dist: 98, w: 10, h: 5, color: '#F472B6', rot: 55, delay: 0.18 },
-    { type: 'confetti', angle: 285, dist: 130, w: 12, h: 5, color: '#7DD3FC', rot: -40, delay: 0.08 },
-    { type: 'confetti', angle: 315, dist: 102, w: 8, h: 7, color: '#FBBF24', rot: 30, delay: 0.12 },
-    { type: 'confetti', angle: 345, dist: 130, w: 10, h: 5, color: '#0284C7', rot: -15, delay: 0.22 },
+    { type: 'confetti', angle: 15, dist: 98, w: 10, h: 5, color: '#A855F7', rot: 25, delay: 0 },
+    { type: 'confetti', angle: 45, dist: 130, w: 8, h: 8, color: '#EC4899', rot: 45, delay: 0.1 },
+    { type: 'confetti', angle: 90, dist: 108, w: 12, h: 5, color: '#3B82F6', rot: -30, delay: 0.05 },
+    { type: 'confetti', angle: 105, dist: 126, w: 7, h: 7, color: '#A855F7', rot: 60, delay: 0.15 },
+    { type: 'confetti', angle: 135, dist: 102, w: 10, h: 4, color: '#10B981', rot: 15, delay: 0.08 },
+    { type: 'confetti', angle: 165, dist: 130, w: 8, h: 6, color: '#FACC15', rot: -50, delay: 0.2 },
+    { type: 'confetti', angle: 195, dist: 102, w: 11, h: 5, color: '#EC4899', rot: 35, delay: 0.06 },
+    { type: 'confetti', angle: 225, dist: 126, w: 9, h: 9, color: '#3B82F6', rot: -20, delay: 0.14 },
+    { type: 'confetti', angle: 240, dist: 98, w: 10, h: 5, color: '#FACC15', rot: 55, delay: 0.18 },
+    { type: 'confetti', angle: 285, dist: 130, w: 12, h: 5, color: '#10B981', rot: -40, delay: 0.08 },
+    { type: 'confetti', angle: 315, dist: 102, w: 8, h: 7, color: '#FACC15', rot: 30, delay: 0.12 },
+    { type: 'confetti', angle: 345, dist: 130, w: 10, h: 5, color: '#EC4899', rot: -15, delay: 0.22 },
   ];
 
   return (
