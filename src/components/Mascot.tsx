@@ -277,8 +277,6 @@ const CelebrationParticles: React.FC = () => {
           ) : (visual as any).isSleeping ? (
             /* Rosto adormecido com fiozinho no nariz e boca mais para baixo */
             <div className="relative flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-2xl md:text-3xl tracking-normal select-none">
-              {/* Fiozinho de sono saindo do centro do nariz */}
-              <span className="anim-nose-strand"></span>
               <span>(¯</span>
               <span className="relative inline-block mx-0.5 translate-y-2">
                 <span className="text-amber-900 inline-block">﹃</span>

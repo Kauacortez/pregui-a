@@ -135,31 +135,9 @@
         transform: translateY(-5px) scale(1.025);
       }
     }
-    @keyframes noseStrandBreath {
-      0%, 100% {
-        transform: translateX(-50%) scaleY(1);
-      }
-      50% {
-        transform: translateX(-50%) scaleY(1.45);
-      }
-    }
     .anim-sleep-box {
       animation: sleepBreathe 3.4s infinite ease-in-out;
       will-change: transform;
-    }
-    .anim-nose-strand {
-      position: absolute;
-      left: 57%;
-      top: 13px;
-      transform: translateX(-50%);
-      width: 3.2px;
-      height: 3px;
-      background-color: #78350f;
-      border-radius: 0 0 1.5px 1.5px;
-      transform-origin: top center;
-      animation: noseStrandBreath 3.4s infinite ease-in-out;
-      will-change: transform;
-      pointer-events: none;
     }
     @keyframes innerFloatZ1 {
       0% { opacity: 0; transform: translate(10px, 40px) scale(0.6); }
@@ -954,8 +932,6 @@
                 ) : visual.isSleeping ? (
                   /* Rosto adormecido com fiozinho no nariz e boca mais para baixo */
                   <div className="relative flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-3xl tracking-normal select-none">
-                    {/* Fiozinho de sono saindo do centro do nariz */}
-                    <span className="anim-nose-strand"></span>
                     <span>(¯</span>
                     <span className="relative inline-block mx-0.5 translate-y-2">
                       <span className="text-amber-900 inline-block">﹃</span>
