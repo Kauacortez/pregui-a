@@ -129,14 +129,14 @@ export const Mascot: React.FC = () => {
         {(visual as any).isBoxing ? (
           <div className="flex items-center justify-center font-mono font-black text-white text-3xl md:text-4xl drop-shadow-md select-none tracking-normal">
             <span className="text-white select-none">(</span>
-            <span className="inline-block animate-punch-left origin-center text-emerald-100">
+            <span className="inline-block animate-punch-left origin-right text-emerald-100 will-change-transform">
               {(visual as any).armLeft}
             </span>
             <span className="inline-block select-none px-0.5">
               {(visual as any).faceCenter}
             </span>
             <span className="text-white select-none">)</span>
-            <span className="inline-block animate-punch-right origin-center text-emerald-100">
+            <span className="inline-block animate-punch-right origin-left text-emerald-100 will-change-transform">
               {(visual as any).armRight}
             </span>
           </div>
