@@ -280,7 +280,7 @@ const CelebrationParticles: React.FC = () => {
               {/* Fiozinho de sono saindo do centro do nariz */}
               <span className="anim-nose-strand"></span>
               <span>(¯</span>
-              <span className="relative inline-block mx-0.5 translate-y-3">
+              <span className="relative inline-block mx-0.5 translate-y-2">
                 <span className="text-amber-900 inline-block">﹃</span>
               </span>
               <span>¯)</span>

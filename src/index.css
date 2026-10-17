@@ -13,14 +13,14 @@
     transform: translateX(-50%) scaleY(1);
   }
   50% {
-    transform: translateX(-50%) scaleY(3.0);
+    transform: translateX(-50%) scaleY(2.1);
   }
 }
 
 .anim-nose-strand {
   position: absolute;
-  left: 50%;
-  top: 9px;
+  left: 57%;
+  top: 11px;
   transform: translateX(-50%);
   width: 3.2px;
   height: 3px;
