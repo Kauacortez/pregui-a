@@ -275,12 +275,15 @@ const CelebrationParticles: React.FC = () => {
               <span className="anim-sparkle inline-block origin-center ml-0.5 text-sky-800 will-change-transform">✧</span>
             </div>
           ) : (visual as any).isSleeping ? (
-            /* Rosto adormecido com boca mais para baixo e baba respirando suave */
-            <div className="flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-2xl md:text-3xl tracking-normal select-none">
+            /* Rosto adormecido com gotinha no nariz e boca mais para baixo */
+            <div className="relative flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-2xl md:text-3xl tracking-normal select-none">
+              {/* Gotinha de sono saindo do centro do nariz */}
+              <div className="anim-nose-container">
+                <span className="anim-nose-drip"></span>
+              </div>
               <span>(¯</span>
               <span className="relative inline-block mx-0.5 translate-y-2">
                 <span className="text-amber-900 inline-block">﹃</span>
-                <span className="anim-drool-strand"></span>
               </span>
               <span>¯)</span>
             </div>
