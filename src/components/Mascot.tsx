@@ -54,6 +54,7 @@ export const Mascot: React.FC = () => {
       case 'dormindo':
       default:
         return {
+          isSleeping: true,
           eyes: '(¯﹃¯)',
           mouth: 'ᶻ 𝗓 𐰁',
           eyesClass: 'text-2xl md:text-3xl tracking-normal text-amber-950',
@@ -208,6 +209,12 @@ const CelebrationParticles: React.FC = () => {
                   scale: [1, 1.12, 1],
                   transition: { repeat: Infinity, duration: 0.9 },
                 }
+              : mascotMood === 'dormindo'
+              ? {
+                  y: [0, -5, -5, 0],
+                  scale: [1, 1.025, 1.025, 1],
+                  transition: { repeat: Infinity, duration: 3.4, ease: 'easeInOut' },
+                }
               : {}
           }
           className={`relative z-10 w-36 h-36 md:w-44 md:h-44 rounded-3xl flex flex-col items-center justify-center ${visual.bg} ${visual.ring} ${(visual as any).border || 'border-4 border-amber-900/80'} transition-colors duration-500 shadow-2xl cursor-pointer`}
@@ -258,6 +265,34 @@ const CelebrationParticles: React.FC = () => {
               {/* Estrelinha que brilha intensamente na piscadinha */}
               <span className="anim-sparkle inline-block origin-center ml-0.5 text-sky-800 will-change-transform">✧</span>
             </div>
+          ) : (visual as any).isSleeping ? (
+            <div className="relative flex flex-col items-center justify-center">
+              {/* Floating Zzz */}
+              <div className="absolute -top-3 right-2 pointer-events-none z-20">
+                <span className="floating-z1 text-xs select-none">z</span>
+                <span className="floating-z2 text-sm select-none">z</span>
+                <span className="floating-z3 text-lg select-none">Z</span>
+              </div>
+
+              {/* Rosto adormecido com baba animada e bolha de sono */}
+              <div className="flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-2xl md:text-3xl tracking-normal select-none relative">
+                <span>(¯</span>
+                <span className="relative inline-block mx-0.5">
+                  <span className="anim-drool text-amber-900">﹃</span>
+                  <span className="anim-bubble absolute -top-1 -right-2.5 w-3 h-3 rounded-full bg-sky-200/60 border border-sky-400/70 shadow-sm pointer-events-none">
+                    <span className="absolute top-0.5 left-0.5 w-1 h-1 bg-white/90 rounded-full"></span>
+                  </span>
+                </span>
+                <span>¯)</span>
+              </div>
+
+              {/* Indicador suave de sono */}
+              <div className="flex items-center gap-1 mt-1 text-amber-900/80 font-mono text-xs font-bold tracking-wider select-none">
+                <span className="opacity-70">ᶻ</span>
+                <span className="opacity-85 font-semibold">𝗓</span>
+                <span className="opacity-100 font-black">𐰁</span>
+              </div>
+            </div>
           ) : (
             <span className={`font-black font-['Arial',sans-serif] drop-shadow-sm ${(visual as any).eyesClass || 'text-3xl md:text-4xl tracking-widest text-white'}`}>
               {visual.eyes}
@@ -265,7 +300,7 @@ const CelebrationParticles: React.FC = () => {
           )}
 
           {/* Boca expressiva */}
-          {visual.mouth && (
+          {!(visual as any).isSleeping && visual.mouth && (
             <span className={`font-black mt-1 ${(visual as any).mouthClass || 'text-xl md:text-2xl text-slate-950'}`}>
               {visual.mouth}
             </span>
