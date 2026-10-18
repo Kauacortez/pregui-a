@@ -71,7 +71,7 @@ export const useFocusStore = create<FocusState>()(
       isActive: false,
       isPenalized: false,
       mascotMood: 'dormindo',
-      mascotMessage: "Sessão encerrada precocemente. A preguiça venceu desta vez?"
+      mascotMessage: "Não desista, falta só mais um pouco!"
     });
   },
 
