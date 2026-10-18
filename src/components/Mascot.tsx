@@ -126,45 +126,45 @@ export const Mascot: React.FC = () => {
 // Componente de Partículas de Celebração (Confetes, Brilhinhos e Estrelinhas)
 const CelebrationParticles: React.FC = () => {
   const particles = [
-    // Brilhinhos (4-point sparkle) - bem visíveis ao redor do card, sem invadir o cronômetro
-    { type: 'sparkle', angle: 25, dist: 104, size: 22, color: '#3B82F6', delay: 0 },
-    { type: 'sparkle', angle: 335, dist: 104, size: 22, color: '#FACC15', delay: 0.15 },
-    { type: 'sparkle', angle: 280, dist: 100, size: 24, color: '#EC4899', delay: 0.08 },
-    { type: 'sparkle', angle: 260, dist: 100, size: 24, color: '#10B981', delay: 0.2 },
-    { type: 'sparkle', angle: 205, dist: 104, size: 22, color: '#A855F7', delay: 0.1 },
-    { type: 'sparkle', angle: 155, dist: 104, size: 22, color: '#3B82F6', delay: 0.05 },
+    // Brilhinhos (4-point sparkle) - irradiando atrás do card, sem apontar para o cronômetro
+    { type: 'sparkle', angle: 30, dist: 118, size: 20, color: '#3B82F6', delay: 0 },
+    { type: 'sparkle', angle: 15, dist: 124, size: 18, color: '#FACC15', delay: 0.2 },
+    { type: 'sparkle', angle: 165, dist: 122, size: 18, color: '#EC4899', delay: 0.1 },
+    { type: 'sparkle', angle: 210, dist: 115, size: 22, color: '#10B981', delay: 0.15 },
+    { type: 'sparkle', angle: 255, dist: 125, size: 18, color: '#A855F7', delay: 0.12 },
+    { type: 'sparkle', angle: 300, dist: 122, size: 20, color: '#3B82F6', delay: 0.05 },
 
-    // Estrelinhas (5-point stars) - rentes e luminosas nas laterais e cantos
-    { type: 'star', angle: 0, dist: 102, size: 20, color: '#FACC15', delay: 0.05 },
-    { type: 'star', angle: 42, dist: 104, size: 19, color: '#10B981', delay: 0.18 },
-    { type: 'star', angle: 310, dist: 108, size: 20, color: '#3B82F6', delay: 0.1 },
-    { type: 'star', angle: 230, dist: 108, size: 20, color: '#A855F7', delay: 0.22 },
-    { type: 'star', angle: 180, dist: 102, size: 20, color: '#EC4899', delay: 0.08 },
-    { type: 'star', angle: 138, dist: 104, size: 19, color: '#A855F7', delay: 0.14 },
+    // Estrelinhas (5-point stars) - visíveis atrás das laterais e topo, livres do cronômetro
+    { type: 'star', angle: 0, dist: 120, size: 18, color: '#FACC15', delay: 0.05 },
+    { type: 'star', angle: 38, dist: 114, size: 17, color: '#10B981', delay: 0.18 },
+    { type: 'star', angle: 150, dist: 120, size: 20, color: '#3B82F6', delay: 0.1 },
+    { type: 'star', angle: 180, dist: 118, size: 18, color: '#A855F7', delay: 0.22 },
+    { type: 'star', angle: 270, dist: 120, size: 19, color: '#EC4899', delay: 0.08 },
+    { type: 'star', angle: 330, dist: 118, size: 17, color: '#A855F7', delay: 0.14 },
 
-    // Confetes - nítidos e contrastantes ao redor do card mantendo a parte inferior livre
-    { type: 'confetti', angle: 12, dist: 102, w: 12, h: 6, color: '#A855F7', rot: 20, delay: 0 },
-    { type: 'confetti', angle: 35, dist: 104, w: 9, h: 9, color: '#EC4899', rot: 45, delay: 0.1 },
-    { type: 'confetti', angle: 48, dist: 103, w: 11, h: 6, color: '#3B82F6', rot: -25, delay: 0.06 },
-    { type: 'confetti', angle: 322, dist: 106, w: 11, h: 6, color: '#FACC15', rot: 30, delay: 0.16 },
-    { type: 'confetti', angle: 295, dist: 101, w: 12, h: 5, color: '#10B981', rot: -15, delay: 0.08 },
-    { type: 'confetti', angle: 270, dist: 98, w: 8, h: 8, color: '#A855F7', rot: 45, delay: 0.22 },
-    { type: 'confetti', angle: 245, dist: 101, w: 12, h: 5, color: '#FACC15', rot: 50, delay: 0.12 },
-    { type: 'confetti', angle: 218, dist: 106, w: 11, h: 6, color: '#EC4899', rot: -30, delay: 0.18 },
-    { type: 'confetti', angle: 192, dist: 102, w: 12, h: 6, color: '#3B82F6', rot: 25, delay: 0.04 },
-    { type: 'confetti', angle: 168, dist: 102, w: 11, h: 6, color: '#10B981', rot: -20, delay: 0.14 },
-    { type: 'confetti', angle: 145, dist: 104, w: 9, h: 9, color: '#FACC15', rot: 40, delay: 0.08 },
-    { type: 'confetti', angle: 132, dist: 103, w: 11, h: 6, color: '#EC4899', rot: -35, delay: 0.2 },
+    // Confetes - flutuando atrás do card, com a parte inferior voltada ao cronômetro 100% desobstruída
+    { type: 'confetti', angle: 10, dist: 115, w: 10, h: 5, color: '#A855F7', rot: 25, delay: 0 },
+    { type: 'confetti', angle: 42, dist: 112, w: 9, h: 9, color: '#EC4899', rot: 45, delay: 0.1 },
+    { type: 'confetti', angle: 350, dist: 124, w: 12, h: 5, color: '#3B82F6', rot: -20, delay: 0.05 },
+    { type: 'confetti', angle: 190, dist: 122, w: 8, h: 8, color: '#A855F7', rot: 50, delay: 0.15 },
+    { type: 'confetti', angle: 138, dist: 112, w: 9, h: 9, color: '#10B981', rot: 20, delay: 0.08 },
+    { type: 'confetti', angle: 160, dist: 126, w: 10, h: 5, color: '#FACC15', rot: -45, delay: 0.2 },
+    { type: 'confetti', angle: 195, dist: 112, w: 11, h: 5, color: '#EC4899', rot: 35, delay: 0.06 },
+    { type: 'confetti', angle: 225, dist: 126, w: 9, h: 9, color: '#3B82F6', rot: -20, delay: 0.14 },
+    { type: 'confetti', angle: 245, dist: 115, w: 10, h: 5, color: '#FACC15', rot: 55, delay: 0.18 },
+    { type: 'confetti', angle: 285, dist: 128, w: 12, h: 5, color: '#10B981', rot: -40, delay: 0.08 },
+    { type: 'confetti', angle: 315, dist: 116, w: 8, h: 7, color: '#FACC15', rot: 30, delay: 0.12 },
+    { type: 'confetti', angle: 345, dist: 128, w: 10, h: 5, color: '#EC4899', rot: -15, delay: 0.22 },
   ];
 
   return (
-    <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-visible z-20">
+    <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-visible z-0">
       {particles.map((p, idx) => {
         const rad = (p.angle * Math.PI) / 180;
         const tx = Math.round(Math.cos(rad) * p.dist);
         const ty = Math.round(Math.sin(rad) * p.dist);
-        const driftX = idx % 2 === 0 ? 3 : -3;
-        const driftY = idx % 3 === 0 ? -2 : 2;
+        const driftX = idx % 2 === 0 ? 4 : -4;
+        const driftY = idx % 3 === 0 ? -3 : 3;
         const baseRot = p.rot || (p.angle * 2);
 
         return (
@@ -172,11 +172,11 @@ const CelebrationParticles: React.FC = () => {
             key={idx}
             initial={{ x: 0, y: 0, scale: 0, rotate: 0, opacity: 0 }}
             animate={{
-              x: [0, tx * 1.04, tx, tx + driftX],
-              y: [0, ty * 1.04, ty, ty + driftY],
-              scale: [0, 1.2, 1, 1],
-              rotate: [0, baseRot * 0.5, baseRot, baseRot + 10],
-              opacity: [0, 1, 1, 1],
+              x: [0, tx * 1.08, tx, tx + driftX],
+              y: [0, ty * 1.08, ty, ty + driftY],
+              scale: [0, 1.22, 1, 1],
+              rotate: [0, baseRot * 0.5, baseRot, baseRot + 12],
+              opacity: [0, 1, 1, 0.95],
             }}
             transition={{
               duration: 0.65,
@@ -191,18 +191,18 @@ const CelebrationParticles: React.FC = () => {
                   width: `${p.w}px`,
                   height: `${p.h}px`,
                   backgroundColor: p.color,
-                  borderRadius: p.w === p.h ? '50%' : '3px',
-                  boxShadow: `0 2px 8px ${p.color}88, 0 1px 3px rgba(0,0,0,0.25)`
+                  borderRadius: p.w === p.h ? '50%' : '2px',
+                  boxShadow: `0 2px 6px ${p.color}66`
                 }}
               />
             )}
             {p.type === 'sparkle' && (
-              <svg width={p.size} height={p.size} viewBox="0 0 24 24" fill={p.color} style={{ filter: `drop-shadow(0 0 5px ${p.color}) drop-shadow(0 2px 4px rgba(0,0,0,0.25))` }}>
+              <svg width={p.size} height={p.size} viewBox="0 0 24 24" fill={p.color} style={{ filter: `drop-shadow(0 2px 6px ${p.color}88)` }}>
                 <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
               </svg>
             )}
             {p.type === 'star' && (
-              <svg width={p.size} height={p.size} viewBox="0 0 24 24" fill={p.color} style={{ filter: `drop-shadow(0 0 5px ${p.color}) drop-shadow(0 2px 4px rgba(0,0,0,0.25))` }}>
+              <svg width={p.size} height={p.size} viewBox="0 0 24 24" fill={p.color} style={{ filter: `drop-shadow(0 2px 6px ${p.color}88)` }}>
                 <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
               </svg>
             )}
