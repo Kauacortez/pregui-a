@@ -676,12 +676,18 @@
                 } catch(e) {}
                 return 0;
               }
-              return prev - 1;
+              const next = prev - 1;
+              if (initialDuration > 60 && next <= 60) {
+                setMascotMessage(m => (m !== "Falta pouco! Não desista!" ? "Falta pouco! Não desista!" : m));
+              } else if (initialDuration > 5 * 60 && next <= Math.floor(initialDuration / 2)) {
+                setMascotMessage(m => (m !== "Estamos na metade do caminho, força!" ? "Estamos na metade do caminho, força!" : m));
+              }
+              return next;
             });
           }, 1000);
         }
         return () => clearInterval(interval);
-      }, [isActive, isPenalized]);
+      }, [isActive, isPenalized, initialDuration]);
 
       // Timer da Penitência
       useEffect(() => {
@@ -736,7 +742,7 @@
         setIsActive(true);
         setIsPenalized(false);
         setMascotMood('focado');
-        setMascotMessage("Sessão iniciada. Monitoramento de presença e disciplina ativado.");
+        setMascotMessage("Vamos lá! a gente consegue!");
       };
 
       const handleStartCurrentSession = () => {
@@ -773,7 +779,14 @@
         setPenaltyTimer(0);
         setTypedPenalty('');
         setMascotMood('focado');
-        setMascotMessage("Compromisso validado. O cronômetro foi retomado com sucesso.");
+
+        let resumeMsg = "Vamos lá! a gente consegue!";
+        if (initialDuration > 60 && timeLeft <= 60) {
+          resumeMsg = "Falta pouco! Não desista!";
+        } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {
+          resumeMsg = "Estamos na metade do caminho, força!";
+        }
+        setMascotMessage(resumeMsg);
 
         try {
           const current = loadSavedState() || {};

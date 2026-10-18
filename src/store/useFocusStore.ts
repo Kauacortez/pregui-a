@@ -62,7 +62,7 @@ export const useFocusStore = create<FocusState>()(
       initialDuration: duration,
       distractionStrikes: 0,
       mascotMood: 'focado',
-      mascotMessage: "Modo Monstro ATIVADO! Olhos na tela e mãos no trabalho."
+      mascotMessage: "Vamos lá! a gente consegue!"
     });
   },
 
@@ -76,7 +76,7 @@ export const useFocusStore = create<FocusState>()(
   },
 
   tick: () => {
-    const { timeLeft, isActive, isPenalized } = get();
+    const { timeLeft, isActive, isPenalized, initialDuration } = get();
     // Se o usuário estiver na tela de penalidade, o cronômetro do foco pausa
     if (!isActive || isPenalized) return;
 
@@ -88,7 +88,19 @@ export const useFocusStore = create<FocusState>()(
         mascotMessage: "Meta atingida! Sessão de foco concluída integralmente com sucesso."
       });
     } else {
-      set({ timeLeft: timeLeft - 1 });
+      const nextTime = timeLeft - 1;
+      let nextMessage: string | undefined = undefined;
+
+      if (initialDuration > 60 && nextTime <= 60) {
+        nextMessage = "Falta pouco! Não desista!";
+      } else if (initialDuration > 5 * 60 && nextTime <= Math.floor(initialDuration / 2)) {
+        nextMessage = "Estamos na metade do caminho, força!";
+      }
+
+      set((state) => ({
+        timeLeft: nextTime,
+        ...(nextMessage && state.mascotMessage !== nextMessage ? { mascotMessage: nextMessage } : {})
+      }));
     }
   },
 
@@ -109,10 +121,18 @@ export const useFocusStore = create<FocusState>()(
   },
 
   resolvePenalty: () => {
+    const { timeLeft, initialDuration } = get();
+    let resumeMsg = "Vamos lá! a gente consegue!";
+    if (initialDuration > 60 && timeLeft <= 60) {
+      resumeMsg = "Falta pouco! Não desista!";
+    } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {
+      resumeMsg = "Estamos na metade do caminho, força!";
+    }
+
     set({
       isPenalized: false,
       mascotMood: 'focado',
-      mascotMessage: "Penitência cumprida! Retomando o contador. Não ouse sair de novo."
+      mascotMessage: resumeMsg
     });
   },
 
