@@ -49,7 +49,7 @@ export const useFocusStore = create<FocusState>()(
   initialDuration: 25 * 60,
   distractionStrikes: 0,
   mascotMood: 'dormindo',
-  mascotMessage: "Estou com preguiça...",
+  mascotMessage: "Estou com preguiça... pq não fazer amanhã?",
   distractionsList: ['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos'],
   penaltyChallenge: PENALTY_PHRASES[0],
 
