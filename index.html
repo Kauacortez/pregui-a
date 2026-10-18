@@ -525,6 +525,7 @@
       const wasPenalizedOrReloadedDuringSession = Boolean(saved?.isPenalized || saved?.isActive);
 
       const [isActive, setIsActive] = useState(saved ? Boolean(saved.isActive) : false);
+      const [isPaused, setIsPaused] = useState(saved ? Boolean(saved.isPaused) : false);
       const [isPenalized, setIsPenalized] = useState(wasPenalizedOrReloadedDuringSession);
       const [timeLeft, setTimeLeft] = useState(saved?.timeLeft ?? 25 * 60);
       const [initialDuration, setInitialDuration] = useState(saved?.initialDuration ?? 25 * 60);
@@ -537,7 +538,7 @@
       const [mascotMessage, setMascotMessage] = useState(
         wasPenalizedOrReloadedDuringSession
           ? "Atenção: Validação de presença obrigatória pendente. Digite a frase para prosseguir."
-          : "Estou com preguiça…Por que não fazer amanhã?"
+          : (saved?.isPaused ? "Não desista, falta só mais um pouco!" : "Estou com preguiça…Por que não fazer amanhã?")
       );
       const initialTotalSecs = saved?.timeLeft ?? 25 * 60;
       const [customHours, setCustomHours] = useState(
@@ -590,6 +591,7 @@
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify({
             isActive,
+            isPaused,
             isPenalized,
             timeLeft,
             initialDuration,
@@ -599,7 +601,7 @@
             distractionsList
           }));
         } catch (e) {}
-      }, [isActive, isPenalized, timeLeft, initialDuration, distractionStrikes, penaltyChallenge, penaltyTimer, distractionsList]);
+      }, [isActive, isPaused, isPenalized, timeLeft, initialDuration, distractionStrikes, penaltyChallenge, penaltyTimer, distractionsList]);
 
       // Alerta nativo de navegador caso tente fechar ou recarregar durante o foco ou penalidade
       useEffect(() => {
@@ -672,6 +674,7 @@
               if (prev <= 1) {
                 clearInterval(interval);
                 setIsActive(false);
+                setIsPaused(false);
                 setIsPenalized(false);
                 setMascotMood('comemorando');
                 setMascotMessage("Meta atingida! Sessão de foco concluída integralmente com sucesso.");
@@ -708,6 +711,7 @@
 
       const selectPreset = (h, m, s) => {
         sound.playClick();
+        setIsPaused(false);
         setCustomHours(h);
         setCustomMinutes(m);
         setCustomSeconds(s);
@@ -717,6 +721,7 @@
       };
 
       const updateTimeField = (hVal, mVal, sVal) => {
+        setIsPaused(false);
         setCustomHours(hVal);
         setCustomMinutes(mVal);
         setCustomSeconds(sVal);
@@ -731,12 +736,16 @@
 
       const resetTimer = () => {
         sound.playClick();
+        setIsPaused(false);
         setCustomHours(0);
         setCustomMinutes(0);
         setCustomSeconds(0);
         setTimeLeft(0);
         setInitialDuration(0);
         setMascotMessage("Cronômetro zerado. Ajuste o tempo desejado para iniciar.");
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch(e) {}
       };
 
       const startSession = (totalSeconds) => {
@@ -747,12 +756,34 @@
         setInitialDuration(duration);
         setDistractionStrikes(0);
         setIsActive(true);
+        setIsPaused(false);
         setIsPenalized(false);
         setMascotMood('focado');
         setMascotMessage("Vamos lá, a gente consegue!");
       };
 
+      const resumeSession = () => {
+        sound.playClick();
+        setIsActive(true);
+        setIsPaused(false);
+        setIsPenalized(false);
+        setMascotMood('focado');
+
+        const dur = initialDurationRef.current || initialDuration;
+        let resumeMsg = "Vamos lá, a gente consegue!";
+        if (dur > 60 && timeLeft <= 60) {
+          resumeMsg = "Falta pouco! Não desista!";
+        } else if (dur >= 5 * 60 && timeLeft <= Math.ceil(dur / 2)) {
+          resumeMsg = "Estamos na metade do caminho, força!";
+        }
+        setMascotMessage(resumeMsg);
+      };
+
       const handleStartCurrentSession = () => {
+        if (isPaused && timeLeft > 0) {
+          resumeSession();
+          return;
+        }
         const h = Math.max(0, Math.min(23, parseInt(customHours, 10) || 0));
         const m = Math.max(0, Math.min(59, parseInt(customMinutes, 10) || 0));
         const s = Math.max(0, Math.min(59, parseInt(customSeconds, 10) || 0));
@@ -771,11 +802,30 @@
         document.title = "Modo Foco — Gestão Comportamental Anti-Procrastinação";
         sound.playClick();
         setIsActive(false);
+        setIsPaused(true);
         setIsPenalized(false);
         setMascotMood('dormindo');
         setMascotMessage("Não desista, falta só mais um pouco!");
+
+        const h = Math.floor(timeLeft / 3600);
+        const m = Math.floor((timeLeft % 3600) / 60);
+        const s = timeLeft % 60;
+        setCustomHours(h);
+        setCustomMinutes(m);
+        setCustomSeconds(s);
+
         try {
-          localStorage.removeItem(STORAGE_KEY);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            isActive: false,
+            isPaused: true,
+            isPenalized: false,
+            timeLeft,
+            initialDuration: initialDurationRef.current || initialDuration,
+            distractionStrikes,
+            penaltyChallenge,
+            penaltyTimer: 0,
+            distractionsList
+          }));
         } catch(e) {}
       };
 
@@ -1020,7 +1070,7 @@
                 {formatTime(timeLeft)}
               </span>
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-900/70 mt-1">
-                {isActive ? 'Sessão em Andamento' : 'Pronto para Ativar'}
+                {isActive ? 'Sessão em Andamento' : (isPaused && timeLeft > 0 ? 'Sessão Interrompida' : 'Pronto para Ativar')}
               </span>
             </div>
           </div>
@@ -1038,7 +1088,7 @@
                     { label: '1 hora', h: 1, m: 0, s: 0 }
                   ].map((p) => {
                     const totalSecs = (p.h * 3600) + (p.m * 60) + p.s;
-                    const isSelected = timeLeft === totalSecs && !isActive;
+                    const isSelected = timeLeft === totalSecs && !isActive && !isPaused;
                     return (
                       <button
                         key={p.label}
@@ -1120,7 +1170,7 @@
                   className="w-full py-4 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-black rounded-xl text-base shadow-lg shadow-amber-600/30 transition-all flex items-center justify-center gap-2"
                 >
                   <Icons.Play className="w-4 h-4 fill-white" />
-                  <span>INICIAR SESSÃO ({formatTime(timeLeft)})</span>
+                  <span>{isPaused && timeLeft > 0 ? `RETOMAR SESSÃO (${formatTime(timeLeft)})` : `INICIAR SESSÃO (${formatTime(timeLeft)})`}</span>
                 </button>
               </div>
             ) : (

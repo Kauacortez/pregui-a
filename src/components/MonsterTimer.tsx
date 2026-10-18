@@ -9,10 +9,12 @@ export const MonsterTimer: React.FC = () => {
 
   const {
     isActive,
+    isPaused,
     timeLeft,
     initialDuration,
     startSession,
     stopSession,
+    resumeSession,
     tick,
     mascotMood,
   } = useFocusStore();
@@ -61,6 +63,9 @@ export const MonsterTimer: React.FC = () => {
 
   const handleReset = () => {
     soundEffects.playClick();
+    if (isPaused) {
+      useFocusStore.setState({ isPaused: false });
+    }
     setCustomHours(0);
     setCustomMinutes(0);
     setCustomSeconds(0);
@@ -69,8 +74,15 @@ export const MonsterTimer: React.FC = () => {
   const handleStop = () => {
     soundEffects.playBuzzer();
     stopSession();
+    const h = Math.floor(timeLeft / 3600);
+    const m = Math.floor((timeLeft % 3600) / 60);
+    const s = timeLeft % 60;
+    setCustomHours(h);
+    setCustomMinutes(m);
+    setCustomSeconds(s);
   };
 
+  const isResumable = !isActive && isPaused && timeLeft > 0;
   const currentConfiguredSecs = (customHours * 3600) + (customMinutes * 60) + customSeconds;
 
   return (
@@ -104,10 +116,10 @@ export const MonsterTimer: React.FC = () => {
         {/* Mostrador Numérico no Centro: HH:MM:SS */}
         <div className="absolute flex flex-col items-center justify-center">
           <span className="text-3xl sm:text-3xl font-mono font-black text-slate-900 tracking-normal drop-shadow-sm">
-            {formatTime(isActive ? timeLeft : currentConfiguredSecs)}
+            {formatTime(isActive || isResumable ? timeLeft : currentConfiguredSecs)}
           </span>
           <span className="text-xs font-semibold uppercase tracking-wider text-amber-900/70 mt-1">
-            {isActive ? 'Foco em Andamento' : 'Pronto para Ativar'}
+            {isActive ? 'Foco em Andamento' : (isResumable ? 'Sessão Interrompida' : 'Pronto para Ativar')}
           </span>
         </div>
       </div>
@@ -123,13 +135,16 @@ export const MonsterTimer: React.FC = () => {
               { label: '45 min', h: 0, m: 45, s: 0 },
               { label: '1 hora', h: 1, m: 0, s: 0 },
             ].map((p) => {
-              const isSelected = customHours === p.h && customMinutes === p.m && customSeconds === p.s;
+              const isSelected = customHours === p.h && customMinutes === p.m && customSeconds === p.s && !isPaused;
               return (
                 <button
                   key={p.label}
                   type="button"
                   onClick={() => {
                     soundEffects.playClick();
+                    if (isPaused) {
+                      useFocusStore.setState({ isPaused: false });
+                    }
                     setCustomHours(p.h);
                     setCustomMinutes(p.m);
                     setCustomSeconds(p.s);
@@ -206,11 +221,22 @@ export const MonsterTimer: React.FC = () => {
 
           {/* Botão Principal */}
           <button
-            onClick={() => handleStart(customHours, customMinutes, customSeconds)}
+            onClick={() => {
+              if (isResumable) {
+                soundEffects.playClick();
+                resumeSession();
+              } else {
+                handleStart(customHours, customMinutes, customSeconds);
+              }
+            }}
             className="w-full py-4 mt-1 bg-amber-600 hover:bg-amber-500 active:scale-98 text-white font-black rounded-xl text-base shadow-lg shadow-amber-600/30 transition-all tracking-wide flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-            <span>INICIAR SESSÃO ({formatTime(currentConfiguredSecs)})</span>
+            <span>
+              {isResumable
+                ? `RETOMAR SESSÃO (${formatTime(timeLeft)})`
+                : `INICIAR SESSÃO (${formatTime(currentConfiguredSecs)})`}
+            </span>
           </button>
         </div>
       ) : (

@@ -5,6 +5,7 @@ export type MascotMood = 'dormindo' | 'focado' | 'julgando' | 'furioso' | 'comem
 
 interface FocusState {
   isActive: boolean;
+  isPaused: boolean;
   isPenalized: boolean; // Flag ativada quando o usuário abandona a aba
   timeLeft: number;
   initialDuration: number;
@@ -17,6 +18,7 @@ interface FocusState {
   // Ações
   startSession: (durationInMinutes: number) => void;
   stopSession: () => void;
+  resumeSession: () => void;
   tick: () => void;
   registerBetrayal: () => void;
   resolvePenalty: () => void;
@@ -44,6 +46,7 @@ export const useFocusStore = create<FocusState>()(
   persist(
     (set, get) => ({
   isActive: false,
+  isPaused: false,
   isPenalized: false,
   timeLeft: 25 * 60,
   initialDuration: 25 * 60,
@@ -57,6 +60,7 @@ export const useFocusStore = create<FocusState>()(
     const duration = minutes * 60;
     set({
       isActive: true,
+      isPaused: false,
       isPenalized: false,
       timeLeft: duration,
       initialDuration: duration,
@@ -69,9 +73,27 @@ export const useFocusStore = create<FocusState>()(
   stopSession: () => {
     set({
       isActive: false,
+      isPaused: true,
       isPenalized: false,
       mascotMood: 'dormindo',
       mascotMessage: "Não desista, falta só mais um pouco!"
+    });
+  },
+
+  resumeSession: () => {
+    const { initialDuration, timeLeft } = get();
+    let resumeMsg = "Vamos lá, a gente consegue!";
+    if (initialDuration > 60 && timeLeft <= 60) {
+      resumeMsg = "Falta pouco! Não desista!";
+    } else if (initialDuration >= 5 * 60 && timeLeft <= Math.ceil(initialDuration / 2)) {
+      resumeMsg = "Estamos na metade do caminho, força!";
+    }
+    set({
+      isActive: true,
+      isPaused: false,
+      isPenalized: false,
+      mascotMood: 'focado',
+      mascotMessage: resumeMsg
     });
   },
 
@@ -84,6 +106,7 @@ export const useFocusStore = create<FocusState>()(
       set({
         timeLeft: 0,
         isActive: false,
+        isPaused: false,
         mascotMood: 'comemorando',
         mascotMessage: "Meta atingida! Sessão de foco concluída integralmente com sucesso."
       });
