@@ -139,6 +139,62 @@
       animation: sleepBreathe 3.4s infinite ease-in-out;
       will-change: transform;
     }
+
+    /* Animações Sincronizadas dos Balões de Fala */
+    @keyframes balloonSleep {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      45%, 55% {
+        transform: translateY(-4px);
+      }
+    }
+    .anim-balloon-sleep {
+      animation: balloonSleep 3.4s infinite ease-in-out;
+      will-change: transform;
+    }
+
+    @keyframes balloonBreathe {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+    .anim-balloon-breathe {
+      animation: balloonBreathe 2.5s infinite ease-in-out;
+      will-change: transform;
+    }
+
+    @keyframes balloonVictory {
+      0% {
+        transform: translateY(0) rotate(-0.75deg);
+      }
+      100% {
+        transform: translateY(-3.5px) rotate(0.75deg);
+      }
+    }
+    .anim-balloon-victory {
+      animation: balloonVictory 0.8s infinite alternate ease-in-out;
+      will-change: transform;
+    }
+
+    @keyframes balloonShake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      20%, 60% {
+        transform: translateX(-3px);
+      }
+      40%, 80% {
+        transform: translateX(3px);
+      }
+    }
+    .anim-balloon-shake {
+      animation: balloonShake 0.25s infinite;
+      will-change: transform;
+    }
     @keyframes innerFloatZ1 {
       0% { opacity: 0; transform: translate(10px, 40px) scale(0.6); }
       30% { opacity: 0.9; transform: translate(14px, 28px) scale(0.85); }
@@ -683,7 +739,7 @@
                 setIsPaused(false);
                 setIsPenalized(false);
                 setMascotMood('comemorando');
-                setMascotMessage("Meta atingida! Sessão de foco concluída integralmente com sucesso.");
+                setMascotMessage("Parabéns, nós conseguimos!");
                 sound.playCelebration();
                 try {
                   localStorage.removeItem(STORAGE_KEY);
@@ -898,10 +954,18 @@
               mouth: '',
               bg: 'bg-amber-600',
               anim: 'animate-breathe',
+              balloonAnim: 'anim-balloon-breathe',
               ring: 'ring-amber-500/40'
             };
           case 'furioso':
-            return { eyes: 'ಠ益ಠ', mouth: '▲', bg: 'bg-red-600', anim: 'animate-shake', ring: 'ring-red-600/60' };
+            return {
+              eyes: 'ಠ益ಠ',
+              mouth: '▲',
+              bg: 'bg-red-600',
+              anim: 'animate-shake',
+              balloonAnim: 'anim-balloon-shake',
+              ring: 'ring-red-600/60'
+            };
           case 'comemorando':
             return {
               isWinking: true,
@@ -911,6 +975,7 @@
               bg: 'bg-[#7DD3FC]',
               border: 'border-4 border-sky-400',
               anim: 'animate-victory',
+              balloonAnim: 'anim-balloon-victory',
               ring: 'ring-sky-300/60'
             };
           default:
@@ -922,6 +987,7 @@
               mouthClass: 'text-xl text-amber-900 font-bold',
               bg: 'bg-amber-300',
               anim: 'anim-sleep-box',
+              balloonAnim: 'anim-balloon-sleep',
               ring: 'ring-amber-400/40'
             };
         }
@@ -968,7 +1034,7 @@
 
           {/* Área do Mascote */}
           <div className="flex flex-col items-center justify-center my-4 w-full">
-            <div className="relative z-20 px-5 py-3 mb-5 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm">
+            <div className={`relative z-20 px-5 py-3 mb-6 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm ${visual.balloonAnim}`}>
               <p className="text-sm sm:text-base font-bold text-slate-900">{mascotMessage}</p>
               <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-[#FFFDF7] border-r-2 border-b-2 border-amber-300 rotate-45"></div>
             </div>

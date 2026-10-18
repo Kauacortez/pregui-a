@@ -108,7 +108,7 @@ export const useFocusStore = create<FocusState>()(
         isActive: false,
         isPaused: false,
         mascotMood: 'comemorando',
-        mascotMessage: "Meta atingida! Sessão de foco concluída integralmente com sucesso."
+        mascotMessage: "Parabéns, nós conseguimos!"
       });
     } else {
       const nextTime = timeLeft - 1;

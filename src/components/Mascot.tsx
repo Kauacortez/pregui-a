@@ -79,11 +79,41 @@ export const Mascot: React.FC = () => {
       <AnimatePresence mode="wait">
         <motion.div
           key={mascotMessage}
-          initial={{ opacity: 0, y: 12, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -8, scale: 0.95 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative px-5 py-3 mb-6 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={
+            mascotMood === 'furioso'
+              ? {
+                  opacity: 1,
+                  scale: 1,
+                  x: [-3, 3, -3, 3, 0],
+                  transition: { repeat: Infinity, duration: 0.18 },
+                }
+              : mascotMood === 'focado'
+              ? {
+                  opacity: 1,
+                  scale: 1,
+                  y: [0, -4, 0],
+                  transition: { repeat: Infinity, duration: 2.0, ease: 'easeInOut' },
+                }
+              : mascotMood === 'comemorando'
+              ? {
+                  opacity: 1,
+                  scale: 1,
+                  y: [0, -3.5, 0],
+                  rotate: [-0.75, 0.75, -0.75],
+                  transition: { repeat: Infinity, duration: 0.9, ease: 'easeInOut' },
+                }
+              : mascotMood === 'dormindo'
+              ? {
+                  opacity: 1,
+                  scale: 1,
+                  y: [0, -4, -4, 0],
+                  transition: { repeat: Infinity, duration: 3.4, ease: 'easeInOut' },
+                }
+              : { opacity: 1, y: 0, scale: 1 }
+          }
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="relative px-5 py-3 mb-6 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm will-change-transform"
         >
           <p className="text-sm md:text-base font-bold text-slate-900 leading-snug">
             {mascotMessage}
