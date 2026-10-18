@@ -19,6 +19,7 @@ interface FocusState {
   startSession: (durationInMinutes: number) => void;
   stopSession: () => void;
   resumeSession: () => void;
+  resetTimer: () => void;
   tick: () => void;
   registerBetrayal: () => void;
   resolvePenalty: () => void;
@@ -94,6 +95,18 @@ export const useFocusStore = create<FocusState>()(
       isPenalized: false,
       mascotMood: 'focado',
       mascotMessage: resumeMsg
+    });
+  },
+
+  resetTimer: () => {
+    set({
+      timeLeft: 0,
+      initialDuration: 0,
+      isActive: false,
+      isPaused: false,
+      isPenalized: false,
+      mascotMood: 'dormindo',
+      mascotMessage: "Estou com preguiça…Por que não fazer amanhã?"
     });
   },
 

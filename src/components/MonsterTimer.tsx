@@ -15,6 +15,7 @@ export const MonsterTimer: React.FC = () => {
     startSession,
     stopSession,
     resumeSession,
+    resetTimer,
     tick,
     mascotMood,
   } = useFocusStore();
@@ -63,9 +64,7 @@ export const MonsterTimer: React.FC = () => {
 
   const handleReset = () => {
     soundEffects.playClick();
-    if (isPaused) {
-      useFocusStore.setState({ isPaused: false });
-    }
+    resetTimer();
     setCustomHours(0);
     setCustomMinutes(0);
     setCustomSeconds(0);
