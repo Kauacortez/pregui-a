@@ -93,7 +93,7 @@ export const useFocusStore = create<FocusState>()(
 
       if (initialDuration > 60 && nextTime <= 60) {
         nextMessage = "Falta pouco! Não desista!";
-      } else if (initialDuration > 5 * 60 && nextTime <= Math.floor(initialDuration / 2)) {
+      } else if (initialDuration >= 5 * 60 && nextTime <= Math.ceil(initialDuration / 2)) {
         nextMessage = "Estamos na metade do caminho, força!";
       }
 
@@ -125,7 +125,7 @@ export const useFocusStore = create<FocusState>()(
     let resumeMsg = "Vamos lá, a gente consegue!";
     if (initialDuration > 60 && timeLeft <= 60) {
       resumeMsg = "Falta pouco! Não desista!";
-    } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {
+    } else if (initialDuration >= 5 * 60 && timeLeft <= Math.ceil(initialDuration / 2)) {
       resumeMsg = "Estamos na metade do caminho, força!";
     }
 

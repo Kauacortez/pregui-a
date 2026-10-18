@@ -560,6 +560,11 @@
       const [cheatAttempt, setCheatAttempt] = useState(false);
       
       const titleIntervalRef = useRef(null);
+      const initialDurationRef = useRef(initialDuration);
+
+      useEffect(() => {
+        initialDurationRef.current = initialDuration;
+      }, [initialDuration]);
 
       // Protocolo de Presença: exibido por apenas 7 segundos ao entrar no site
       const [showPresenceProtocol, setShowPresenceProtocol] = useState(true);
@@ -677,9 +682,10 @@
                 return 0;
               }
               const next = prev - 1;
-              if (initialDuration > 60 && next <= 60) {
+              const dur = initialDurationRef.current || initialDuration;
+              if (dur > 60 && next <= 60) {
                 setMascotMessage(m => (m !== "Falta pouco! Não desista!" ? "Falta pouco! Não desista!" : m));
-              } else if (initialDuration > 5 * 60 && next <= Math.floor(initialDuration / 2)) {
+              } else if (dur >= 5 * 60 && next <= Math.ceil(dur / 2)) {
                 setMascotMessage(m => (m !== "Estamos na metade do caminho, força!" ? "Estamos na metade do caminho, força!" : m));
               }
               return next;
@@ -736,6 +742,7 @@
       const startSession = (totalSeconds) => {
         sound.playClick();
         const duration = Math.max(1, totalSeconds);
+        initialDurationRef.current = duration;
         setTimeLeft(duration);
         setInitialDuration(duration);
         setDistractionStrikes(0);
@@ -780,10 +787,11 @@
         setTypedPenalty('');
         setMascotMood('focado');
 
+        const dur = initialDurationRef.current || initialDuration;
         let resumeMsg = "Vamos lá, a gente consegue!";
-        if (initialDuration > 60 && timeLeft <= 60) {
+        if (dur > 60 && timeLeft <= 60) {
           resumeMsg = "Falta pouco! Não desista!";
-        } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {
+        } else if (dur >= 5 * 60 && timeLeft <= Math.ceil(dur / 2)) {
           resumeMsg = "Estamos na metade do caminho, força!";
         }
         setMascotMessage(resumeMsg);
