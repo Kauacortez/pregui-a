@@ -49,7 +49,7 @@ export const useFocusStore = create<FocusState>()(
   initialDuration: 25 * 60,
   distractionStrikes: 0,
   mascotMood: 'dormindo',
-  mascotMessage: "Estou com preguiça... pq não fazer amanhã?",
+  mascotMessage: "Estou com preguiça…Por que não fazer amanhã?",
   distractionsList: ['Instagram', 'TikTok', 'Twitter / X', 'YouTube Shorts', 'Jogos'],
   penaltyChallenge: PENALTY_PHRASES[0],
 
@@ -62,7 +62,7 @@ export const useFocusStore = create<FocusState>()(
       initialDuration: duration,
       distractionStrikes: 0,
       mascotMood: 'focado',
-      mascotMessage: "Vamos lá! a gente consegue!"
+      mascotMessage: "Vamos lá, a gente consegue!"
     });
   },
 
@@ -122,7 +122,7 @@ export const useFocusStore = create<FocusState>()(
 
   resolvePenalty: () => {
     const { timeLeft, initialDuration } = get();
-    let resumeMsg = "Vamos lá! a gente consegue!";
+    let resumeMsg = "Vamos lá, a gente consegue!";
     if (initialDuration > 60 && timeLeft <= 60) {
       resumeMsg = "Falta pouco! Não desista!";
     } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {

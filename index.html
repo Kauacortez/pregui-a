@@ -537,7 +537,7 @@
       const [mascotMessage, setMascotMessage] = useState(
         wasPenalizedOrReloadedDuringSession
           ? "Atenção: Validação de presença obrigatória pendente. Digite a frase para prosseguir."
-          : "Estou com preguiça... pq não fazer amanhã?"
+          : "Estou com preguiça…Por que não fazer amanhã?"
       );
       const initialTotalSecs = saved?.timeLeft ?? 25 * 60;
       const [customHours, setCustomHours] = useState(
@@ -742,7 +742,7 @@
         setIsActive(true);
         setIsPenalized(false);
         setMascotMood('focado');
-        setMascotMessage("Vamos lá! a gente consegue!");
+        setMascotMessage("Vamos lá, a gente consegue!");
       };
 
       const handleStartCurrentSession = () => {
@@ -780,7 +780,7 @@
         setTypedPenalty('');
         setMascotMood('focado');
 
-        let resumeMsg = "Vamos lá! a gente consegue!";
+        let resumeMsg = "Vamos lá, a gente consegue!";
         if (initialDuration > 60 && timeLeft <= 60) {
           resumeMsg = "Falta pouco! Não desista!";
         } else if (initialDuration > 5 * 60 && timeLeft <= Math.floor(initialDuration / 2)) {
