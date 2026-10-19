@@ -24,7 +24,7 @@ const THEME_PRESETS = {
     badge: 'bg-blue-100 text-blue-900 border-blue-300',
     button: 'bg-blue-100/80 hover:bg-blue-200/90 active:bg-blue-300 border-blue-300/90 text-blue-950',
     footerText: 'text-blue-900/70',
-    timerTrack: 'stroke-blue-200/90',
+    timerTrack: 'stroke-blue-300',
     timerProgress: 'stroke-blue-600',
     timerProgressIdle: 'stroke-blue-300',
     timerProgressActive: 'stroke-blue-600',
