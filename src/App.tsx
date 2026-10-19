@@ -5,6 +5,7 @@ import { BlacklistManager } from './components/BlacklistManager';
 import { DistractionDetector } from './components/DistractionDetector';
 import { PenaltyLockScreen } from './components/PenaltyLockScreen';
 import { Bell, BellOff, ShieldAlert } from 'lucide-react';
+import { useFocusStore } from './store/useFocusStore';
 
 // Presets de temas visuais (Azul, Rosa, Amarelo [padrão], Verde, Roxo)
 const THEME_PRESETS = {
@@ -153,6 +154,11 @@ export const App: React.FC = () => {
 
   const currentThemeConfig = THEME_PRESETS[themeColor as keyof typeof THEME_PRESETS] || THEME_PRESETS.amarelo;
 
+  const handleSelectTheme = (newColor: string) => {
+    setThemeColor(newColor);
+    useFocusStore.getState().resetTimer();
+  };
+
   const [showPresenceProtocol, setShowPresenceProtocol] = useState(true);
   const [presenceFading, setPresenceFading] = useState(false);
 
@@ -220,7 +226,7 @@ export const App: React.FC = () => {
           <div className="hidden sm:flex items-center justify-center absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
             <ColorPaletteSelector
               currentTheme={themeColor}
-              onSelectTheme={setThemeColor}
+              onSelectTheme={handleSelectTheme}
             />
           </div>
 
@@ -243,7 +249,7 @@ export const App: React.FC = () => {
         <div className="flex sm:hidden justify-center items-center pb-2.5 pt-0.5 px-4 border-t border-black/5">
           <ColorPaletteSelector
             currentTheme={themeColor}
-            onSelectTheme={setThemeColor}
+            onSelectTheme={handleSelectTheme}
           />
         </div>
       </header>

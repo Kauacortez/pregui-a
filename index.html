@@ -1525,11 +1525,6 @@
         document.body.style.backgroundColor = currentThemeConfig.bg;
       }, [themeColor, currentThemeConfig]);
 
-      const handleSelectTheme = (newColor) => {
-        sound.playClick();
-        setThemeColor(newColor);
-      };
-
       const [isActive, setIsActive] = useState(saved ? Boolean(saved.isActive) : false);
       const [isPaused, setIsPaused] = useState(saved ? Boolean(saved.isPaused) : false);
       const [isPenalized, setIsPenalized] = useState(wasPenalizedOrReloadedDuringSession);
@@ -1792,9 +1787,15 @@
       };
 
       const resetTimer = () => {
+        sound.stopEmergencySiren();
+        if (titleIntervalRef.current) clearInterval(titleIntervalRef.current);
+        document.title = "Modo Foco — Gestão Comportamental Anti-Procrastinação";
         sound.playClick();
         setIsActive(false);
         setIsPaused(false);
+        setIsPenalized(false);
+        setPenaltyTimer(0);
+        setTypedPenalty('');
         setCustomHours(0);
         setCustomMinutes(0);
         setCustomSeconds(0);
@@ -1806,6 +1807,12 @@
         try {
           localStorage.removeItem(STORAGE_KEY);
         } catch(e) {}
+      };
+
+      const handleSelectTheme = (newColor) => {
+        sound.playClick();
+        setThemeColor(newColor);
+        resetTimer();
       };
 
       const startSession = (totalSeconds) => {
