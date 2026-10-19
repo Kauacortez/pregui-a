@@ -85,6 +85,16 @@ export const MonsterTimer: React.FC = () => {
   const isResumable = !isActive && isPaused && timeLeft > 0;
   const currentConfiguredSecs = (customHours * 3600) + (customMinutes * 60) + customSeconds;
 
+  const themeColor = typeof window !== 'undefined' ? (localStorage.getItem('focus_theme_color') || 'amarelo') : 'amarelo';
+  const timerThemeStyles: Record<string, { track: string; idle: string; active: string }> = {
+    azul: { track: 'stroke-blue-400', idle: 'stroke-blue-500', active: 'stroke-[#1E3A8A]' },
+    verde: { track: 'stroke-emerald-400', idle: 'stroke-emerald-500', active: 'stroke-emerald-600' },
+    rosa: { track: 'stroke-pink-200/90', idle: 'stroke-pink-300', active: 'stroke-pink-600' },
+    roxo: { track: 'stroke-purple-200/90', idle: 'stroke-purple-300', active: 'stroke-purple-600' },
+    amarelo: { track: 'stroke-amber-200/90', idle: 'stroke-amber-300', active: 'stroke-amber-600' },
+  };
+  const currentTheme = timerThemeStyles[themeColor] || timerThemeStyles.amarelo;
+
   return (
     <div className="flex flex-col items-center justify-center my-4 w-full">
       {/* Indicador Circular de Progresso com Mascote Orbital */}
@@ -100,7 +110,7 @@ export const MonsterTimer: React.FC = () => {
             cx="80"
             cy="80"
             r="70"
-            className="stroke-amber-200/90"
+            className={currentTheme.track}
             strokeWidth="10"
             fill="transparent"
           />
@@ -109,7 +119,7 @@ export const MonsterTimer: React.FC = () => {
             cy="80"
             r="70"
             className={`transition-all duration-1000 ease-linear ${
-              isActive ? 'stroke-amber-600' : 'stroke-amber-300'
+              isActive ? currentTheme.active : currentTheme.idle
             }`}
             strokeWidth="10"
             strokeDasharray="440"
