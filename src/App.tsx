@@ -84,9 +84,9 @@ const THEME_PRESETS = {
     badge: 'bg-emerald-100 text-emerald-900 border-emerald-300',
     button: 'bg-emerald-100/80 hover:bg-emerald-200/90 active:bg-emerald-300 border-emerald-300/90 text-emerald-950',
     footerText: 'text-emerald-900/70',
-    timerTrack: 'stroke-emerald-200/90',
+    timerTrack: 'stroke-emerald-300',
     timerProgress: 'stroke-emerald-600',
-    timerProgressIdle: 'stroke-emerald-300',
+    timerProgressIdle: 'stroke-emerald-400',
     timerProgressActive: 'stroke-emerald-600',
   },
   roxo: {

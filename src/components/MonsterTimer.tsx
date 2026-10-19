@@ -98,7 +98,7 @@ export const MonsterTimer: React.FC<MonsterTimerProps> = ({ themeConfig }) => {
   const themeColor = typeof window !== 'undefined' ? (localStorage.getItem('focus_theme_color') || 'amarelo') : 'amarelo';
   const timerThemeStyles: Record<string, { track: string; idle: string; active: string }> = {
     azul: { track: 'stroke-blue-300', idle: 'stroke-blue-400', active: 'stroke-blue-600' },
-    verde: { track: 'stroke-emerald-200/90', idle: 'stroke-emerald-300', active: 'stroke-emerald-600' },
+    verde: { track: 'stroke-emerald-300', idle: 'stroke-emerald-400', active: 'stroke-emerald-600' },
     rosa: { track: 'stroke-pink-200/90', idle: 'stroke-pink-300', active: 'stroke-pink-600' },
     roxo: { track: 'stroke-purple-200/90', idle: 'stroke-purple-300', active: 'stroke-purple-600' },
     amarelo: { track: 'stroke-amber-200/90', idle: 'stroke-amber-300', active: 'stroke-amber-600' },
