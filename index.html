@@ -95,6 +95,56 @@
       will-change: transform, opacity;
     }
 
+    /* Animação Orbital do Timer (Baseada no opal.html) */
+    .orbit-svg {
+      overflow: visible;
+      pointer-events: none;
+    }
+    .rotating-group {
+      transform-origin: 170px 170px;
+    }
+    .rotating-group.spinning {
+      animation: orbitSpin var(--orbit-speed, 8s) linear infinite;
+    }
+    .rotating-group.paused {
+      animation-play-state: paused !important;
+    }
+    @keyframes orbitSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    #charPositioner {
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .flight-Physics.smooth {
+      animation: smoothFly 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes smoothFly {
+      0% { transform: translate(0px, -4px) rotate(-4deg) scale(1.03, 0.97); }
+      100% { transform: translate(2px, 4px) rotate(4deg) scale(0.97, 1.03); }
+    }
+    .trail-pulse {
+      animation: trailWave 0.3s steps(2) infinite;
+    }
+    @keyframes trailWave {
+      0% { stroke-dashoffset: 0; opacity: 0.95; }
+      100% { stroke-dashoffset: 8; opacity: 0.75; }
+    }
+    .sparkle-move {
+      animation: sparklePop 0.5s steps(3) infinite;
+    }
+    .sparkle-move.d1 { animation-delay: 0.15s; }
+    .sparkle-move.d2 { animation-delay: 0.3s; }
+    @keyframes sparklePop {
+      0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
+      50% { transform: translate(-6px, 3px) scale(0.8); opacity: 0.7; }
+      100% { transform: translate(-12px, 7px) scale(0.4); opacity: 0; }
+    }
+    .pixelated {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
     /* Animações da Piscadinha e Piscar do Kaomoji de Celebração */
     @keyframes rightEyeOpen {
       0%, 35%, 55%, 75%, 90%, 100% { opacity: 1; transform: scaleY(1); }
@@ -329,6 +379,25 @@
       ChevronDown: (props) => (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
           <polyline points="6 9 12 15 18 9" />
+        </svg>
+      ),
+      Sliders: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <line x1="4" y1="21" x2="4" y2="14" />
+          <line x1="4" y1="10" x2="4" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12" y2="3" />
+          <line x1="20" y1="21" x2="20" y2="16" />
+          <line x1="20" y1="12" x2="20" y2="3" />
+          <line x1="1" y1="14" x2="7" y2="14" />
+          <line x1="9" y1="8" x2="15" y2="8" />
+          <line x1="17" y1="16" x2="23" y2="16" />
+        </svg>
+      ),
+      X: (props) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       ),
     };
@@ -576,6 +645,444 @@
     }
 
     // ─────────────────────────────────────────────────────────────
+    // Configurações e Componentes da Animação Orbital do Timer (opal.html)
+    // ─────────────────────────────────────────────────────────────
+    const ORBIT_SETTINGS_KEY = 'modo_foco_orbit_settings_v1';
+    const DEFAULT_ORBIT_SETTINGS = {
+      enabled: true,
+      speed: 8,
+      scale: 0.9,
+      angle: 0,
+      showTrail: true,
+      customImg1: null,
+      customImg2: null,
+      customImg3: null
+    };
+
+    const loadOrbitSettings = () => {
+      try {
+        const raw = localStorage.getItem(ORBIT_SETTINGS_KEY);
+        if (!raw) return DEFAULT_ORBIT_SETTINGS;
+        return { ...DEFAULT_ORBIT_SETTINGS, ...JSON.parse(raw) };
+      } catch (e) {
+        return DEFAULT_ORBIT_SETTINGS;
+      }
+    };
+
+    function TimerOrbitAnimation({ orbitAnimState, isActive, isPaused, settings }) {
+      if (!settings || settings.enabled === false) return null;
+
+      const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
+      const isPausedState = isPaused;
+
+      return (
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+          style={{ '--orbit-speed': `${settings.speed || 8}s` }}
+        >
+          <svg 
+            className="orbit-svg pixelated" 
+            viewBox="0 0 340 340" 
+            style={{ width: '305px', height: '305px' }}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g className={`rotating-group ${isSpinning ? 'spinning' : ''} ${isPausedState ? 'paused' : ''}`}>
+              
+              {/* RASTRO E BRILHOS (Visíveis no Estado 3 quando ativado) */}
+              <g 
+                style={{ 
+                  opacity: orbitAnimState === 3 && settings.showTrail !== false ? 1 : 0, 
+                  transition: 'opacity 0.3s ease' 
+                }}
+              >
+                <g>
+                  <path 
+                    className="trail-pulse" 
+                    d="M 55.6 194.3 A 117 117 0 0 1 75.3 101.2" 
+                    fill="none" 
+                    stroke="#FFF0B3" 
+                    strokeWidth="6" 
+                    strokeDasharray="10 4" 
+                    opacity="0.65"
+                  />
+                  <path 
+                    className="trail-pulse" 
+                    d="M 71.2 107.4 A 117 117 0 0 1 124.3 62.3" 
+                    fill="none" 
+                    stroke="#FFD27F" 
+                    strokeWidth="12" 
+                    strokeDasharray="16 2" 
+                    opacity="0.9"
+                  />
+                  <path 
+                    d="M 119.5 64.5 A 117 117 0 0 1 170 53" 
+                    fill="none" 
+                    stroke="#FFB84D" 
+                    strokeWidth="18" 
+                  />
+                  <path 
+                    d="M 95.0 82.0 A 117 117 0 0 1 168 53" 
+                    fill="none" 
+                    stroke="#FFA057" 
+                    strokeWidth="8" 
+                    strokeDasharray="12 4" 
+                  />
+                  <rect className="sparkle-move" x="54" y="180" width="6" height="6" fill="#FFF0B3" />
+                  <rect className="sparkle-move d1" x="62" y="196" width="5" height="5" fill="#FFD27F" />
+                  <rect className="sparkle-move d2" x="58" y="155" width="7" height="7" fill="#FFB84D" />
+                </g>
+
+                <g>
+                  <g transform="translate(142, 55)">
+                    <g className="sparkle-move">
+                      <rect x="3" y="0" width="3" height="9" fill="#FFFFFF"/>
+                      <rect x="0" y="3" width="9" height="3" fill="#FFFFFF"/>
+                    </g>
+                  </g>
+                  <g transform="translate(106, 75)">
+                    <g className="sparkle-move d1">
+                      <rect x="3" y="0" width="3" height="9" fill="#FFFFFF"/>
+                      <rect x="0" y="3" width="9" height="3" fill="#FFFFFF"/>
+                    </g>
+                  </g>
+                  <g transform="translate(76, 115)">
+                    <g className="sparkle-move d2">
+                      <rect x="2" y="0" width="2" height="6" fill="#FFFFFF"/>
+                      <rect x="0" y="2" width="6" height="2" fill="#FFFFFF"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+
+              {/* POSICIONADOR DA PERSONAGEM */}
+              <g 
+                id="charPositioner" 
+                transform="translate(170, 53)"
+              >
+                <g 
+                  id="charWrapper" 
+                  transform={`rotate(${settings.angle || 0}) scale(${settings.scale || 0.9})`}
+                >
+                  <g className="flight-Physics smooth">
+
+                    {/* SPRITE 1: NORMAL / PARADA */}
+                    <g className="sprite-frame" style={{ display: orbitAnimState === 1 ? 'block' : 'none' }}>
+                      {settings.customImg1 ? (
+                        <image href={settings.customImg1} x="-34" y="-34" width="68" height="68" className="pixelated" />
+                      ) : (
+                        <g className="fallback-group" transform="translate(-28, -28) scale(3.5)">
+                          <path d="M1 2h4v4H1zM11 2h4v4h-4z" fill="#6e4e43"/>
+                          <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
+                          <path d="M4 2h8v2H4zM3 4h1v5H3zM12 4h1v5h-1zM4 10h8v1H4z" fill="#231123"/>
+                          <rect x="4" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="9" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="5" y="6" width="1" height="1" fill="#ffffff"/>
+                          <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+                          <rect x="6" y="11" width="4" height="2" fill="#e5b55f"/>
+                          <rect x="4" y="11" width="2" height="2" fill="#e6c3a1"/>
+                          <rect x="10" y="11" width="2" height="2" fill="#e6c3a1"/>
+                          <rect x="6" y="13" width="4" height="2" fill="#231123"/>
+                        </g>
+                      )}
+                    </g>
+
+                    {/* SPRITE 2: INDO AO CÍRCULO (IMPULSO / DECOLAGEM) */}
+                    <g className="sprite-frame" style={{ display: orbitAnimState === 2 ? 'block' : 'none' }}>
+                      {settings.customImg2 ? (
+                        <image href={settings.customImg2} x="-36" y="-34" width="72" height="68" className="pixelated" />
+                      ) : (
+                        <g className="fallback-group" transform="translate(-28, -28) rotate(25 8 8) scale(3.5)">
+                          <path d="M0 3h4v4H0zM10 1h4v4h-4z" fill="#6e4e43"/>
+                          <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
+                          <path d="M4 2h8v2H4zM4 10h8v1H4z" fill="#231123"/>
+                          <rect x="5" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="10" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="6" y="5" width="1" height="1" fill="#ffffff"/>
+                          <rect x="11" y="5" width="1" height="1" fill="#ffffff"/>
+                          <rect x="5" y="11" width="4" height="2" fill="#e5b55f"/>
+                          <rect x="9" y="10" width="3" height="2" fill="#e6c3a1"/>
+                          <rect x="4" y="13" width="3" height="2" fill="#231123"/>
+                        </g>
+                      )}
+                    </g>
+
+                    {/* SPRITE 3: VOO DO SUPERMAN GIRANDO NO CÍRCULO */}
+                    <g className="sprite-frame" style={{ display: orbitAnimState === 3 ? 'block' : 'none' }}>
+                      {settings.customImg3 ? (
+                        <g>
+                          <image 
+                            href={settings.customImg3} 
+                            x="-44" 
+                            y="-32" 
+                            width="74" 
+                            height="64" 
+                            className="pixelated" 
+                            style={{ opacity: 0.4, filter: 'sepia(1) saturate(5)' }} 
+                          />
+                          <image 
+                            href={settings.customImg3} 
+                            x="-34" 
+                            y="-34" 
+                            width="74" 
+                            height="64" 
+                            className="pixelated" 
+                          />
+                        </g>
+                      ) : (
+                        <g className="fallback-group" transform="translate(-32, -26) scale(3.5)">
+                          <rect x="1" y="8" width="3" height="2" fill="#ffffff"/>
+                          <rect x="3" y="8" width="3" height="3" fill="#231123"/>
+                          <rect x="5" y="7" width="4" height="3" fill="#e5b55f"/>
+                          <path d="M3 1h4v4H3zM11 0h4v4h-4z" fill="#6e4e43"/>
+                          <path d="M7 3h8v7H7z" fill="#e6c3a1"/>
+                          <path d="M7 2h8v2H7zM6 4h1v5H6zM15 4h1v5h-1zM7 10h8v1H7z" fill="#231123"/>
+                          <rect x="9" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="13" y="5" width="3" height="4" fill="#131626"/>
+                          <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+                          <rect x="14" y="6" width="1" height="1" fill="#ffffff"/>
+                          <rect x="14" y="9" width="4" height="2" fill="#e6c3a1"/>
+                          <rect x="14" y="8" width="4" height="1" fill="#231123"/>
+                        </g>
+                      )}
+                    </g>
+
+                  </g>
+                </g>
+              </g>
+
+            </g>
+          </svg>
+        </div>
+      );
+    }
+
+    function OrbitSettingsModal({ isOpen, onClose, settings, onUpdateSettings, onTriggerTestSequence }) {
+      if (!isOpen) return null;
+
+      const fileInputRef = useRef(null);
+
+      const handleImageUpload = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            const customImg1 = img.src;
+
+            // Frame 2: Dash de impulso
+            const canvas2 = document.createElement('canvas');
+            canvas2.width = 128;
+            canvas2.height = 128;
+            const ctx2 = canvas2.getContext('2d');
+            ctx2.imageSmoothingEnabled = false;
+            ctx2.translate(64, 64);
+            ctx2.rotate((22 * Math.PI) / 180);
+            ctx2.scale(0.92, 1.08);
+            ctx2.drawImage(img, -54, -54, 108, 108);
+            const customImg2 = canvas2.toDataURL();
+
+            // Frame 3: Voo Superman horizontal
+            const canvas3 = document.createElement('canvas');
+            canvas3.width = 128;
+            canvas3.height = 128;
+            const ctx3 = canvas3.getContext('2d');
+            ctx3.imageSmoothingEnabled = false;
+            ctx3.translate(64, 64);
+            ctx3.rotate((55 * Math.PI) / 180);
+            ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0);
+            ctx3.drawImage(img, -54, -54, 108, 108);
+            const customImg3 = canvas3.toDataURL();
+
+            onUpdateSettings({
+              ...settings,
+              customImg1,
+              customImg2,
+              customImg3
+            });
+            onTriggerTestSequence();
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const handleResetSprites = () => {
+        onUpdateSettings({
+          ...settings,
+          customImg1: null,
+          customImg2: null,
+          customImg3: null
+        });
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#FFFDF7] border-2 border-amber-300 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-amber-200">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-700">
+                  <Icons.Sliders className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">Ajustes da Animação</h3>
+                  <p className="text-[11px] text-amber-900/70 font-medium">Controle do personagem orbital do cronômetro</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-8 h-8 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 flex items-center justify-center transition-colors"
+                title="Fechar"
+              >
+                <Icons.X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-4 text-xs">
+              {/* Botão de Teste Rápido */}
+              <button
+                type="button"
+                onClick={onTriggerTestSequence}
+                className="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-98"
+              >
+                <Icons.Play className="w-4 h-4 fill-current" />
+                <span>Testar Sequência (1 ➔ 2 ➔ 3)</span>
+              </button>
+
+              {/* Ativar / Desativar */}
+              <label className="flex items-center justify-between p-3 bg-amber-50/70 border border-amber-200 rounded-xl cursor-pointer">
+                <div>
+                  <span className="font-bold text-slate-900 block">Ativar Personagem Orbital</span>
+                  <span className="text-[11px] text-amber-900/70">Exibir mascote orbitando o círculo do timer</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.enabled !== false}
+                  onChange={(e) => onUpdateSettings({ ...settings, enabled: e.target.checked })}
+                  className="w-4 h-4 accent-amber-600 cursor-pointer"
+                />
+              </label>
+
+              {/* Velocidade do Giro */}
+              <div className="p-3 bg-white border border-amber-200 rounded-xl flex flex-col gap-1.5">
+                <div className="flex justify-between items-center font-bold text-slate-900">
+                  <span>Velocidade da Órbita:</span>
+                  <span className="font-mono text-amber-700">{settings.speed}s / volta</span>
+                </div>
+                <input
+                  type="range"
+                  min="2"
+                  max="16"
+                  step="0.5"
+                  value={settings.speed}
+                  onChange={(e) => onUpdateSettings({ ...settings, speed: parseFloat(e.target.value) })}
+                  className="w-full accent-amber-600 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-amber-900/60 font-semibold">
+                  <span>Mais rápido (2s)</span>
+                  <span>Mais lento (16s)</span>
+                </div>
+              </div>
+
+              {/* Tamanho da Personagem */}
+              <div className="p-3 bg-white border border-amber-200 rounded-xl flex flex-col gap-1.5">
+                <div className="flex justify-between items-center font-bold text-slate-900">
+                  <span>Tamanho da Personagem:</span>
+                  <span className="font-mono text-amber-700">{settings.scale}x</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.6"
+                  max="1.6"
+                  step="0.05"
+                  value={settings.scale}
+                  onChange={(e) => onUpdateSettings({ ...settings, scale: parseFloat(e.target.value) })}
+                  className="w-full accent-amber-600 cursor-pointer"
+                />
+              </div>
+
+              {/* Ângulo de Inclinação */}
+              <div className="p-3 bg-white border border-amber-200 rounded-xl flex flex-col gap-1.5">
+                <div className="flex justify-between items-center font-bold text-slate-900">
+                  <span>Ângulo de Voo:</span>
+                  <span className="font-mono text-amber-700">{settings.angle}°</span>
+                </div>
+                <input
+                  type="range"
+                  min="-90"
+                  max="90"
+                  step="5"
+                  value={settings.angle}
+                  onChange={(e) => onUpdateSettings({ ...settings, angle: parseInt(e.target.value, 10) })}
+                  className="w-full accent-amber-600 cursor-pointer"
+                />
+              </div>
+
+              {/* Rastro e Faíscas */}
+              <label className="flex items-center justify-between p-3 bg-amber-50/70 border border-amber-200 rounded-xl cursor-pointer">
+                <div>
+                  <span className="font-bold text-slate-900 block">Rastro Dourado e Faíscas</span>
+                  <span className="text-[11px] text-amber-900/70">Efeito de propulsão durante o voo</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.showTrail !== false}
+                  onChange={(e) => onUpdateSettings({ ...settings, showTrail: e.target.checked })}
+                  className="w-4 h-4 accent-amber-600 cursor-pointer"
+                />
+              </label>
+
+              {/* Personalizar Sprite / Imagem */}
+              <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-col gap-2">
+                <span className="font-bold text-slate-900">Personalizar Sprite (Gerador Automático)</span>
+                <p className="text-[11px] text-amber-900/70">
+                  Envie qualquer imagem PNG/pixel art para converter automaticamente nas 3 poses de voo!
+                </p>
+                <div className="flex gap-2 mt-1">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                    className="flex-1 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold text-xs transition-colors shadow-sm"
+                  >
+                    Carregar Imagem...
+                  </button>
+                  {settings.customImg1 && (
+                    <button
+                      type="button"
+                      onClick={handleResetSprites}
+                      className="px-3 py-2 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-lg font-semibold text-xs transition-colors"
+                      title="Voltar ao sprite pixel art padrão"
+                    >
+                      Padrão
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Botão Fechar / Concluir */}
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold mt-2 transition-colors"
+              >
+                Concluir
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ─────────────────────────────────────────────────────────────
     // Componente Principal: App
     // ─────────────────────────────────────────────────────────────
     function App() {
@@ -621,6 +1128,38 @@
       const [typedPenalty, setTypedPenalty] = useState('');
       const [penaltyTimer, setPenaltyTimer] = useState(saved?.isPenalized ? (saved?.penaltyTimer ?? 0) : 0);
       const [cheatAttempt, setCheatAttempt] = useState(false);
+
+      const [orbitSettings, setOrbitSettings] = useState(loadOrbitSettings);
+      const [showOrbitModal, setShowOrbitModal] = useState(false);
+      const [orbitAnimState, setOrbitAnimState] = useState(saved?.isActive ? 3 : 1);
+
+      const handleUpdateOrbitSettings = (newSettings) => {
+        setOrbitSettings(newSettings);
+        try {
+          localStorage.setItem(ORBIT_SETTINGS_KEY, JSON.stringify(newSettings));
+        } catch (e) {}
+      };
+
+      const triggerOrbitTestSequence = () => {
+        setOrbitAnimState(1);
+        setTimeout(() => {
+          setOrbitAnimState(2);
+        }, 650);
+        setTimeout(() => {
+          setOrbitAnimState(3);
+        }, 1150);
+      };
+
+      useEffect(() => {
+        window.__orbit = {
+          getState: () => ({ orbitAnimState, orbitSettings, isActive, isPaused }),
+          setOrbitAnimState,
+          openModal: () => setShowOrbitModal(true),
+          closeModal: () => setShowOrbitModal(false),
+          triggerTestSequence: triggerOrbitTestSequence,
+          updateSettings: handleUpdateOrbitSettings
+        };
+      }, [orbitAnimState, orbitSettings, isActive, isPaused]);
       
       const titleIntervalRef = useRef(null);
       const initialDurationRef = useRef(initialDuration);
@@ -741,6 +1280,7 @@
                 setMascotMood('comemorando');
                 setMascotMessage("Parabéns, nós conseguimos!");
                 sound.playCelebration();
+                setOrbitAnimState(1);
                 try {
                   localStorage.removeItem(STORAGE_KEY);
                 } catch(e) {}
@@ -807,6 +1347,7 @@
         setInitialDuration(0);
         setMascotMood('dormindo');
         setMascotMessage("Estou com preguiça…Por que não fazer amanhã?");
+        setOrbitAnimState(1);
         try {
           localStorage.removeItem(STORAGE_KEY);
         } catch(e) {}
@@ -824,6 +1365,15 @@
         setIsPenalized(false);
         setMascotMood('focado');
         setMascotMessage("Vamos lá, a gente consegue!");
+
+        // Sequência de ativação orbital: 1 (Normal) -> 2 (Impulso) -> 3 (Voo Superman)
+        setOrbitAnimState(1);
+        setTimeout(() => {
+          setOrbitAnimState(2);
+        }, 650);
+        setTimeout(() => {
+          setOrbitAnimState(3);
+        }, 1150);
       };
 
       const resumeSession = () => {
@@ -832,6 +1382,9 @@
         setIsPaused(false);
         setIsPenalized(false);
         setMascotMood('focado');
+        if (orbitAnimState !== 3) {
+          setOrbitAnimState(3);
+        }
 
         const dur = initialDurationRef.current || initialDuration;
         let resumeMsg = "Vamos lá, a gente consegue!";
@@ -1013,15 +1566,26 @@
                 <p className="text-xs text-amber-900/70 font-medium">Vigilância Comportamental de Produtividade</p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                if ('Notification' in window) Notification.requestPermission();
-              }}
-              className="text-xs bg-amber-100/70 hover:bg-amber-200/80 border border-amber-300/80 px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-colors"
-            >
-              <Icons.Bell className="w-3.5 h-3.5 text-amber-700" />
-              <span>Notificações</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowOrbitModal(true)}
+                className="text-xs bg-amber-100/70 hover:bg-amber-200/80 active:bg-amber-300 border border-amber-300/80 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                title="Configurações da animação do cronômetro"
+              >
+                <Icons.Sliders className="w-3.5 h-3.5 text-amber-700" />
+                <span>Animação</span>
+              </button>
+              <button
+                onClick={() => {
+                  if ('Notification' in window) Notification.requestPermission();
+                }}
+                className="text-xs bg-amber-100/70 hover:bg-amber-200/80 border border-amber-300/80 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <Icons.Bell className="w-3.5 h-3.5 text-amber-700" />
+                <span className="hidden sm:inline">Notificações</span>
+              </button>
+            </div>
           </header>
 
           {/* Dica da Sentinela: Protocolo de Presença exibido por 5 segundos ao entrar */}
@@ -1125,8 +1689,14 @@
             )}
           </div>
 
-          {/* Cronômetro Circular */}
+          {/* Cronômetro Circular com Animação Orbital do Personagem */}
           <div className="relative flex items-center justify-center w-60 h-60 my-2">
+            <TimerOrbitAnimation
+              orbitAnimState={orbitAnimState}
+              isActive={isActive}
+              isPaused={isPaused}
+              settings={orbitSettings}
+            />
             <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
               <circle cx="80" cy="80" r="70" className="stroke-amber-200/90" strokeWidth="10" fill="transparent" />
               <circle
@@ -1419,6 +1989,15 @@
               </div>
             </div>
           )}
+
+          {/* Modal de Configurações da Animação Orbital (opal.html) */}
+          <OrbitSettingsModal
+            isOpen={showOrbitModal}
+            onClose={() => setShowOrbitModal(false)}
+            settings={orbitSettings}
+            onUpdateSettings={handleUpdateOrbitSettings}
+            onTriggerTestSequence={triggerOrbitTestSequence}
+          />
 
           <footer className="w-full text-center border-t border-amber-200/90 pt-4 text-[11px] text-amber-900/70 mt-6 font-medium">
             Sessão monitorada por presença de aba. Continuidade garante o resultado.

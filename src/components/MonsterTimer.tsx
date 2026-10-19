@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFocusStore } from '../store/useFocusStore';
 import { soundEffects } from '../utils/soundEffects';
+import { OrbitTimerAnimation, loadOrbitSettings } from './OrbitTimerAnimation';
 
 export const MonsterTimer: React.FC = () => {
   const [customHours, setCustomHours] = useState(0);
@@ -86,8 +87,14 @@ export const MonsterTimer: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center my-4 w-full">
-      {/* Indicador Circular de Progresso */}
+      {/* Indicador Circular de Progresso com Mascote Orbital */}
       <div className="relative flex items-center justify-center w-64 h-64">
+        <OrbitTimerAnimation
+          orbitAnimState={isActive ? 3 : 1}
+          isActive={isActive}
+          isPaused={isPaused}
+          settings={loadOrbitSettings()}
+        />
         <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
           <circle
             cx="80"
