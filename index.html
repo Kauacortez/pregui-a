@@ -669,16 +669,51 @@
     };
 
     const processSpriteImage = (img) => {
-      const isHorizontalStrip = img.naturalWidth >= img.naturalHeight * 2.2;
-      if (isHorizontalStrip) {
-        // Folha de 3 sprites horizontais (Frame 1 Normal | Frame 2 Impulso | Frame 3 Voo)
-        const frameW = img.naturalWidth / 3;
-        const frameH = img.naturalHeight;
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      const ratio = w / h;
+
+      // 1. Grade 4x3 (como a folha oficial de 12 frames da personagem padrão: 4 colunas x 3 linhas)
+      if (Math.abs(ratio - 4/3) < 0.15 || (w % 4 === 0 && h % 3 === 0 && ratio > 1.1 && ratio < 1.7)) {
+        const frameW = w / 4;
+        const frameH = h / 3;
+
+        // Frame 1: Normal em pé (Linha 0, Coluna 0)
+        const c1 = document.createElement('canvas');
+        c1.width = frameW; c1.height = frameH;
+        const ctx1 = c1.getContext('2d');
+        ctx1.imageSmoothingEnabled = false;
+        ctx1.drawImage(img, 0, 0, frameW, frameH, 0, 0, frameW, frameH);
+
+        // Frame 2: Impulso / Arrancada decolando (Linha 1, Coluna 3)
+        const c2 = document.createElement('canvas');
+        c2.width = frameW; c2.height = frameH;
+        const ctx2 = c2.getContext('2d');
+        ctx2.imageSmoothingEnabled = false;
+        ctx2.drawImage(img, 3 * frameW, 1 * frameH, frameW, frameH, 0, 0, frameW, frameH);
+
+        // Frame 3: Voo Superman horizontal no círculo (Linha 2, Coluna 0)
+        const c3 = document.createElement('canvas');
+        c3.width = frameW; c3.height = frameH;
+        const ctx3 = c3.getContext('2d');
+        ctx3.imageSmoothingEnabled = false;
+        ctx3.drawImage(img, 0, 2 * frameH, frameW, frameH, 0, 0, frameW, frameH);
+
+        return {
+          customImg1: c1.toDataURL(),
+          customImg2: c2.toDataURL(),
+          customImg3: c3.toDataURL()
+        };
+      }
+
+      // 2. Faixa horizontal 3x1 (3 quadros lado a lado)
+      if (ratio >= 2.2) {
+        const frameW = w / 3;
+        const frameH = h;
         const frames = [];
         for (let i = 0; i < 3; i++) {
           const canvas = document.createElement('canvas');
-          canvas.width = frameW;
-          canvas.height = frameH;
+          canvas.width = frameW; canvas.height = frameH;
           const ctx = canvas.getContext('2d');
           ctx.imageSmoothingEnabled = false;
           ctx.drawImage(img, i * frameW, 0, frameW, frameH, 0, 0, frameW, frameH);
@@ -689,36 +724,34 @@
           customImg2: frames[1],
           customImg3: frames[2]
         };
-      } else {
-        // Sprite individual: gera proceduralmente as 3 poses de voo
-        const canvas2 = document.createElement('canvas');
-        canvas2.width = 128;
-        canvas2.height = 128;
-        const ctx2 = canvas2.getContext('2d');
-        ctx2.imageSmoothingEnabled = false;
-        ctx2.translate(64, 64);
-        ctx2.rotate((22 * Math.PI) / 180);
-        ctx2.scale(0.92, 1.08);
-        ctx2.drawImage(img, -54, -54, 108, 108);
-        const customImg2 = canvas2.toDataURL();
-
-        const canvas3 = document.createElement('canvas');
-        canvas3.width = 128;
-        canvas3.height = 128;
-        const ctx3 = canvas3.getContext('2d');
-        ctx3.imageSmoothingEnabled = false;
-        ctx3.translate(64, 64);
-        ctx3.rotate((55 * Math.PI) / 180);
-        ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0);
-        ctx3.drawImage(img, -54, -54, 108, 108);
-        const customImg3 = canvas3.toDataURL();
-
-        return {
-          customImg1: img.src,
-          customImg2,
-          customImg3
-        };
       }
+
+      // 3. Imagem única: gera proceduralmente as 3 poses de voo
+      const canvas2 = document.createElement('canvas');
+      canvas2.width = 128; canvas2.height = 128;
+      const ctx2 = canvas2.getContext('2d');
+      ctx2.imageSmoothingEnabled = false;
+      ctx2.translate(64, 64);
+      ctx2.rotate((22 * Math.PI) / 180);
+      ctx2.scale(0.92, 1.08);
+      ctx2.drawImage(img, -54, -54, 108, 108);
+      const customImg2 = canvas2.toDataURL();
+
+      const canvas3 = document.createElement('canvas');
+      canvas3.width = 128; canvas3.height = 128;
+      const ctx3 = canvas3.getContext('2d');
+      ctx3.imageSmoothingEnabled = false;
+      ctx3.translate(64, 64);
+      ctx3.rotate((55 * Math.PI) / 180);
+      ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0);
+      ctx3.drawImage(img, -54, -54, 108, 108);
+      const customImg3 = canvas3.toDataURL();
+
+      return {
+        customImg1: img.src,
+        customImg2,
+        customImg3
+      };
     };
 
     const loadCharacterFromDisk = (charId, callback) => {
