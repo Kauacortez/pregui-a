@@ -649,7 +649,8 @@
     // ─────────────────────────────────────────────────────────────
     const ORBIT_SETTINGS_KEY = 'modo_foco_orbit_settings_v1';
     const CHARACTERS_LIST = [
-      { id: 'personagem-1-padrao', name: 'Personagem 1 (Padrão)', folder: 'assets/characters/personagem-1-padrao' },
+      { id: 'personagem-1-padrao', name: 'Personagem 1 (Amarela / Padrão)', folder: 'assets/characters/personagem-1-padrao' },
+      { id: 'personagem-azul', name: 'Personagem Azul (Tema Azul)', folder: 'assets/characters/personagem-azul' },
       { id: 'personagem-2', name: 'Personagem 2', folder: 'assets/characters/personagem-2' },
       { id: 'personagem-3', name: 'Personagem 3', folder: 'assets/characters/personagem-3' },
       { id: 'personagem-4', name: 'Personagem 4', folder: 'assets/characters/personagem-4' },
@@ -791,11 +792,12 @@
       }
     };
 
-    function TimerOrbitAnimation({ orbitAnimState, isActive, isPaused, settings }) {
+    function TimerOrbitAnimation({ orbitAnimState, isActive, isPaused, settings, themeColor }) {
       if (!settings || settings.enabled === false) return null;
 
       const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
       const isPausedState = isPaused;
+      const isBlueTheme = themeColor === 'azul';
 
       return (
         <div 
@@ -822,7 +824,7 @@
                     className="trail-pulse" 
                     d="M 55.6 194.3 A 117 117 0 0 1 75.3 101.2" 
                     fill="none" 
-                    stroke="#FFF0B3" 
+                    stroke={isBlueTheme ? "#DBEAFE" : "#FFF0B3"} 
                     strokeWidth="6" 
                     strokeDasharray="10 4" 
                     opacity="0.65"
@@ -831,7 +833,7 @@
                     className="trail-pulse" 
                     d="M 71.2 107.4 A 117 117 0 0 1 124.3 62.3" 
                     fill="none" 
-                    stroke="#FFD27F" 
+                    stroke={isBlueTheme ? "#93C5FD" : "#FFD27F"} 
                     strokeWidth="12" 
                     strokeDasharray="16 2" 
                     opacity="0.9"
@@ -839,19 +841,19 @@
                   <path 
                     d="M 119.5 64.5 A 117 117 0 0 1 170 53" 
                     fill="none" 
-                    stroke="#FFB84D" 
+                    stroke={isBlueTheme ? "#60A5FA" : "#FFB84D"} 
                     strokeWidth="18" 
                   />
                   <path 
                     d="M 95.0 82.0 A 117 117 0 0 1 168 53" 
                     fill="none" 
-                    stroke="#FFA057" 
+                    stroke={isBlueTheme ? "#3B82F6" : "#FFA057"} 
                     strokeWidth="8" 
                     strokeDasharray="12 4" 
                   />
-                  <rect className="sparkle-move" x="54" y="180" width="6" height="6" fill="#FFF0B3" />
-                  <rect className="sparkle-move d1" x="62" y="196" width="5" height="5" fill="#FFD27F" />
-                  <rect className="sparkle-move d2" x="58" y="155" width="7" height="7" fill="#FFB84D" />
+                  <rect className="sparkle-move" x="54" y="180" width="6" height="6" fill={isBlueTheme ? "#DBEAFE" : "#FFF0B3"} />
+                  <rect className="sparkle-move d1" x="62" y="196" width="5" height="5" fill={isBlueTheme ? "#93C5FD" : "#FFD27F"} />
+                  <rect className="sparkle-move d2" x="58" y="155" width="7" height="7" fill={isBlueTheme ? "#60A5FA" : "#FFB84D"} />
                 </g>
 
                 <g>
@@ -892,19 +894,7 @@
                       {settings.customImg1 ? (
                         <image href={settings.customImg1} x="-34" y="-34" width="68" height="68" className="pixelated" />
                       ) : (
-                        <g className="fallback-group" transform="translate(-28, -28) scale(3.5)">
-                          <path d="M1 2h4v4H1zM11 2h4v4h-4z" fill="#6e4e43"/>
-                          <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
-                          <path d="M4 2h8v2H4zM3 4h1v5H3zM12 4h1v5h-1zM4 10h8v1H4z" fill="#231123"/>
-                          <rect x="4" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="9" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="5" y="6" width="1" height="1" fill="#ffffff"/>
-                          <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
-                          <rect x="6" y="11" width="4" height="2" fill="#e5b55f"/>
-                          <rect x="4" y="11" width="2" height="2" fill="#e6c3a1"/>
-                          <rect x="10" y="11" width="2" height="2" fill="#e6c3a1"/>
-                          <rect x="6" y="13" width="4" height="2" fill="#231123"/>
-                        </g>
+                        <image href={isBlueTheme ? "./assets/characters/personagem-azul/frame1-normal.png" : "./assets/characters/personagem-1-padrao/frame1-normal.png"} x="-34" y="-34" width="68" height="68" className="pixelated" />
                       )}
                     </g>
 
@@ -913,18 +903,7 @@
                       {settings.customImg2 ? (
                         <image href={settings.customImg2} x="-36" y="-34" width="72" height="68" className="pixelated" />
                       ) : (
-                        <g className="fallback-group" transform="translate(-28, -28) rotate(25 8 8) scale(3.5)">
-                          <path d="M0 3h4v4H0zM10 1h4v4h-4z" fill="#6e4e43"/>
-                          <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
-                          <path d="M4 2h8v2H4zM4 10h8v1H4z" fill="#231123"/>
-                          <rect x="5" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="10" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="6" y="5" width="1" height="1" fill="#ffffff"/>
-                          <rect x="11" y="5" width="1" height="1" fill="#ffffff"/>
-                          <rect x="5" y="11" width="4" height="2" fill="#e5b55f"/>
-                          <rect x="9" y="10" width="3" height="2" fill="#e6c3a1"/>
-                          <rect x="4" y="13" width="3" height="2" fill="#231123"/>
-                        </g>
+                        <image href={isBlueTheme ? "./assets/characters/personagem-azul/frame2-impulso.png" : "./assets/characters/personagem-1-padrao/frame2-impulso.png"} x="-36" y="-34" width="72" height="68" className="pixelated" />
                       )}
                     </g>
 
@@ -939,7 +918,7 @@
                             width="74" 
                             height="64" 
                             className="pixelated" 
-                            style={{ opacity: 0.4, filter: 'sepia(1) saturate(5)' }} 
+                            style={{ opacity: 0.4, filter: isBlueTheme ? 'drop-shadow(-4px 0 6px #60A5FA)' : 'sepia(1) saturate(5)' }} 
                           />
                           <image 
                             href={settings.customImg3} 
@@ -951,19 +930,24 @@
                           />
                         </g>
                       ) : (
-                        <g className="fallback-group" transform="translate(-32, -26) scale(3.5)">
-                          <rect x="1" y="8" width="3" height="2" fill="#ffffff"/>
-                          <rect x="3" y="8" width="3" height="3" fill="#231123"/>
-                          <rect x="5" y="7" width="4" height="3" fill="#e5b55f"/>
-                          <path d="M3 1h4v4H3zM11 0h4v4h-4z" fill="#6e4e43"/>
-                          <path d="M7 3h8v7H7z" fill="#e6c3a1"/>
-                          <path d="M7 2h8v2H7zM6 4h1v5H6zM15 4h1v5h-1zM7 10h8v1H7z" fill="#231123"/>
-                          <rect x="9" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="13" y="5" width="3" height="4" fill="#131626"/>
-                          <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
-                          <rect x="14" y="6" width="1" height="1" fill="#ffffff"/>
-                          <rect x="14" y="9" width="4" height="2" fill="#e6c3a1"/>
-                          <rect x="14" y="8" width="4" height="1" fill="#231123"/>
+                        <g>
+                          <image 
+                            href={isBlueTheme ? "./assets/characters/personagem-azul/frame3-voo.png" : "./assets/characters/personagem-1-padrao/frame3-voo.png"} 
+                            x="-44" 
+                            y="-32" 
+                            width="74" 
+                            height="64" 
+                            className="pixelated" 
+                            style={{ opacity: 0.4, filter: isBlueTheme ? 'drop-shadow(-4px 0 6px #60A5FA)' : 'sepia(1) saturate(5)' }} 
+                          />
+                          <image 
+                            href={isBlueTheme ? "./assets/characters/personagem-azul/frame3-voo.png" : "./assets/characters/personagem-1-padrao/frame3-voo.png"} 
+                            x="-34" 
+                            y="-34" 
+                            width="74" 
+                            height="64" 
+                            className="pixelated" 
+                          />
                         </g>
                       )}
                     </g>
@@ -1566,14 +1550,29 @@
       const [showOrbitModal, setShowOrbitModal] = useState(false);
       const [orbitAnimState, setOrbitAnimState] = useState(saved?.isActive ? 3 : 1);
 
+      // Cache de sprites para troca instantânea entre temas
+      const charactersSpritesCache = useRef({});
+
       useEffect(() => {
-        // Tenta detectar automaticamente a folha de sprites da pasta do personagem se não houver imagem ativa
-        const charId = orbitSettings.selectedCharacter || 'personagem-1-padrao';
-        if (!orbitSettings.customImg1) {
-          loadCharacterFromDisk(charId, (result) => {
+        // Personagem dedicado ao tema azul e apenas o azul; demais temas usam a personagem amarela padrão
+        const requiredChar = themeColor === 'azul' ? 'personagem-azul' : 'personagem-1-padrao';
+
+        if (charactersSpritesCache.current[requiredChar]) {
+          const cached = charactersSpritesCache.current[requiredChar];
+          setOrbitSettings(prev => ({
+            ...prev,
+            selectedCharacter: requiredChar,
+            customImg1: cached.customImg1,
+            customImg2: cached.customImg2,
+            customImg3: cached.customImg3
+          }));
+        } else {
+          loadCharacterFromDisk(requiredChar, (result) => {
             if (result) {
+              charactersSpritesCache.current[requiredChar] = result;
               setOrbitSettings(prev => ({
                 ...prev,
+                selectedCharacter: requiredChar,
                 customImg1: result.customImg1,
                 customImg2: result.customImg2,
                 customImg3: result.customImg3
@@ -1581,7 +1580,7 @@
             }
           });
         }
-      }, []);
+      }, [themeColor]);
 
       const handleUpdateOrbitSettings = (newSettings) => {
         setOrbitSettings(newSettings);
@@ -2202,6 +2201,7 @@
               isActive={isActive}
               isPaused={isPaused}
               settings={orbitSettings}
+              themeColor={themeColor}
             />
             <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
               <circle cx="80" cy="80" r="70" className={currentThemeConfig.timerTrack} strokeWidth="10" fill="transparent" />

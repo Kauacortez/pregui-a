@@ -114,6 +114,7 @@ export const MonsterTimer: React.FC<MonsterTimerProps> = ({ themeConfig }) => {
           isActive={isActive}
           isPaused={isPaused}
           settings={loadOrbitSettings()}
+          themeColor={themeColor}
         />
         <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
           <circle
