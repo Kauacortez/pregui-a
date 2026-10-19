@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animação Timer - Sistema de 3 Sprites</title>
+  <style>
+    :root {
+      --bg-color: #0f141c;
+      --speed: 8s;
+      --bob-speed: 0.8s;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #e2e8f0;
+    }
+
+    .timer-wrapper {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reference-timer {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 14px solid #1e2736;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      box-sizing: content-box;
+      transition: opacity 0.3s;
+    }
+
+    .reference-timer .time {
+      font-size: 2.3rem;
+      font-weight: 800;
+      font-family: monospace;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .reference-timer .label {
+      font-size: 0.72rem;
+      color: #8b9bb4;
+      letter-spacing: 1.5px;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .orbit-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    /* Giro só ativa quando entra no Estado 3 (Voo Superman) */
+    .rotating-group {
+      transform-origin: 170px 170px;
+    }
+
+    .rotating-group.spinning {
+      animation: spin var(--speed) linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Transição de posição da personagem (Do centro/topo até o anel) */
+    #charPositioner {
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Flutuação Suave (Seu Preset Salvo) */
+    .flight-Physics.smooth {
+      animation: smoothFly var(--bob-speed) ease-in-out infinite alternate;
+    }
+
+    @keyframes smoothFly {
+      0% { transform: translate(0px, -4px) rotate(-4deg) scale(1.03, 0.97); }
+      100% { transform: translate(2px, 4px) rotate(4deg) scale(0.97, 1.03); }
+    }
+
+    /* Rastro oculto no Estado 1 e 2, visível no Estado 3 */
+    #trailAndSparkles {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #trailAndSparkles.active {
+      opacity: 1;
+    }
+
+    .trail-pulse {
+      animation: trailWave 0.3s steps(2) infinite;
+    }
+
+    @keyframes trailWave {
+      0% { stroke-dashoffset: 0; opacity: 0.95; }
+      100% { stroke-dashoffset: 8; opacity: 0.75; }
+    }
+
+    .sparkle-move {
+      animation: sparklePop 0.5s steps(3) infinite;
+    }
+    .sparkle-move.d1 { animation-delay: 0.15s; }
+    .sparkle-move.d2 { animation-delay: 0.3s; }
+
+    @keyframes sparklePop {
+      0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
+      50% { transform: translate(-6px, 3px) scale(0.8); opacity: 0.7; }
+      100% { transform: translate(-12px, 7px) scale(0.4); opacity: 0; }
+    }
+
+    .pixelated {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* Controle de visibilidade dos Sprites */
+    .sprite-frame { display: none; }
+    .sprite-frame.active { display: block; }
+
+    /* Painel de Controles */
+    .controls {
+      margin-top: 15px;
+      background: rgba(30, 39, 54, 0.95);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid #2d3748;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 350px;
+      font-size: 0.8rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .state-badges {
+      display: flex;
+      gap: 6px;
+    }
+
+    .badge {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 7px 4px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.73rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .badge.current {
+      background: #f59e0b;
+      color: #0f141c;
+      border-color: #fbbf24;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    button, .file-label {
+      flex: 1;
+      background: #10b981;
+      color: #0f141c;
+      border: none;
+      padding: 9px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.78rem;
+      transition: filter 0.2s;
+    }
+
+    button:hover, .file-label:hover { filter: brightness(1.1); }
+    button.play-btn { background: #3b82f6; color: #fff; font-size: 0.85rem; }
+    button.secondary { background: #334155; color: #f8fafc; }
+
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    input[type="file"] { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="timer-wrapper">
+    <div class="reference-timer" id="refTimer">
+      <div class="time">00:24:28</div>
+      <div class="label" id="statusLabel">SESSÃO EM ANDAMENTO</div>
+    </div>
+
+    <svg class="orbit-svg pixelated" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+      <g class="rotating-group spinning" id="orbitRing">
+        
+        <!-- RASTRO E BRILHOS (Só aparecem no Estado 3 - Voo Superman) -->
+        <g id="trailAndSparkles" class="active">
+          <g id="trailGroup">
+            <path class="trail-pulse" d="M 55.6 194.3 A 117 117 0 0 1 75.3 101.2" 
+                  fill="none" stroke="#FFF0B3" stroke-width="6" stroke-dasharray="10 4" opacity="0.65"/>
+            <path class="trail-pulse" d="M 71.2 107.4 A 117 117 0 0 1 124.3 62.3" 
+                  fill="none" stroke="#FFD27F" stroke-width="12" stroke-dasharray="16 2" opacity="0.9"/>
+            <path d="M 119.5 64.5 A 117 117 0 0 1 170 53" 
+                  fill="none" stroke="#FFB84D" stroke-width="18" />
+            <path d="M 95.0 82.0 A 117 117 0 0 1 168 53" 
+                  fill="none" stroke="#FFA057" stroke-width="8" stroke-dasharray="12 4" />
+            <rect class="sparkle-move" x="54" y="180" width="6" height="6" fill="#FFF0B3" />
+            <rect class="sparkle-move d1" x="62" y="196" width="5" height="5" fill="#FFD27F" />
+            <rect class="sparkle-move d2" x="58" y="155" width="7" height="7" fill="#FFB84D" />
+          </g>
+
+          <g>
+            <g transform="translate(142, 55)">
+              <g class="sparkle-move">
+                <rect x="3" y="0" width="3" height="9" fill="#FFFFFF"/>
+                <rect x="0" y="3" width="9" height="3" fill="#FFFFFF"/>
+              </g>
+            </g>
+            <g transform="translate(106, 75)">
+              <g class="sparkle-move d1">
+                <rect x="3" y="0" width="3" height="9" fill="#FFFFFF"/>
+                <rect x="0" y="3" width="9" height="3" fill="#FFFFFF"/>
+              </g>
+            </g>
+            <g transform="translate(76, 115)">
+              <g class="sparkle-move d2">
+                <rect x="2" y="0" width="2" height="6" fill="#FFFFFF"/>
+                <rect x="0" y="2" width="6" height="2" fill="#FFFFFF"/>
+              </g>
+            </g>
+          </g>
+        </g>
+
+        <!-- POSICIONADOR DA PERSONAGEM -->
+        <g id="charPositioner" transform="translate(170, 53)">
+          <g id="charWrapper" transform="rotate(0) scale(0.9)">
+            <g id="flightBox" class="flight-Physics smooth">
+
+              <!-- ======================================================= -->
+              <!-- SPRITE 1: NORMAL / PARADA (Pose da sua Imagem 2)        -->
+              <!-- ======================================================= -->
+              <g id="sprite1" class="sprite-frame">
+                <image id="customImg1" href="" x="-34" y="-34" width="68" height="68" class="pixelated" style="display:none;"/>
+                <g class="fallback-group" transform="translate(-28, -28) scale(3.5)">
+                  <!-- Maria-chiquinha + Cabeça em pé -->
+                  <path d="M1 2h4v4H1zM11 2h4v4h-4z" fill="#6e4e43"/>
+                  <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
+                  <path d="M4 2h8v2H4zM3 4h1v5H3zM12 4h1v5h-1zM4 10h8v1H4z" fill="#231123"/>
+                  <rect x="4" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="9" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="5" y="6" width="1" height="1" fill="#ffffff"/>
+                  <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+                  <!-- Corpinho em pé normal -->
+                  <rect x="6" y="11" width="4" height="2" fill="#e5b55f"/>
+                  <rect x="4" y="11" width="2" height="2" fill="#e6c3a1"/>
+                  <rect x="10" y="11" width="2" height="2" fill="#e6c3a1"/>
+                  <rect x="6" y="13" width="4" height="2" fill="#231123"/>
+                </g>
+              </g>
+
+              <!-- ======================================================= -->
+              <!-- SPRITE 2: INDO AO CÍRCULO (Impulso / Decolagem)         -->
+              <!-- ======================================================= -->
+              <g id="sprite2" class="sprite-frame">
+                <image id="customImg2" href="" x="-36" y="-34" width="72" height="68" class="pixelated" style="display:none;"/>
+                <g class="fallback-group" transform="translate(-28, -28) rotate(25 8 8) scale(3.5)">
+                  <!-- Cabelo jogado para trás pelo impulso -->
+                  <path d="M0 3h4v4H0zM10 1h4v4h-4z" fill="#6e4e43"/>
+                  <path d="M4 3h8v7H4z" fill="#e6c3a1"/>
+                  <path d="M4 2h8v2H4zM4 10h8v1H4z" fill="#231123"/>
+                  <rect x="5" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="10" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="6" y="5" width="1" height="1" fill="#ffffff"/>
+                  <rect x="11" y="5" width="1" height="1" fill="#ffffff"/>
+                  <!-- Braços preparando o impulso -->
+                  <rect x="5" y="11" width="4" height="2" fill="#e5b55f"/>
+                  <rect x="9" y="10" width="3" height="2" fill="#e6c3a1"/>
+                  <rect x="4" y="13" width="3" height="2" fill="#231123"/>
+                </g>
+              </g>
+
+              <!-- ======================================================= -->
+              <!-- SPRITE 3: VOO DO SUPERMAN GIRANDO NO CÍRCULO            -->
+              <!-- ======================================================= -->
+              <g id="sprite3" class="sprite-frame active">
+                <!-- Sombra dourada de supervelocidade -->
+                <image id="ghostImg3" href="" x="-44" y="-32" width="74" height="64" class="pixelated" style="display:none; opacity: 0.4; filter: sepia(1) saturate(5);"/>
+                <image id="customImg3" href="" x="-34" y="-34" width="74" height="64" class="pixelated" style="display:none;"/>
+                
+                <!-- Sprite Nativo na Pose Clássica do Superman (Horizontal + Braço esticado à frente) -->
+                <g class="fallback-group" transform="translate(-32, -26) scale(3.5)">
+                  <!-- Perninhas e corpo esticados na horizontal (à esquerda) -->
+                  <rect x="1" y="8" width="3" height="2" fill="#ffffff"/>
+                  <rect x="3" y="8" width="3" height="3" fill="#231123"/>
+                  <rect x="5" y="7" width="4" height="3" fill="#e5b55f"/>
+                  <!-- Coques voando para trás -->
+                  <path d="M3 1h4v4H3zM11 0h4v4h-4z" fill="#6e4e43"/>
+                  <!-- Cabeça inclinada olhando para a frente do giro -->
+                  <path d="M7 3h8v7H7z" fill="#e6c3a1"/>
+                  <path d="M7 2h8v2H7zM6 4h1v5H6zM15 4h1v5h-1zM7 10h8v1H7z" fill="#231123"/>
+                  <!-- Olhos focados na direção do voo -->
+                  <rect x="9" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="13" y="5" width="3" height="4" fill="#131626"/>
+                  <rect x="10" y="6" width="1" height="1" fill="#ffffff"/>
+                  <rect x="14" y="6" width="1" height="1" fill="#ffffff"/>
+                  <!-- Braço do Superman esticado lá na frente! -->
+                  <rect x="14" y="9" width="4" height="2" fill="#e6c3a1"/>
+                  <rect x="14" y="8" width="4" height="1" fill="#231123"/>
+                </g>
+              </g>
+
+            </g>
+          </g>
+        </g>
+
+      </g>
+    </svg>
+  </div>
+
+  <!-- Painel de Controles -->
+  <div class="controls">
+    <!-- Botão Principal para ver a animação dos 3 estágios acontecendo -->
+    <button class="play-btn" id="playSequenceBtn">▶️ Testar Sequência Completa (1 ➔ 2 ➔ 3)</button>
+
+    <!-- Seletor manual de cada Sprite para você inspecionar -->
+    <div class="state-badges">
+      <div class="badge" data-state="1">1. Normal</div>
+      <div class="badge" data-state="2">2. Indo ao Círculo</div>
+      <div class="badge current" data-state="3">3. Voo Superman</div>
+    </div>
+
+    <div class="btn-group">
+      <label class="file-label" title="Gera automaticamente as 3 poses a partir da sua Imagem 2 estática!">
+        ⚡ Gerar 3 Poses da Img 2
+        <input type="file" id="autoGenUpload" accept="image/*">
+      </label>
+      <button class="secondary" id="toggleRefBtn">Ocultar Guia</button>
+    </div>
+
+    <div class="control-row">
+      <label for="speedRange">Velocidade do Giro:</label>
+      <input type="range" id="speedRange" min="1" max="8" step="0.5" value="8">
+    </div>
+
+    <div class="control-row">
+      <label for="scaleRange">Tamanho da Personagem:</label>
+      <input type="range" id="scaleRange" min="0.6" max="1.8" step="0.1" value="0.9">
+    </div>
+
+    <div class="control-row">
+      <label for="angleRange">Ângulo da Personagem:</label>
+      <input type="range" id="angleRange" min="-180" max="180" step="15" value="0">
+    </div>
+  </div>
+
+  <script>
+    const orbitRing = document.getElementById('orbitRing');
+    const trailAndSparkles = document.getElementById('trailAndSparkles');
+    const charPositioner = document.getElementById('charPositioner');
+    const charWrapper = document.getElementById('charWrapper');
+    const badges = document.querySelectorAll('.badge');
+    const playSequenceBtn = document.getElementById('playSequenceBtn');
+    const autoGenUpload = document.getElementById('autoGenUpload');
+
+    const sprites = {
+      1: document.getElementById('sprite1'),
+      2: document.getElementById('sprite2'),
+      3: document.getElementById('sprite3')
+    };
+
+    let seqTimeout1, seqTimeout2;
+
+    // Função que troca o Estado/Sprite da personagem
+    function setAnimationState(state) {
+      clearTimeout(seqTimeout1);
+      clearTimeout(seqTimeout2);
+
+      // Atualiza botões ativos
+      badges.forEach(b => b.classList.toggle('current', b.dataset.state == state));
+
+      // Troca o Sprite visível
+      Object.values(sprites).forEach(s => s.classList.remove('active'));
+      sprites[state].classList.add('active');
+
+      if (state == 1) {
+        // ESTADO 1: Normal (Flutuando um pouco acima/dentro antes de engatar no círculo)
+        orbitRing.classList.remove('spinning');
+        trailAndSparkles.classList.remove('active');
+        charPositioner.setAttribute('transform', 'translate(170, 95)');
+      } 
+      else if (state == 2) {
+        // ESTADO 2: Indo ao círculo (Impulso saindo de Y:95 para a borda Y:53)
+        orbitRing.classList.remove('spinning');
+        trailAndSparkles.classList.remove('active');
+        charPositioner.setAttribute('transform', 'translate(170, 53)');
+      } 
+      else if (state == 3) {
+        // ESTADO 3: Voo do Superman girando no círculo com rastro!
+        charPositioner.setAttribute('transform', 'translate(170, 53)');
+        orbitRing.classList.add('spinning');
+        trailAndSparkles.classList.add('active');
+      }
+    }
+
+    // Clique manual nos botões 1, 2 e 3
+    badges.forEach(badge => {
+      badge.addEventListener('click', () => setAnimationState(Number(badge.dataset.state)));
+    });
+
+    // Botão que roda a animação completa (1 -> 2 -> 3)
+    playSequenceBtn.addEventListener('click', () => {
+      setAnimationState(1); // Começa Normal
+      seqTimeout1 = setTimeout(() => {
+        setAnimationState(2); // Vai em direção ao círculo
+      }, 900);
+      seqTimeout2 = setTimeout(() => {
+        setAnimationState(3); // Engata o Voo do Superman e gira!
+      }, 1450);
+    });
+
+    // GERADOR AUTOMÁTICO DE 3 SPRITES A PARTIR DA SUA IMAGEM 2 ESTÁTICA
+    autoGenUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const img = new Image();
+      img.onload = () => {
+        // Esconde os fallbacks em SVG
+        document.querySelectorAll('.fallback-group').forEach(el => el.style.display = 'none');
+
+        // Frame 1: Sua imagem 2 original em pé
+        const c1 = document.getElementById('customImg1');
+        c1.setAttribute('href', img.src);
+        c1.style.display = 'block';
+
+        // Frame 2: Gera sprite inclinado dando impulso (Dash) via Canvas
+        const canvas2 = document.createElement('canvas');
+        canvas2.width = 128; canvas2.height = 128;
+        const ctx2 = canvas2.getContext('2d');
+        ctx2.imageSmoothingEnabled = false;
+        ctx2.translate(64, 64);
+        ctx2.rotate(22 * Math.PI / 180); // Inclina para frente
+        ctx2.scale(0.92, 1.08);          // Estica de impulso
+        ctx2.drawImage(img, -54, -54, 108, 108);
+        const c2 = document.getElementById('customImg2');
+        c2.setAttribute('href', canvas2.toDataURL());
+        c2.style.display = 'block';
+
+        // Frame 3: Gera sprite em Pose de Voo Superman (Aerodinâmico horizontal)
+        const canvas3 = document.createElement('canvas');
+        canvas3.width = 128; canvas3.height = 128;
+        const ctx3 = canvas3.getContext('2d');
+        ctx3.imageSmoothingEnabled = false;
+        ctx3.translate(64, 64);
+        ctx3.rotate(55 * Math.PI / 180); // Deita no ângulo de voo do Superman
+        ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0); // Efeito aerodinâmico pixel art
+        ctx3.drawImage(img, -54, -54, 108, 108);
+        const supermanDataUrl = canvas3.toDataURL();
+
+        const c3 = document.getElementById('customImg3');
+        const g3 = document.getElementById('ghostImg3');
+        c3.setAttribute('href', supermanDataUrl);
+        g3.setAttribute('href', supermanDataUrl);
+        c3.style.display = 'block';
+        g3.style.display = 'block';
+
+        // Já dispara a sequência completa para você ver o resultado!
+        playSequenceBtn.click();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // Controles do seu Preset
+    const toggleRefBtn = document.getElementById('toggleRefBtn');
+    const refTimer = document.getElementById('refTimer');
+    const speedRange = document.getElementById('speedRange');
+    const scaleRange = document.getElementById('scaleRange');
+    const angleRange = document.getElementById('angleRange');
+
+    let refVisible = true;
+    toggleRefBtn.addEventListener('click', () => {
+      refVisible = !refVisible;
+      refTimer.style.opacity = refVisible ? '1' : '0';
+      toggleRefBtn.textContent = refVisible ? 'Ocultar Guia' : 'Mostrar Guia';
+    });
+
+    speedRange.addEventListener('input', (e) => {
+      document.documentElement.style.setProperty('--speed', `${e.target.value}s`);
+    });
+
+    function updateCharTransform() {
+      charWrapper.setAttribute('transform', `rotate(${angleRange.value}) scale(${scaleRange.value})`);
+    }
+    scaleRange.addEventListener('input', updateCharTransform);
+    angleRange.addEventListener('input', updateCharTransform);
+  </script>
+</body>
+</html>
