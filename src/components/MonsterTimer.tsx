@@ -3,7 +3,17 @@ import { useFocusStore } from '../store/useFocusStore';
 import { soundEffects } from '../utils/soundEffects';
 import { OrbitTimerAnimation, loadOrbitSettings } from './OrbitTimerAnimation';
 
-export const MonsterTimer: React.FC = () => {
+interface MonsterTimerProps {
+  themeConfig?: {
+    timerTrack?: string;
+    timerProgress?: string;
+    timerProgressIdle?: string;
+    timerProgressActive?: string;
+    footerText?: string;
+  };
+}
+
+export const MonsterTimer: React.FC<MonsterTimerProps> = ({ themeConfig }) => {
   const [customHours, setCustomHours] = useState(0);
   const [customMinutes, setCustomMinutes] = useState(25);
   const [customSeconds, setCustomSeconds] = useState(0);
@@ -87,8 +97,8 @@ export const MonsterTimer: React.FC = () => {
 
   const themeColor = typeof window !== 'undefined' ? (localStorage.getItem('focus_theme_color') || 'amarelo') : 'amarelo';
   const timerThemeStyles: Record<string, { track: string; idle: string; active: string }> = {
-    azul: { track: 'stroke-blue-400', idle: 'stroke-blue-500', active: 'stroke-[#1E3A8A]' },
-    verde: { track: 'stroke-emerald-400', idle: 'stroke-emerald-500', active: 'stroke-emerald-600' },
+    azul: { track: 'stroke-blue-200/90', idle: 'stroke-blue-300', active: 'stroke-blue-600' },
+    verde: { track: 'stroke-emerald-200/90', idle: 'stroke-emerald-300', active: 'stroke-emerald-600' },
     rosa: { track: 'stroke-pink-200/90', idle: 'stroke-pink-300', active: 'stroke-pink-600' },
     roxo: { track: 'stroke-purple-200/90', idle: 'stroke-purple-300', active: 'stroke-purple-600' },
     amarelo: { track: 'stroke-amber-200/90', idle: 'stroke-amber-300', active: 'stroke-amber-600' },
@@ -110,7 +120,7 @@ export const MonsterTimer: React.FC = () => {
             cx="80"
             cy="80"
             r="70"
-            className={currentTheme.track}
+            className={themeConfig?.timerTrack || currentTheme.track}
             strokeWidth="10"
             fill="transparent"
           />
@@ -119,7 +129,9 @@ export const MonsterTimer: React.FC = () => {
             cy="80"
             r="70"
             className={`transition-all duration-1000 ease-linear ${
-              isActive ? currentTheme.active : currentTheme.idle
+              isActive
+                ? (themeConfig?.timerProgressActive || currentTheme.active)
+                : (themeConfig?.timerProgressIdle || currentTheme.idle)
             }`}
             strokeWidth="10"
             strokeDasharray="440"
@@ -134,7 +146,7 @@ export const MonsterTimer: React.FC = () => {
           <span className="text-3xl sm:text-3xl font-mono font-black text-slate-900 tracking-normal drop-shadow-sm">
             {formatTime(isActive || isResumable ? timeLeft : currentConfiguredSecs)}
           </span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-amber-900/70 mt-1">
+          <span className={`text-xs font-semibold uppercase tracking-wider mt-1 ${themeConfig?.footerText || 'text-amber-900/70'}`}>
             {isActive ? 'Foco em Andamento' : (isResumable ? 'Sessão Interrompida' : 'Pronto para Ativar')}
           </span>
         </div>

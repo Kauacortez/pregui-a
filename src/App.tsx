@@ -14,16 +14,20 @@ const THEME_PRESETS = {
     name: 'Azul',
     dotColor: '#2563EB',
     bg: '#BFDBFE',
-    headerBg: 'rgba(219, 234, 254, 0.90)',
-    borderColor: 'rgba(147, 197, 253, 0.9)',
+    headerBg: 'rgba(239, 246, 255, 0.85)',
+    borderColor: 'rgba(191, 219, 254, 0.9)',
     accentBg: 'bg-blue-100',
-    accentText: 'text-blue-950',
+    accentText: 'text-blue-900',
     accentBorder: 'border-blue-300',
-    accentIcon: 'text-blue-100',
-    accentIconBg: 'bg-[#1E3A8A]/15 border-[#1E3A8A]/40 text-[#1E3A8A] shadow-blue-900/10',
-    badge: 'bg-[#1E3A8A] text-white border-[#172554]',
-    button: 'bg-[#1E3A8A] hover:bg-[#1E40AF] active:bg-[#172554] border border-[#172554] text-white shadow-sm',
-    footerText: 'text-blue-950/80',
+    accentIcon: 'text-blue-700',
+    accentIconBg: 'bg-blue-500/15 border-blue-500/40 text-blue-700 shadow-blue-500/10',
+    badge: 'bg-blue-100 text-blue-900 border-blue-300',
+    button: 'bg-blue-100/80 hover:bg-blue-200/90 active:bg-blue-300 border-blue-300/90 text-blue-950',
+    footerText: 'text-blue-900/70',
+    timerTrack: 'stroke-blue-200/90',
+    timerProgress: 'stroke-blue-600',
+    timerProgressIdle: 'stroke-blue-300',
+    timerProgressActive: 'stroke-blue-600',
   },
   rosa: {
     id: 'rosa',
@@ -40,6 +44,10 @@ const THEME_PRESETS = {
     badge: 'bg-pink-100 text-pink-900 border-pink-300',
     button: 'bg-pink-100/80 hover:bg-pink-200/90 active:bg-pink-300 border-pink-300/90 text-pink-950',
     footerText: 'text-pink-900/70',
+    timerTrack: 'stroke-pink-200/90',
+    timerProgress: 'stroke-pink-600',
+    timerProgressIdle: 'stroke-pink-300',
+    timerProgressActive: 'stroke-pink-600',
   },
   amarelo: {
     id: 'amarelo',
@@ -56,6 +64,10 @@ const THEME_PRESETS = {
     badge: 'bg-amber-100 text-amber-900 border-amber-300',
     button: 'bg-amber-100/80 hover:bg-amber-200/90 active:bg-amber-300 border-amber-300/90 text-amber-950',
     footerText: 'text-amber-900/70',
+    timerTrack: 'stroke-amber-200/90',
+    timerProgress: 'stroke-amber-600',
+    timerProgressIdle: 'stroke-amber-300',
+    timerProgressActive: 'stroke-amber-600',
   },
   verde: {
     id: 'verde',
@@ -72,6 +84,10 @@ const THEME_PRESETS = {
     badge: 'bg-emerald-100 text-emerald-900 border-emerald-300',
     button: 'bg-emerald-100/80 hover:bg-emerald-200/90 active:bg-emerald-300 border-emerald-300/90 text-emerald-950',
     footerText: 'text-emerald-900/70',
+    timerTrack: 'stroke-emerald-200/90',
+    timerProgress: 'stroke-emerald-600',
+    timerProgressIdle: 'stroke-emerald-300',
+    timerProgressActive: 'stroke-emerald-600',
   },
   roxo: {
     id: 'roxo',
@@ -88,6 +104,10 @@ const THEME_PRESETS = {
     badge: 'bg-purple-100 text-purple-900 border-purple-300',
     button: 'bg-purple-100/80 hover:bg-purple-200/90 active:bg-purple-300 border-purple-300/90 text-purple-950',
     footerText: 'text-purple-900/70',
+    timerTrack: 'stroke-purple-200/90',
+    timerProgress: 'stroke-purple-600',
+    timerProgressIdle: 'stroke-purple-300',
+    timerProgressActive: 'stroke-purple-600',
   }
 };
 
@@ -270,7 +290,7 @@ export const App: React.FC = () => {
         <Mascot />
 
         {/* Cronômetro */}
-        <MonsterTimer />
+        <MonsterTimer themeConfig={currentThemeConfig} />
 
         {/* Gerenciador de distrações */}
         <BlacklistManager />
