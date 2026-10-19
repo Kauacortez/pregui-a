@@ -782,8 +782,24 @@
       img.src = url;
     };
 
+    const SPRITE_VERSION_KEY = 'orbit_sprites_version';
+    const CURRENT_SPRITES_VERSION = '20261019_v2_unsquashed';
+
     const loadOrbitSettings = () => {
       try {
+        const storedVersion = localStorage.getItem(SPRITE_VERSION_KEY);
+        if (storedVersion !== CURRENT_SPRITES_VERSION) {
+          localStorage.setItem(SPRITE_VERSION_KEY, CURRENT_SPRITES_VERSION);
+          const raw = localStorage.getItem(ORBIT_SETTINGS_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            delete parsed.customImg1;
+            delete parsed.customImg2;
+            delete parsed.customImg3;
+            localStorage.setItem(ORBIT_SETTINGS_KEY, JSON.stringify(parsed));
+            return { ...DEFAULT_ORBIT_SETTINGS, ...parsed };
+          }
+        }
         const raw = localStorage.getItem(ORBIT_SETTINGS_KEY);
         if (!raw) return DEFAULT_ORBIT_SETTINGS;
         return { ...DEFAULT_ORBIT_SETTINGS, ...JSON.parse(raw) };
