@@ -648,15 +648,104 @@
     // Configurações e Componentes da Animação Orbital do Timer (opal.html)
     // ─────────────────────────────────────────────────────────────
     const ORBIT_SETTINGS_KEY = 'modo_foco_orbit_settings_v1';
+    const CHARACTERS_LIST = [
+      { id: 'personagem-1-padrao', name: 'Personagem 1 (Padrão)', folder: 'assets/characters/personagem-1-padrao' },
+      { id: 'personagem-2', name: 'Personagem 2', folder: 'assets/characters/personagem-2' },
+      { id: 'personagem-3', name: 'Personagem 3', folder: 'assets/characters/personagem-3' },
+      { id: 'personagem-4', name: 'Personagem 4', folder: 'assets/characters/personagem-4' },
+      { id: 'personagem-5', name: 'Personagem 5', folder: 'assets/characters/personagem-5' }
+    ];
+
     const DEFAULT_ORBIT_SETTINGS = {
       enabled: true,
       speed: 8,
       scale: 0.9,
       angle: 0,
       showTrail: true,
+      selectedCharacter: 'personagem-1-padrao',
       customImg1: null,
       customImg2: null,
       customImg3: null
+    };
+
+    const processSpriteImage = (img) => {
+      const isHorizontalStrip = img.naturalWidth >= img.naturalHeight * 2.2;
+      if (isHorizontalStrip) {
+        // Folha de 3 sprites horizontais (Frame 1 Normal | Frame 2 Impulso | Frame 3 Voo)
+        const frameW = img.naturalWidth / 3;
+        const frameH = img.naturalHeight;
+        const frames = [];
+        for (let i = 0; i < 3; i++) {
+          const canvas = document.createElement('canvas');
+          canvas.width = frameW;
+          canvas.height = frameH;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(img, i * frameW, 0, frameW, frameH, 0, 0, frameW, frameH);
+          frames.push(canvas.toDataURL());
+        }
+        return {
+          customImg1: frames[0],
+          customImg2: frames[1],
+          customImg3: frames[2]
+        };
+      } else {
+        // Sprite individual: gera proceduralmente as 3 poses de voo
+        const canvas2 = document.createElement('canvas');
+        canvas2.width = 128;
+        canvas2.height = 128;
+        const ctx2 = canvas2.getContext('2d');
+        ctx2.imageSmoothingEnabled = false;
+        ctx2.translate(64, 64);
+        ctx2.rotate((22 * Math.PI) / 180);
+        ctx2.scale(0.92, 1.08);
+        ctx2.drawImage(img, -54, -54, 108, 108);
+        const customImg2 = canvas2.toDataURL();
+
+        const canvas3 = document.createElement('canvas');
+        canvas3.width = 128;
+        canvas3.height = 128;
+        const ctx3 = canvas3.getContext('2d');
+        ctx3.imageSmoothingEnabled = false;
+        ctx3.translate(64, 64);
+        ctx3.rotate((55 * Math.PI) / 180);
+        ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0);
+        ctx3.drawImage(img, -54, -54, 108, 108);
+        const customImg3 = canvas3.toDataURL();
+
+        return {
+          customImg1: img.src,
+          customImg2,
+          customImg3
+        };
+      }
+    };
+
+    const loadCharacterFromDisk = (charId, callback) => {
+      const url = `./assets/characters/${charId}/spritesheet.png?t=${Date.now()}`;
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const result = processSpriteImage(img);
+          callback(result);
+        } catch (e) {
+          callback(null);
+        }
+      };
+      img.onerror = () => {
+        // Tenta frames separados se não houver spritesheet único
+        const f1 = new Image();
+        f1.onload = () => {
+          callback({
+            customImg1: `./assets/characters/${charId}/frame1-normal.png`,
+            customImg2: `./assets/characters/${charId}/frame2-impulso.png`,
+            customImg3: `./assets/characters/${charId}/frame3-voo.png`
+          });
+        };
+        f1.onerror = () => callback(null);
+        f1.src = `./assets/characters/${charId}/frame1-normal.png`;
+      };
+      img.src = url;
     };
 
     const loadOrbitSettings = () => {
@@ -860,6 +949,7 @@
       if (!isOpen) return null;
 
       const fileInputRef = useRef(null);
+      const [reloadFeedback, setReloadFeedback] = useState('');
 
       const handleImageUpload = (e) => {
         const file = e.target.files && e.target.files[0];
@@ -869,43 +959,59 @@
         reader.onload = (event) => {
           const img = new Image();
           img.onload = () => {
-            const customImg1 = img.src;
-
-            // Frame 2: Dash de impulso
-            const canvas2 = document.createElement('canvas');
-            canvas2.width = 128;
-            canvas2.height = 128;
-            const ctx2 = canvas2.getContext('2d');
-            ctx2.imageSmoothingEnabled = false;
-            ctx2.translate(64, 64);
-            ctx2.rotate((22 * Math.PI) / 180);
-            ctx2.scale(0.92, 1.08);
-            ctx2.drawImage(img, -54, -54, 108, 108);
-            const customImg2 = canvas2.toDataURL();
-
-            // Frame 3: Voo Superman horizontal
-            const canvas3 = document.createElement('canvas');
-            canvas3.width = 128;
-            canvas3.height = 128;
-            const ctx3 = canvas3.getContext('2d');
-            ctx3.imageSmoothingEnabled = false;
-            ctx3.translate(64, 64);
-            ctx3.rotate((55 * Math.PI) / 180);
-            ctx3.transform(1.12, 0, -0.18, 0.88, 0, 0);
-            ctx3.drawImage(img, -54, -54, 108, 108);
-            const customImg3 = canvas3.toDataURL();
-
+            const processed = processSpriteImage(img);
             onUpdateSettings({
               ...settings,
-              customImg1,
-              customImg2,
-              customImg3
+              ...processed
             });
             onTriggerTestSequence();
           };
           img.src = event.target.result;
         };
         reader.readAsDataURL(file);
+      };
+
+      const handleCharacterChange = (newCharId) => {
+        setReloadFeedback('');
+        loadCharacterFromDisk(newCharId, (result) => {
+          if (result) {
+            onUpdateSettings({
+              ...settings,
+              selectedCharacter: newCharId,
+              customImg1: result.customImg1,
+              customImg2: result.customImg2,
+              customImg3: result.customImg3
+            });
+            onTriggerTestSequence();
+          } else {
+            onUpdateSettings({
+              ...settings,
+              selectedCharacter: newCharId,
+              customImg1: null,
+              customImg2: null,
+              customImg3: null
+            });
+          }
+        });
+      };
+
+      const handleReloadFromDisk = () => {
+        const activeChar = settings.selectedCharacter || 'personagem-1-padrao';
+        loadCharacterFromDisk(activeChar, (result) => {
+          if (result) {
+            onUpdateSettings({
+              ...settings,
+              customImg1: result.customImg1,
+              customImg2: result.customImg2,
+              customImg3: result.customImg3
+            });
+            setReloadFeedback('Folha de sprites carregada com sucesso da pasta!');
+            onTriggerTestSequence();
+          } else {
+            setReloadFeedback(`Nenhum 'spritesheet.png' encontrado em assets/characters/${activeChar}/`);
+          }
+          setTimeout(() => setReloadFeedback(''), 4000);
+        });
       };
 
       const handleResetSprites = () => {
@@ -916,6 +1022,8 @@
           customImg3: null
         });
       };
+
+      const activeChar = settings.selectedCharacter || 'personagem-1-padrao';
 
       return (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -950,6 +1058,62 @@
                 <Icons.Play className="w-4 h-4 fill-current" />
                 <span>Testar Sequência (1 ➔ 2 ➔ 3)</span>
               </button>
+
+              {/* Seletor de Personagem (5 Slots de Folha de Sprites) */}
+              <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-col gap-2">
+                <div className="flex justify-between items-center font-bold text-slate-900">
+                  <span>Personagem Ativo:</span>
+                  <span className="text-[10px] bg-amber-200/90 text-amber-900 px-2 py-0.5 rounded font-mono font-bold">5 Slots Disponíveis</span>
+                </div>
+                <select
+                  value={activeChar}
+                  onChange={(e) => handleCharacterChange(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-amber-300 rounded-xl text-slate-900 font-semibold text-xs focus:outline-none focus:ring-1 focus:ring-amber-500"
+                >
+                  {CHARACTERS_LIST.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                
+                <div className="p-2.5 bg-amber-100/50 border border-amber-200/80 rounded-lg text-[11px] text-amber-950/80 flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-slate-900">Pasta no projeto:</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white text-amber-900 border border-amber-200">
+                      {settings.customImg1 ? 'Sprite Customizado Ativo' : 'Sprite Nativo (Aguardando folha)'}
+                    </span>
+                  </div>
+                  <code className="font-mono text-amber-900 text-[10px] bg-white/80 p-1 rounded border border-amber-200 break-all">
+                    assets/characters/{activeChar}/spritesheet.png
+                  </code>
+                  <div className="flex gap-2 mt-1">
+                    <button
+                      type="button"
+                      onClick={handleReloadFromDisk}
+                      className="flex-1 py-1.5 px-2 bg-amber-700 hover:bg-amber-600 active:scale-98 text-white rounded-lg font-bold text-[11px] transition-colors shadow-sm"
+                      title="Lê novamente o arquivo da pasta assets/characters/"
+                    >
+                      Recarregar da Pasta
+                    </button>
+                    {settings.customImg1 && (
+                      <button
+                        type="button"
+                        onClick={handleResetSprites}
+                        className="py-1.5 px-2.5 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-lg font-semibold text-[11px] transition-colors"
+                        title="Voltar ao sprite pixel art original de exemplo"
+                      >
+                        Padrão Nativo
+                      </button>
+                    )}
+                  </div>
+                  {reloadFeedback && (
+                    <span className="text-[10px] font-semibold text-amber-800 animate-pulse">
+                      {reloadFeedback}
+                    </span>
+                  )}
+                </div>
+              </div>
 
               {/* Ativar / Desativar */}
               <label className="flex items-center justify-between p-3 bg-amber-50/70 border border-amber-200 rounded-xl cursor-pointer">
@@ -1034,11 +1198,11 @@
                 />
               </label>
 
-              {/* Personalizar Sprite / Imagem */}
+              {/* Envio Direto de Imagem / Folha de Sprites */}
               <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-col gap-2">
-                <span className="font-bold text-slate-900">Personalizar Sprite (Gerador Automático)</span>
+                <span className="font-bold text-slate-900">Enviar Imagem ou Folha Diretamente</span>
                 <p className="text-[11px] text-amber-900/70">
-                  Envie qualquer imagem PNG/pixel art para converter automaticamente nas 3 poses de voo!
+                  Você também pode carregar um arquivo PNG direto do seu computador. Se for uma folha horizontal com 3 sprites, ela será recortada automaticamente!
                 </p>
                 <div className="flex gap-2 mt-1">
                   <input
@@ -1051,20 +1215,10 @@
                   <button
                     type="button"
                     onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                    className="flex-1 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold text-xs transition-colors shadow-sm"
+                    className="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold text-xs transition-colors shadow-sm"
                   >
-                    Carregar Imagem...
+                    Selecionar Arquivo PNG...
                   </button>
-                  {settings.customImg1 && (
-                    <button
-                      type="button"
-                      onClick={handleResetSprites}
-                      className="px-3 py-2 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-lg font-semibold text-xs transition-colors"
-                      title="Voltar ao sprite pixel art padrão"
-                    >
-                      Padrão
-                    </button>
-                  )}
                 </div>
               </div>
 
@@ -1132,6 +1286,23 @@
       const [orbitSettings, setOrbitSettings] = useState(loadOrbitSettings);
       const [showOrbitModal, setShowOrbitModal] = useState(false);
       const [orbitAnimState, setOrbitAnimState] = useState(saved?.isActive ? 3 : 1);
+
+      useEffect(() => {
+        // Tenta detectar automaticamente a folha de sprites da pasta do personagem se não houver imagem ativa
+        const charId = orbitSettings.selectedCharacter || 'personagem-1-padrao';
+        if (!orbitSettings.customImg1) {
+          loadCharacterFromDisk(charId, (result) => {
+            if (result) {
+              setOrbitSettings(prev => ({
+                ...prev,
+                customImg1: result.customImg1,
+                customImg2: result.customImg2,
+                customImg3: result.customImg3
+              }));
+            }
+          });
+        }
+      }, []);
 
       const handleUpdateOrbitSettings = (newSettings) => {
         setOrbitSettings(newSettings);

@@ -6,6 +6,7 @@ export interface OrbitSettings {
   scale: number;
   angle: number;
   showTrail: boolean;
+  selectedCharacter?: string;
   customImg1: string | null;
   customImg2: string | null;
   customImg3: string | null;
@@ -17,6 +18,7 @@ export const DEFAULT_ORBIT_SETTINGS: OrbitSettings = {
   scale: 0.9,
   angle: 0,
   showTrail: true,
+  selectedCharacter: 'personagem-1-padrao',
   customImg1: null,
   customImg2: null,
   customImg3: null,
