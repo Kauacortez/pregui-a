@@ -60,7 +60,7 @@ const THEME_PRESETS = {
     id: 'verde',
     name: 'Verde',
     dotColor: '#10B981',
-    bg: '#DCFCE7',
+    bg: '#BBF7D0',
     headerBg: 'rgba(240, 253, 244, 0.85)',
     borderColor: 'rgba(167, 243, 208, 0.9)',
     accentBg: 'bg-emerald-100',
