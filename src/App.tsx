@@ -35,45 +35,55 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FEF7CD] text-slate-900 flex flex-col justify-between items-center p-4 sm:p-6 selection:bg-amber-500 selection:text-white">
+    <div className="min-h-screen bg-[#FEF7CD] text-slate-900 flex flex-col justify-between selection:bg-amber-500 selection:text-white">
       {/* Sentinela de fuga da aba e tela de penitência */}
       <DistractionDetector />
       <PenaltyLockScreen />
 
-      {/* Barra Superior */}
-      <header className="w-full max-w-xl flex justify-between items-center border-b border-amber-200/90 pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-700 shadow-lg shadow-amber-500/10">
-            <ShieldAlert size={18} />
+      {/* Barra Superior Alinhada aos Cantos (Responsivo: PC, Tablet e Celular) */}
+      <header className="w-full border-b border-amber-200/90 bg-[#FFFDF7]/70 backdrop-blur-sm sticky top-0 z-40 shadow-xs">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 flex justify-between items-center gap-3">
+          {/* Canto Esquerdo: Título Modo de Foco */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-left">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-700 shadow-md shadow-amber-500/10 shrink-0">
+              <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <div>
+              <h1 className="text-xs sm:text-base md:text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5 sm:gap-2">
+                <span className="whitespace-nowrap">MODO DE FOCO</span>
+                <span className="hidden sm:inline-block text-[9px] sm:text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-1.5 sm:px-2 py-0.5 rounded font-mono font-semibold whitespace-nowrap">
+                  ANTI-PROCRASTINAÇÃO
+                </span>
+              </h1>
+              <p className="hidden sm:block text-[10px] sm:text-xs text-amber-900/70 font-medium whitespace-nowrap">
+                Vigilância Comportamental de Produtividade
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
-              MODO FOCO <span className="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-mono font-semibold">ANTI-PROCRASTINAÇÃO</span>
-            </h1>
-            <p className="text-[11px] text-amber-900/70 font-medium">Vigilância Comportamental de Produtividade</p>
+
+          {/* Canto Direito: Botão de Notificação */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <button
+              onClick={requestNotifications}
+              className={`p-2 sm:p-2.5 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs whitespace-nowrap ${
+                notificationsEnabled
+                  ? 'bg-amber-600 border-amber-700 text-white shadow-sm'
+                  : 'bg-amber-100/80 hover:bg-amber-200/90 border-amber-300/90 text-amber-950'
+              }`}
+              title={notificationsEnabled ? 'Notificações Ativas' : 'Ativar Notificações no Navegador'}
+            >
+              {notificationsEnabled ? <Bell size={16} /> : <BellOff size={16} />}
+              <span className="hidden sm:inline">
+                {notificationsEnabled ? 'Alertas ON' : 'Ativar Alertas'}
+              </span>
+            </button>
           </div>
         </div>
-
-        {/* Botão de Notificação */}
-        <button
-          onClick={requestNotifications}
-          className={`p-2.5 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-semibold ${
-            notificationsEnabled
-              ? 'bg-amber-600 border-amber-700 text-white shadow-sm'
-              : 'bg-amber-100/70 hover:bg-amber-200/80 border-amber-300/80 text-amber-950'
-          }`}
-          title={notificationsEnabled ? 'Notificações Ativas' : 'Ativar Notificações no Navegador'}
-        >
-          {notificationsEnabled ? <Bell size={16} /> : <BellOff size={16} />}
-          <span className="hidden sm:inline">
-            {notificationsEnabled ? 'Alertas ON' : 'Ativar Alertas'}
-          </span>
-        </button>
       </header>
 
       {/* Conteúdo Central */}
-      <main className="w-full max-w-xl flex flex-col items-center justify-center my-6">
-        {/* Protocolo de Presença exibido por 7 segundos ao entrar */}
+      <main className="w-full max-w-xl mx-auto flex flex-col items-center justify-center px-4 py-2 sm:py-4 flex-1">
+        {/* Protocolo de Presença exibido por 5 segundos ao entrar */}
         {showPresenceProtocol && (
           <div className={`w-full mb-2 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2 text-xs text-slate-800 transition-all duration-500 ease-in-out ${presenceFading ? 'opacity-0 -translate-y-2 max-h-0 py-0 my-0 overflow-hidden' : 'opacity-100 max-h-24'}`}>
             <ShieldAlert size={16} className="text-amber-600 shrink-0" />
@@ -94,7 +104,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Rodapé */}
-      <footer className="w-full max-w-xl text-center border-t border-amber-200/90 pt-4 text-xs text-amber-900/70 font-medium">
+      <footer className="w-full max-w-7xl mx-auto text-center border-t border-amber-200/90 py-3 sm:py-4 px-4 text-xs text-amber-900/70 font-medium">
         Desenvolvido com carinho e intolerância a desculpas. Mantenha os olhos aqui!
       </footer>
     </div>

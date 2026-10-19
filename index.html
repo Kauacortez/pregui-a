@@ -1756,41 +1756,58 @@
       const canUnlockPenalty = penaltyTimer === 0 && typedPenalty.trim().toLowerCase() === penaltyChallenge.trim().toLowerCase();
 
       return (
-        <div className="min-h-screen flex flex-col justify-between items-center p-4 sm:p-6 max-w-xl mx-auto">
-          {/* Header Profissional */}
-          <header className="w-full flex justify-between items-center border-b border-amber-200/90 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-700 shadow-lg shadow-amber-500/10">
-                <Icons.Target className="w-5 h-5" />
+        <div className="min-h-screen flex flex-col justify-between bg-[#FEF7CD]">
+          {/* Header Superior Alinhado aos Cantos (Responsivo: PC, Tablet e Celular) */}
+          <header className="w-full border-b border-amber-200/90 bg-[#FFFDF7]/70 backdrop-blur-sm sticky top-0 z-40 shadow-xs">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 flex justify-between items-center gap-3">
+              
+              {/* Canto Esquerdo: Título Modo de Foco */}
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-left">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-700 shadow-md shadow-amber-500/10 shrink-0">
+                  <Icons.Target className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div>
+                  <h1 className="text-xs sm:text-base md:text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5 sm:gap-2">
+                    <span className="whitespace-nowrap">MODO DE FOCO</span>
+                    <span className="hidden sm:inline-block text-[9px] sm:text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-1.5 sm:px-2 py-0.5 rounded font-mono font-semibold whitespace-nowrap">
+                      ANTI-PROCRASTINAÇÃO
+                    </span>
+                  </h1>
+                  <p className="hidden sm:block text-[10px] sm:text-xs text-amber-900/70 font-medium whitespace-nowrap">
+                    Vigilância Comportamental de Produtividade
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
-                  MODO FOCO <span className="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-mono font-semibold">ANTI-PROCRASTINAÇÃO</span>
-                </h1>
-                <p className="text-xs text-amber-900/70 font-medium">Vigilância Comportamental de Produtividade</p>
+
+              {/* Canto Direito: Botão de Alteração (Animação) e Notificação */}
+              <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowOrbitModal(true)}
+                  className="text-xs bg-amber-100/80 hover:bg-amber-200/90 active:bg-amber-300 border border-amber-300/90 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                  title="Configurações e alteração da animação orbital"
+                >
+                  <Icons.Sliders className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                  <span>Animação</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if ('Notification' in window) Notification.requestPermission();
+                  }}
+                  className="text-xs bg-amber-100/80 hover:bg-amber-200/90 active:bg-amber-300 border border-amber-300/90 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                  title="Permissões de notificações"
+                >
+                  <Icons.Bell className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                  <span className="hidden sm:inline">Notificações</span>
+                </button>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setShowOrbitModal(true)}
-                className="text-xs bg-amber-100/70 hover:bg-amber-200/80 active:bg-amber-300 border border-amber-300/80 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
-                title="Configurações da animação do cronômetro"
-              >
-                <Icons.Sliders className="w-3.5 h-3.5 text-amber-700" />
-                <span>Animação</span>
-              </button>
-              <button
-                onClick={() => {
-                  if ('Notification' in window) Notification.requestPermission();
-                }}
-                className="text-xs bg-amber-100/70 hover:bg-amber-200/80 border border-amber-300/80 px-2.5 sm:px-3 py-1.5 rounded-lg text-amber-950 font-semibold flex items-center gap-1.5 transition-colors"
-              >
-                <Icons.Bell className="w-3.5 h-3.5 text-amber-700" />
-                <span className="hidden sm:inline">Notificações</span>
-              </button>
+
             </div>
           </header>
+
+          {/* Conteúdo Central da Aplicação */}
+          <main className="w-full max-w-xl mx-auto flex flex-col items-center px-4 py-2 sm:py-4 flex-1">
 
           {/* Dica da Sentinela: Protocolo de Presença exibido por 5 segundos ao entrar */}
           {showPresenceProtocol && (
@@ -2193,6 +2210,8 @@
               </div>
             </div>
           )}
+
+          </main>
 
           {/* Modal de Configurações da Animação Orbital (opal.html) */}
           <OrbitSettingsModal
