@@ -267,7 +267,7 @@
       position: absolute;
       font-family: 'Arial', sans-serif;
       font-weight: 900;
-      color: #92400e;
+      color: currentColor;
       pointer-events: none;
       animation: innerFloatZ1 3s infinite ease-out;
       will-change: transform, opacity;
@@ -276,7 +276,7 @@
       position: absolute;
       font-family: 'Arial', sans-serif;
       font-weight: 900;
-      color: #b45309;
+      color: currentColor;
       pointer-events: none;
       animation: innerFloatZ2 3s infinite ease-out 1s;
       will-change: transform, opacity;
@@ -285,7 +285,7 @@
       position: absolute;
       font-family: 'Arial', sans-serif;
       font-weight: 900;
-      color: #d97706;
+      color: currentColor;
       pointer-events: none;
       animation: innerFloatZ3 3s infinite ease-out 2s;
       will-change: transform, opacity;
@@ -1276,23 +1276,38 @@
       azul: {
         id: 'azul',
         name: 'Azul',
-        dotColor: '#1E3A8A',
+        dotColor: '#2563EB',
         bg: '#BFDBFE',
         headerBg: 'rgba(219, 234, 254, 0.90)',
         border: 'border-blue-300/90',
         borderColor: 'rgba(147, 197, 253, 0.9)',
+        cardBg: 'bg-[#F0F7FF]',
+        cardIcon: 'text-[#1E3A8A]',
         accentBg: 'bg-blue-100',
         accentText: 'text-blue-950',
         accentBorder: 'border-blue-300',
-        accentIcon: 'text-blue-100',
+        accentIcon: 'text-blue-200',
         accentIconBg: 'bg-[#1E3A8A]/15 border-[#1E3A8A]/40 text-[#1E3A8A] shadow-blue-900/10',
         badge: 'bg-[#1E3A8A] text-white border-[#172554]',
         button: 'bg-[#1E3A8A] hover:bg-[#1E40AF] active:bg-[#172554] border border-[#172554] text-white shadow-sm',
-        buttonActive: 'bg-[#0F172A] hover:bg-[#1E3A8A] text-white border-black shadow-md ring-2 ring-blue-400',
+        buttonActive: 'bg-[#1E3A8A] text-white border-blue-400 shadow-md ring-2 ring-blue-400',
         primaryButton: 'bg-[#1E3A8A] hover:bg-[#1E40AF] active:scale-95 text-white font-black shadow-lg shadow-blue-950/40',
         footerText: 'text-blue-950/80',
-        timerTrack: 'stroke-blue-300/90',
-        timerProgress: 'stroke-blue-800',
+        timerTrack: 'stroke-blue-200/90',
+        timerProgress: 'stroke-[#1E3A8A]',
+        timerProgressIdle: 'stroke-[#1E3A8A]',
+        timerProgressActive: 'stroke-[#1E3A8A]',
+        inputBg: 'bg-blue-100/70',
+        inputBorder: 'border-blue-300/90',
+        inputText: 'text-[#1E3A8A]',
+        mascotSleepingBg: 'bg-blue-300',
+        mascotSleepingBorder: 'border-4 border-[#1E3A8A]',
+        mascotSleepingRing: 'ring-blue-400/50',
+        mascotSleepingEyes: 'text-3xl tracking-normal text-blue-950',
+        mascotSleepingMouth: 'text-xl text-[#1E3A8A] font-bold',
+        mascotFocadoBg: 'bg-[#1E3A8A]',
+        mascotFocadoBorder: 'border-4 border-blue-950',
+        mascotFocadoRing: 'ring-blue-500/40',
       },
       rosa: {
         id: 'rosa',
@@ -1302,6 +1317,8 @@
         headerBg: 'rgba(253, 242, 248, 0.85)',
         border: 'border-pink-200/90',
         borderColor: 'rgba(251, 207, 232, 0.9)',
+        cardBg: 'bg-[#FFFDF7]',
+        cardIcon: 'text-pink-700',
         accentBg: 'bg-pink-100',
         accentText: 'text-pink-900',
         accentBorder: 'border-pink-300',
@@ -1314,6 +1331,19 @@
         footerText: 'text-pink-900/70',
         timerTrack: 'stroke-pink-200/90',
         timerProgress: 'stroke-pink-600',
+        timerProgressIdle: 'stroke-pink-300',
+        timerProgressActive: 'stroke-pink-600',
+        inputBg: 'bg-pink-50/70',
+        inputBorder: 'border-pink-300/80',
+        inputText: 'text-pink-700',
+        mascotSleepingBg: 'bg-pink-200',
+        mascotSleepingBorder: 'border-4 border-pink-400',
+        mascotSleepingRing: 'ring-pink-300/40',
+        mascotSleepingEyes: 'text-3xl tracking-normal text-pink-950',
+        mascotSleepingMouth: 'text-xl text-pink-900 font-bold',
+        mascotFocadoBg: 'bg-pink-600',
+        mascotFocadoBorder: 'border-4 border-pink-900/80',
+        mascotFocadoRing: 'ring-pink-500/40',
       },
       amarelo: {
         id: 'amarelo',
@@ -1323,6 +1353,8 @@
         headerBg: 'rgba(255, 253, 247, 0.85)',
         border: 'border-amber-200/90',
         borderColor: 'rgba(253, 230, 138, 0.9)',
+        cardBg: 'bg-[#FFFDF7]',
+        cardIcon: 'text-amber-700',
         accentBg: 'bg-amber-100',
         accentText: 'text-amber-900',
         accentBorder: 'border-amber-300',
@@ -1335,6 +1367,19 @@
         footerText: 'text-amber-900/70',
         timerTrack: 'stroke-amber-200/90',
         timerProgress: 'stroke-amber-600',
+        timerProgressIdle: 'stroke-amber-300',
+        timerProgressActive: 'stroke-amber-600',
+        inputBg: 'bg-amber-50/70',
+        inputBorder: 'border-amber-300/80',
+        inputText: 'text-amber-700',
+        mascotSleepingBg: 'bg-amber-300',
+        mascotSleepingBorder: 'border-4 border-amber-900/80',
+        mascotSleepingRing: 'ring-amber-400/40',
+        mascotSleepingEyes: 'text-3xl tracking-normal text-amber-950',
+        mascotSleepingMouth: 'text-xl text-amber-900 font-bold',
+        mascotFocadoBg: 'bg-amber-600',
+        mascotFocadoBorder: 'border-4 border-amber-900/80',
+        mascotFocadoRing: 'ring-amber-500/40',
       },
       verde: {
         id: 'verde',
@@ -1344,6 +1389,8 @@
         headerBg: 'rgba(240, 253, 244, 0.85)',
         border: 'border-emerald-200/90',
         borderColor: 'rgba(167, 243, 208, 0.9)',
+        cardBg: 'bg-[#FFFDF7]',
+        cardIcon: 'text-emerald-700',
         accentBg: 'bg-emerald-100',
         accentText: 'text-emerald-900',
         accentBorder: 'border-emerald-300',
@@ -1356,6 +1403,19 @@
         footerText: 'text-emerald-900/70',
         timerTrack: 'stroke-emerald-200/90',
         timerProgress: 'stroke-emerald-600',
+        timerProgressIdle: 'stroke-emerald-300',
+        timerProgressActive: 'stroke-emerald-600',
+        inputBg: 'bg-emerald-50/70',
+        inputBorder: 'border-emerald-300/80',
+        inputText: 'text-emerald-700',
+        mascotSleepingBg: 'bg-emerald-200',
+        mascotSleepingBorder: 'border-4 border-emerald-400',
+        mascotSleepingRing: 'ring-emerald-300/40',
+        mascotSleepingEyes: 'text-3xl tracking-normal text-emerald-950',
+        mascotSleepingMouth: 'text-xl text-emerald-900 font-bold',
+        mascotFocadoBg: 'bg-emerald-600',
+        mascotFocadoBorder: 'border-4 border-emerald-900/80',
+        mascotFocadoRing: 'ring-emerald-500/40',
       },
       roxo: {
         id: 'roxo',
@@ -1365,6 +1425,8 @@
         headerBg: 'rgba(250, 245, 255, 0.85)',
         border: 'border-purple-200/90',
         borderColor: 'rgba(221, 214, 254, 0.9)',
+        cardBg: 'bg-[#FFFDF7]',
+        cardIcon: 'text-purple-700',
         accentBg: 'bg-purple-100',
         accentText: 'text-purple-900',
         accentBorder: 'border-purple-300',
@@ -1377,6 +1439,19 @@
         footerText: 'text-purple-900/70',
         timerTrack: 'stroke-purple-200/90',
         timerProgress: 'stroke-purple-600',
+        timerProgressIdle: 'stroke-purple-300',
+        timerProgressActive: 'stroke-purple-600',
+        inputBg: 'bg-purple-50/70',
+        inputBorder: 'border-purple-300/80',
+        inputText: 'text-purple-700',
+        mascotSleepingBg: 'bg-purple-200',
+        mascotSleepingBorder: 'border-4 border-purple-400',
+        mascotSleepingRing: 'ring-purple-300/40',
+        mascotSleepingEyes: 'text-3xl tracking-normal text-purple-950',
+        mascotSleepingMouth: 'text-xl text-purple-900 font-bold',
+        mascotFocadoBg: 'bg-purple-600',
+        mascotFocadoBorder: 'border-4 border-purple-900/80',
+        mascotFocadoRing: 'ring-purple-500/40',
       }
     };
 
@@ -1887,10 +1962,11 @@
               armRight: 'ง',
               eyes: '(ง •̀_•́)ง',
               mouth: '',
-              bg: 'bg-amber-600',
+              bg: currentThemeConfig.mascotFocadoBg || 'bg-amber-600',
+              border: currentThemeConfig.mascotFocadoBorder || 'border-4 border-amber-900/80',
               anim: 'animate-breathe',
               balloonAnim: 'anim-balloon-breathe',
-              ring: 'ring-amber-500/40'
+              ring: currentThemeConfig.mascotFocadoRing || 'ring-amber-500/40'
             };
           case 'furioso':
             return {
@@ -1918,12 +1994,13 @@
               isSleeping: true,
               eyes: '(¯﹃¯)',
               mouth: '',
-              eyesClass: 'text-3xl tracking-normal text-amber-950',
-              mouthClass: 'text-xl text-amber-900 font-bold',
-              bg: 'bg-amber-300',
+              eyesClass: currentThemeConfig.mascotSleepingEyes || 'text-3xl tracking-normal text-amber-950',
+              mouthClass: currentThemeConfig.mascotSleepingMouth || 'text-xl text-amber-900 font-bold',
+              bg: currentThemeConfig.mascotSleepingBg || 'bg-amber-300',
+              border: currentThemeConfig.mascotSleepingBorder || 'border-4 border-amber-900/80',
               anim: 'anim-sleep-box',
               balloonAnim: 'anim-balloon-sleep',
-              ring: 'ring-amber-400/40'
+              ring: currentThemeConfig.mascotSleepingRing || 'ring-amber-400/40'
             };
         }
       };
@@ -2006,8 +2083,8 @@
 
           {/* Dica da Sentinela: Protocolo de Presença exibido por 5 segundos ao entrar */}
           {showPresenceProtocol && (
-            <div className={`w-full mt-4 px-4 py-2.5 bg-[#FFFDF7] border border-amber-200/90 shadow-sm rounded-xl flex items-center gap-2.5 text-xs text-slate-800 transition-all duration-500 ease-in-out ${presenceFading ? 'opacity-0 -translate-y-2 max-h-0 py-0 my-0 overflow-hidden' : 'opacity-100 max-h-24'}`}>
-              <Icons.Volume2 className="w-4 h-4 text-amber-600 shrink-0" />
+            <div className={`w-full mt-4 px-4 py-2.5 ${currentThemeConfig.cardBg} border ${currentThemeConfig.border} shadow-sm rounded-xl flex items-center gap-2.5 text-xs text-slate-800 transition-all duration-500 ease-in-out ${presenceFading ? 'opacity-0 -translate-y-2 max-h-0 py-0 my-0 overflow-hidden' : 'opacity-100 max-h-24'}`}>
+              <Icons.Volume2 className={`w-4 h-4 ${currentThemeConfig.cardIcon} shrink-0`} />
               <span>
                 <strong>Protocolo de Presença:</strong> A saída desta aba durante o período de foco ativa o sinal sonoro ininterrupto até o retorno.
               </span>
@@ -2016,9 +2093,15 @@
 
           {/* Área do Mascote */}
           <div className="flex flex-col items-center justify-center my-4 w-full">
-            <div className={`relative z-30 px-5 py-3 mb-6 bg-[#FFFDF7] border-2 border-amber-300 rounded-2xl text-center shadow-md max-w-sm ${visual.balloonAnim}`}>
+            <div
+              className={`relative z-30 px-5 py-3 mb-6 bg-[#FFFDF7] border-2 rounded-2xl text-center shadow-md max-w-sm ${visual.balloonAnim}`}
+              style={{ borderColor: currentThemeConfig.borderColor }}
+            >
               <p className="text-sm sm:text-base font-bold text-slate-900">{mascotMessage}</p>
-              <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-[#FFFDF7] border-r-2 border-b-2 border-amber-300 rotate-45"></div>
+              <div
+                className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-[#FFFDF7] border-r-2 border-b-2 rotate-45"
+                style={{ borderColor: currentThemeConfig.borderColor }}
+              ></div>
             </div>
 
             <div className="relative flex items-center justify-center">
@@ -2031,7 +2114,7 @@
               >
                 {/* Floating Zzz contidos no canto superior direito do card */}
                 {visual.isSleeping && (
-                  <div className="absolute top-2 right-2 w-14 h-14 overflow-hidden pointer-events-none select-none z-20">
+                  <div className={`absolute top-2 right-2 w-14 h-14 overflow-hidden pointer-events-none select-none z-20 ${visual.eyesClass || 'text-amber-900'}`}>
                     <span className="inner-z1 text-xs select-none">z</span>
                     <span className="inner-z2 text-sm select-none">z</span>
                     <span className="inner-z3 text-base select-none">Z</span>
@@ -2077,10 +2160,10 @@
                   </div>
                 ) : visual.isSleeping ? (
                   /* Rosto adormecido com fiozinho no nariz e boca mais para baixo */
-                  <div className="relative flex items-center justify-center font-black text-amber-950 font-['Arial',sans-serif] drop-shadow-sm text-3xl tracking-normal select-none">
+                  <div className={`relative flex items-center justify-center font-black font-['Arial',sans-serif] drop-shadow-sm text-3xl tracking-normal select-none ${visual.eyesClass || 'text-amber-950'}`}>
                     <span>(¯</span>
                     <span className="relative inline-block mx-0.5 translate-y-2">
-                      <span className="text-amber-900 inline-block">﹃</span>
+                      <span className={`inline-block ${visual.mouthClass || 'text-amber-900'}`}>﹃</span>
                     </span>
                     <span>¯)</span>
                   </div>
@@ -2114,10 +2197,10 @@
               settings={orbitSettings}
             />
             <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
-              <circle cx="80" cy="80" r="70" className="stroke-amber-200/90" strokeWidth="10" fill="transparent" />
+              <circle cx="80" cy="80" r="70" className={currentThemeConfig.timerTrack} strokeWidth="10" fill="transparent" />
               <circle
                 cx="80" cy="80" r="70"
-                className={`transition-all duration-1000 ease-linear ${isActive ? 'stroke-amber-600' : 'stroke-amber-300'}`}
+                className={`transition-all duration-1000 ease-linear ${isActive ? currentThemeConfig.timerProgressActive : currentThemeConfig.timerProgressIdle}`}
                 strokeWidth="10"
                 strokeDasharray="440"
                 strokeDashoffset={strokeDashoffset}
@@ -2129,7 +2212,7 @@
               <span className="text-3xl sm:text-3xl font-mono font-black text-slate-900 tracking-normal">
                 {formatTime(timeLeft)}
               </span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-amber-900/70 mt-1">
+              <span className={`text-xs font-semibold uppercase tracking-wider mt-1 ${currentThemeConfig.footerText}`}>
                 {isActive ? 'Sessão em Andamento' : (isPaused && timeLeft > 0 ? 'Sessão Interrompida' : 'Pronto para Ativar')}
               </span>
             </div>
@@ -2167,48 +2250,48 @@
                 </div>
 
                 {/* Painel de Ajuste Manual: Horas, Minutos e Segundos */}
-                <div className="bg-[#FFFDF7] border border-amber-200/90 rounded-xl p-3 flex flex-col gap-2 shadow-sm">
-                  <div className="flex items-center justify-between text-xs text-amber-950 font-semibold">
-                    <span className="flex items-center gap-1.5">
-                      <Icons.Target className="w-3.5 h-3.5 text-amber-700" />
+                <div className={`${currentThemeConfig.cardBg} border ${currentThemeConfig.border} rounded-xl p-3 flex flex-col gap-2 shadow-sm`}>
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className={`flex items-center gap-1.5 ${currentThemeConfig.footerText}`}>
+                      <Icons.Target className={`w-3.5 h-3.5 ${currentThemeConfig.cardIcon}`} />
                       Ajuste manual de tempo:
                     </span>
-                    <span className="text-[11px] font-mono text-amber-700 font-bold">
+                    <span className={`text-[11px] font-mono font-bold ${currentThemeConfig.cardIcon}`}>
                       {formatTime(timeLeft)}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
-                      <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Horas</label>
+                    <div className={`flex flex-col items-center ${currentThemeConfig.inputBg} border ${currentThemeConfig.inputBorder} rounded-lg p-1.5 transition-colors`}>
+                      <label className={`text-[10px] uppercase font-mono font-bold mb-0.5 ${currentThemeConfig.inputText}`}>Horas</label>
                       <input
                         type="number"
                         min="0"
                         max="23"
                         value={customHours}
                         onChange={(e) => updateTimeField(e.target.value, customMinutes, customSeconds)}
-                        className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
+                        className={`w-full bg-transparent text-center font-mono font-black text-lg focus:outline-none ${currentThemeConfig.inputText}`}
                       />
                     </div>
-                    <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
-                      <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Minutos</label>
+                    <div className={`flex flex-col items-center ${currentThemeConfig.inputBg} border ${currentThemeConfig.inputBorder} rounded-lg p-1.5 transition-colors`}>
+                      <label className={`text-[10px] uppercase font-mono font-bold mb-0.5 ${currentThemeConfig.inputText}`}>Minutos</label>
                       <input
                         type="number"
                         min="0"
                         max="59"
                         value={customMinutes}
                         onChange={(e) => updateTimeField(customHours, e.target.value, customSeconds)}
-                        className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
+                        className={`w-full bg-transparent text-center font-mono font-black text-lg focus:outline-none ${currentThemeConfig.inputText}`}
                       />
                     </div>
-                    <div className="flex flex-col items-center bg-amber-50/70 border border-amber-300/80 rounded-lg p-1.5 focus-within:border-amber-600 transition-colors">
-                      <label className="text-[10px] text-amber-900/70 uppercase font-mono font-bold mb-0.5">Segundos</label>
+                    <div className={`flex flex-col items-center ${currentThemeConfig.inputBg} border ${currentThemeConfig.inputBorder} rounded-lg p-1.5 transition-colors`}>
+                      <label className={`text-[10px] uppercase font-mono font-bold mb-0.5 ${currentThemeConfig.inputText}`}>Segundos</label>
                       <input
                         type="number"
                         min="0"
                         max="59"
                         value={customSeconds}
                         onChange={(e) => updateTimeField(customHours, customMinutes, e.target.value)}
-                        className="w-full bg-transparent text-center font-mono font-black text-amber-700 text-lg focus:outline-none"
+                        className={`w-full bg-transparent text-center font-mono font-black text-lg focus:outline-none ${currentThemeConfig.inputText}`}
                       />
                     </div>
                   </div>
@@ -2245,29 +2328,29 @@
           </div>
 
           {/* Restrições Cadastradas (Colapsável sob clique) */}
-          <div className="w-full max-w-md bg-[#FFFDF7] border border-amber-200/90 rounded-2xl shadow-sm mt-6 overflow-hidden transition-all duration-300">
+          <div className={`w-full max-w-md ${currentThemeConfig.cardBg} border ${currentThemeConfig.border} rounded-2xl shadow-sm mt-6 overflow-hidden transition-all duration-300`}>
             <button
               type="button"
               onClick={() => {
                 sound.playClick();
                 setIsRestrictionsOpen(prev => !prev);
               }}
-              className="w-full p-4 flex justify-between items-center text-left hover:bg-amber-100/40 active:bg-amber-100/60 transition-colors cursor-pointer select-none"
+              className="w-full p-4 flex justify-between items-center text-left hover:bg-slate-500/5 active:bg-slate-500/10 transition-colors cursor-pointer select-none"
             >
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-                <Icons.Ban className="w-3.5 h-3.5 text-amber-700" />
+                <Icons.Ban className={`w-3.5 h-3.5 ${currentThemeConfig.cardIcon}`} />
                 <span>Restrições Configuradas</span>
               </h3>
-              <div className="flex items-center gap-1 text-amber-800/70">
+              <div className={`flex items-center gap-1 ${currentThemeConfig.footerText}`}>
                 <Icons.ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isRestrictionsOpen ? 'rotate-180' : ''}`} />
               </div>
             </button>
 
             {isRestrictionsOpen && (
-              <div className="px-4 pb-4 pt-1 border-t border-amber-200/60">
+              <div className={`px-4 pb-4 pt-1 border-t ${currentThemeConfig.border}`}>
                 <div className="flex flex-wrap gap-2 mb-3 mt-2">
                   {distractionsList.map((d) => (
-                    <span key={d} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100/80 text-amber-950 border border-amber-300/90 rounded-lg text-xs font-semibold">
+                    <span key={d} className={`inline-flex items-center gap-1.5 px-2.5 py-1 ${currentThemeConfig.inputBg} ${currentThemeConfig.inputText} border ${currentThemeConfig.inputBorder} rounded-lg text-xs font-semibold`}>
                       <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                       {d}
                       {!isActive && (
@@ -2276,7 +2359,7 @@
                     </span>
                   ))}
                   {distractionsList.length === 0 && (
-                    <p className="text-xs text-amber-800/60 italic">Nenhuma restrição configurada.</p>
+                    <p className={`text-xs italic ${currentThemeConfig.footerText}`}>Nenhuma restrição configurada.</p>
                   )}
                 </div>
                 {!isActive ? (
@@ -2286,14 +2369,14 @@
                       value={newDistraction}
                       onChange={(e) => setNewDistraction(e.target.value)}
                       placeholder="Adicionar restrição (ex: Rede Social, Notícias)..."
-                      className="flex-1 px-3 py-2 bg-white border border-amber-300 rounded-lg text-xs text-slate-900 placeholder:text-amber-800/50 focus:outline-none focus:border-amber-600 shadow-inner"
+                      className={`flex-1 px-3 py-2 bg-white border ${currentThemeConfig.inputBorder} rounded-lg text-xs text-slate-900 focus:outline-none shadow-inner`}
                     />
-                    <button type="submit" className="px-3 py-2 bg-amber-200/80 hover:bg-amber-300 text-amber-950 border border-amber-300 rounded-lg text-xs font-bold transition-colors">
+                    <button type="submit" className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer ${currentThemeConfig.button}`}>
                       Adicionar
                     </button>
                   </form>
                 ) : (
-                  <p className="text-[11px] text-amber-800/60 italic text-center mt-2">
+                  <p className={`text-[11px] italic text-center mt-2 ${currentThemeConfig.footerText}`}>
                     Lista bloqueada para edição durante a sessão ativa.
                   </p>
                 )}

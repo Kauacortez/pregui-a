@@ -11,7 +11,7 @@ const THEME_PRESETS = {
   azul: {
     id: 'azul',
     name: 'Azul',
-    dotColor: '#1E3A8A',
+    dotColor: '#2563EB',
     bg: '#BFDBFE',
     headerBg: 'rgba(219, 234, 254, 0.90)',
     borderColor: 'rgba(147, 197, 253, 0.9)',
