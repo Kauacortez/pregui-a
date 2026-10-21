@@ -651,6 +651,7 @@
     const CHARACTERS_LIST = [
       { id: 'personagem-1-padrao', name: 'Personagem 1 (Amarela / Padrão)', folder: 'assets/characters/personagem-1-padrao' },
       { id: 'personagem-azul', name: 'Personagem Azul (Tema Azul)', folder: 'assets/characters/personagem-azul' },
+      { id: 'personagem-roxo', name: 'Personagem Roxa (Tema Roxo)', folder: 'assets/characters/personagem-roxo' },
       { id: 'personagem-2', name: 'Personagem 2', folder: 'assets/characters/personagem-2' },
       { id: 'personagem-3', name: 'Personagem 3', folder: 'assets/characters/personagem-3' },
       { id: 'personagem-4', name: 'Personagem 4', folder: 'assets/characters/personagem-4' },
@@ -783,7 +784,7 @@
     };
 
     const SPRITE_VERSION_KEY = 'orbit_sprites_version';
-    const CURRENT_SPRITES_VERSION = '20261019_v2_unsquashed';
+    const CURRENT_SPRITES_VERSION = '20261021_v3_purple';
 
     const loadOrbitSettings = () => {
       try {
@@ -808,12 +809,58 @@
       }
     };
 
+    const getOrbitThemeConfig = (theme) => {
+      if (theme === 'azul') {
+        return {
+          trail1: '#DBEAFE',
+          trail2: '#93C5FD',
+          trail3: '#60A5FA',
+          trail4: '#3B82F6',
+          sparkle1: '#DBEAFE',
+          sparkle2: '#93C5FD',
+          sparkle3: '#60A5FA',
+          ghostFilter: 'drop-shadow(-4px 0 6px #60A5FA)',
+          fallback1: './assets/characters/personagem-azul/frame1-normal.png',
+          fallback2: './assets/characters/personagem-azul/frame2-impulso.png',
+          fallback3: './assets/characters/personagem-azul/frame3-voo.png',
+        };
+      }
+      if (theme === 'roxo') {
+        return {
+          trail1: '#F3E8FF',
+          trail2: '#D8B4FE',
+          trail3: '#C084FC',
+          trail4: '#A855F7',
+          sparkle1: '#F3E8FF',
+          sparkle2: '#D8B4FE',
+          sparkle3: '#C084FC',
+          ghostFilter: 'drop-shadow(-4px 0 6px #C084FC)',
+          fallback1: './assets/characters/personagem-roxo/frame1-normal.png',
+          fallback2: './assets/characters/personagem-roxo/frame2-impulso.png',
+          fallback3: './assets/characters/personagem-roxo/frame3-voo.png',
+        };
+      }
+      return {
+        trail1: '#FFF0B3',
+        trail2: '#FFD27F',
+        trail3: '#FFB84D',
+        trail4: '#FFA057',
+        sparkle1: '#FFF0B3',
+        sparkle2: '#FFD27F',
+        sparkle3: '#FFB84D',
+        ghostFilter: 'sepia(1) saturate(5)',
+        fallback1: './assets/characters/personagem-1-padrao/frame1-normal.png',
+        fallback2: './assets/characters/personagem-1-padrao/frame2-impulso.png',
+        fallback3: './assets/characters/personagem-1-padrao/frame3-voo.png',
+      };
+    };
+
     function TimerOrbitAnimation({ orbitAnimState, isActive, isPaused, settings, themeColor }) {
       if (!settings || settings.enabled === false) return null;
 
       const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
       const isPausedState = isPaused;
-      const isBlueTheme = themeColor === 'azul';
+      const orbitTheme = getOrbitThemeConfig(themeColor);
 
       return (
         <div 
@@ -840,7 +887,7 @@
                     className="trail-pulse" 
                     d="M 55.6 194.3 A 117 117 0 0 1 75.3 101.2" 
                     fill="none" 
-                    stroke={isBlueTheme ? "#DBEAFE" : "#FFF0B3"} 
+                    stroke={orbitTheme.trail1} 
                     strokeWidth="6" 
                     strokeDasharray="10 4" 
                     opacity="0.65"
@@ -849,7 +896,7 @@
                     className="trail-pulse" 
                     d="M 71.2 107.4 A 117 117 0 0 1 124.3 62.3" 
                     fill="none" 
-                    stroke={isBlueTheme ? "#93C5FD" : "#FFD27F"} 
+                    stroke={orbitTheme.trail2} 
                     strokeWidth="12" 
                     strokeDasharray="16 2" 
                     opacity="0.9"
@@ -857,19 +904,19 @@
                   <path 
                     d="M 119.5 64.5 A 117 117 0 0 1 170 53" 
                     fill="none" 
-                    stroke={isBlueTheme ? "#60A5FA" : "#FFB84D"} 
+                    stroke={orbitTheme.trail3} 
                     strokeWidth="18" 
                   />
                   <path 
                     d="M 95.0 82.0 A 117 117 0 0 1 168 53" 
                     fill="none" 
-                    stroke={isBlueTheme ? "#3B82F6" : "#FFA057"} 
+                    stroke={orbitTheme.trail4} 
                     strokeWidth="8" 
                     strokeDasharray="12 4" 
                   />
-                  <rect className="sparkle-move" x="54" y="180" width="6" height="6" fill={isBlueTheme ? "#DBEAFE" : "#FFF0B3"} />
-                  <rect className="sparkle-move d1" x="62" y="196" width="5" height="5" fill={isBlueTheme ? "#93C5FD" : "#FFD27F"} />
-                  <rect className="sparkle-move d2" x="58" y="155" width="7" height="7" fill={isBlueTheme ? "#60A5FA" : "#FFB84D"} />
+                  <rect className="sparkle-move" x="54" y="180" width="6" height="6" fill={orbitTheme.sparkle1} />
+                  <rect className="sparkle-move d1" x="62" y="196" width="5" height="5" fill={orbitTheme.sparkle2} />
+                  <rect className="sparkle-move d2" x="58" y="155" width="7" height="7" fill={orbitTheme.sparkle3} />
                 </g>
 
                 <g>
@@ -907,65 +954,49 @@
 
                     {/* SPRITE 1: NORMAL / PARADA */}
                     <g className="sprite-frame" style={{ display: orbitAnimState === 1 ? 'block' : 'none' }}>
-                      {settings.customImg1 ? (
-                        <image href={settings.customImg1} x="-34" y="-34" width="68" height="68" className="pixelated" />
-                      ) : (
-                        <image href={isBlueTheme ? "./assets/characters/personagem-azul/frame1-normal.png" : "./assets/characters/personagem-1-padrao/frame1-normal.png"} x="-34" y="-34" width="68" height="68" className="pixelated" />
-                      )}
+                      <image 
+                        href={settings.customImg1 || orbitTheme.fallback1} 
+                        x="-34" 
+                        y="-34" 
+                        width="68" 
+                        height="68" 
+                        className="pixelated" 
+                      />
                     </g>
 
                     {/* SPRITE 2: INDO AO CÍRCULO (IMPULSO / DECOLAGEM) */}
                     <g className="sprite-frame" style={{ display: orbitAnimState === 2 ? 'block' : 'none' }}>
-                      {settings.customImg2 ? (
-                        <image href={settings.customImg2} x="-36" y="-34" width="72" height="68" className="pixelated" />
-                      ) : (
-                        <image href={isBlueTheme ? "./assets/characters/personagem-azul/frame2-impulso.png" : "./assets/characters/personagem-1-padrao/frame2-impulso.png"} x="-36" y="-34" width="72" height="68" className="pixelated" />
-                      )}
+                      <image 
+                        href={settings.customImg2 || orbitTheme.fallback2} 
+                        x="-36" 
+                        y="-34" 
+                        width="72" 
+                        height="68" 
+                        className="pixelated" 
+                      />
                     </g>
 
                     {/* SPRITE 3: VOO DO SUPERMAN GIRANDO NO CÍRCULO */}
                     <g className="sprite-frame" style={{ display: orbitAnimState === 3 ? 'block' : 'none' }}>
-                      {settings.customImg3 ? (
-                        <g>
-                          <image 
-                            href={settings.customImg3} 
-                            x="-44" 
-                            y="-32" 
-                            width="74" 
-                            height="64" 
-                            className="pixelated" 
-                            style={{ opacity: 0.4, filter: isBlueTheme ? 'drop-shadow(-4px 0 6px #60A5FA)' : 'sepia(1) saturate(5)' }} 
-                          />
-                          <image 
-                            href={settings.customImg3} 
-                            x="-34" 
-                            y="-34" 
-                            width="74" 
-                            height="64" 
-                            className="pixelated" 
-                          />
-                        </g>
-                      ) : (
-                        <g>
-                          <image 
-                            href={isBlueTheme ? "./assets/characters/personagem-azul/frame3-voo.png" : "./assets/characters/personagem-1-padrao/frame3-voo.png"} 
-                            x="-44" 
-                            y="-32" 
-                            width="74" 
-                            height="64" 
-                            className="pixelated" 
-                            style={{ opacity: 0.4, filter: isBlueTheme ? 'drop-shadow(-4px 0 6px #60A5FA)' : 'sepia(1) saturate(5)' }} 
-                          />
-                          <image 
-                            href={isBlueTheme ? "./assets/characters/personagem-azul/frame3-voo.png" : "./assets/characters/personagem-1-padrao/frame3-voo.png"} 
-                            x="-34" 
-                            y="-34" 
-                            width="74" 
-                            height="64" 
-                            className="pixelated" 
-                          />
-                        </g>
-                      )}
+                      <g>
+                        <image 
+                          href={settings.customImg3 || orbitTheme.fallback3} 
+                          x="-44" 
+                          y="-32" 
+                          width="74" 
+                          height="64" 
+                          className="pixelated" 
+                          style={{ opacity: 0.4, filter: orbitTheme.ghostFilter }} 
+                        />
+                        <image 
+                          href={settings.customImg3 || orbitTheme.fallback3} 
+                          x="-34" 
+                          y="-34" 
+                          width="74" 
+                          height="64" 
+                          className="pixelated" 
+                        />
+                      </g>
                     </g>
 
                   </g>
@@ -1570,8 +1601,10 @@
       const charactersSpritesCache = useRef({});
 
       useEffect(() => {
-        // Personagem dedicado ao tema azul e apenas o azul; demais temas usam a personagem amarela padrão
-        const requiredChar = themeColor === 'azul' ? 'personagem-azul' : 'personagem-1-padrao';
+        // Personagem dedicado por tema: azul -> personagem-azul; roxo -> personagem-roxo; demais -> personagem-1-padrao
+        let requiredChar = 'personagem-1-padrao';
+        if (themeColor === 'azul') requiredChar = 'personagem-azul';
+        else if (themeColor === 'roxo') requiredChar = 'personagem-roxo';
 
         if (charactersSpritesCache.current[requiredChar]) {
           const cached = charactersSpritesCache.current[requiredChar];
