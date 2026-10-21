@@ -45,7 +45,7 @@ interface OrbitTimerAnimationProps {
   themeColor?: string;
 }
 
-const ASSETS_VERSION = '20261021_v4_purple_fix';
+const ASSETS_VERSION = '20261021_v5_purple_unflatten';
 
 const getOrbitThemeConfig = (theme?: string) => {
   if (theme === 'azul') {
