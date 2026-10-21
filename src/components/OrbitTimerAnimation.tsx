@@ -7,6 +7,7 @@ export interface OrbitSettings {
   angle: number;
   showTrail: boolean;
   selectedCharacter?: string;
+  isCustomUpload?: boolean;
   customImg1: string | null;
   customImg2: string | null;
   customImg3: string | null;
@@ -44,6 +45,8 @@ interface OrbitTimerAnimationProps {
   themeColor?: string;
 }
 
+const ASSETS_VERSION = '20261021_v4_purple_fix';
+
 const getOrbitThemeConfig = (theme?: string) => {
   if (theme === 'azul') {
     return {
@@ -55,9 +58,9 @@ const getOrbitThemeConfig = (theme?: string) => {
       sparkle2: '#93C5FD',
       sparkle3: '#60A5FA',
       ghostFilter: 'drop-shadow(-4px 0 6px #60A5FA)',
-      fallback1: './assets/characters/personagem-azul/frame1-normal.png',
-      fallback2: './assets/characters/personagem-azul/frame2-impulso.png',
-      fallback3: './assets/characters/personagem-azul/frame3-voo.png',
+      fallback1: `./assets/characters/personagem-azul/frame1-normal.png?v=${ASSETS_VERSION}`,
+      fallback2: `./assets/characters/personagem-azul/frame2-impulso.png?v=${ASSETS_VERSION}`,
+      fallback3: `./assets/characters/personagem-azul/frame3-voo.png?v=${ASSETS_VERSION}`,
     };
   }
   if (theme === 'roxo') {
@@ -70,9 +73,9 @@ const getOrbitThemeConfig = (theme?: string) => {
       sparkle2: '#D8B4FE',
       sparkle3: '#C084FC',
       ghostFilter: 'drop-shadow(-4px 0 6px #C084FC)',
-      fallback1: './assets/characters/personagem-roxo/frame1-normal.png',
-      fallback2: './assets/characters/personagem-roxo/frame2-impulso.png',
-      fallback3: './assets/characters/personagem-roxo/frame3-voo.png',
+      fallback1: `./assets/characters/personagem-roxo/frame1-normal.png?v=${ASSETS_VERSION}`,
+      fallback2: `./assets/characters/personagem-roxo/frame2-impulso.png?v=${ASSETS_VERSION}`,
+      fallback3: `./assets/characters/personagem-roxo/frame3-voo.png?v=${ASSETS_VERSION}`,
     };
   }
   return {
@@ -84,9 +87,9 @@ const getOrbitThemeConfig = (theme?: string) => {
     sparkle2: '#FFD27F',
     sparkle3: '#FFB84D',
     ghostFilter: 'sepia(1) saturate(5)',
-    fallback1: './assets/characters/personagem-1-padrao/frame1-normal.png',
-    fallback2: './assets/characters/personagem-1-padrao/frame2-impulso.png',
-    fallback3: './assets/characters/personagem-1-padrao/frame3-voo.png',
+    fallback1: `./assets/characters/personagem-1-padrao/frame1-normal.png?v=${ASSETS_VERSION}`,
+    fallback2: `./assets/characters/personagem-1-padrao/frame2-impulso.png?v=${ASSETS_VERSION}`,
+    fallback3: `./assets/characters/personagem-1-padrao/frame3-voo.png?v=${ASSETS_VERSION}`,
   };
 };
 
@@ -102,6 +105,11 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
   const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
   const isPausedState = isPaused;
   const orbitTheme = getOrbitThemeConfig(themeColor);
+
+  const isManualUpload = Boolean(settings && settings.isCustomUpload && settings.customImg1);
+  const charF1 = isManualUpload ? settings.customImg1! : orbitTheme.fallback1;
+  const charF2 = isManualUpload ? (settings.customImg2 || settings.customImg1!) : orbitTheme.fallback2;
+  const charF3 = isManualUpload ? (settings.customImg3 || settings.customImg1!) : orbitTheme.fallback3;
 
   return (
     <div
@@ -198,7 +206,7 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
                   style={{ display: orbitAnimState === 1 ? 'block' : 'none' }}
                 >
                   <image
-                    href={settings.customImg1 || orbitTheme.fallback1}
+                    href={charF1}
                     x="-34"
                     y="-34"
                     width="68"
@@ -213,7 +221,7 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
                   style={{ display: orbitAnimState === 2 ? 'block' : 'none' }}
                 >
                   <image
-                    href={settings.customImg2 || orbitTheme.fallback2}
+                    href={charF2}
                     x="-36"
                     y="-34"
                     width="72"
@@ -229,7 +237,7 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
                 >
                   <g>
                     <image
-                      href={settings.customImg3 || orbitTheme.fallback3}
+                      href={charF3}
                       x="-44"
                       y="-32"
                       width="74"
@@ -241,7 +249,7 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
                       }}
                     />
                     <image
-                      href={settings.customImg3 || orbitTheme.fallback3}
+                      href={charF3}
                       x="-34"
                       y="-34"
                       width="74"

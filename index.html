@@ -784,7 +784,7 @@
     };
 
     const SPRITE_VERSION_KEY = 'orbit_sprites_version';
-    const CURRENT_SPRITES_VERSION = '20261021_v3_purple';
+    const CURRENT_SPRITES_VERSION = '20261021_v4_purple_direct';
 
     const loadOrbitSettings = () => {
       try {
@@ -803,11 +803,19 @@
         }
         const raw = localStorage.getItem(ORBIT_SETTINGS_KEY);
         if (!raw) return DEFAULT_ORBIT_SETTINGS;
-        return { ...DEFAULT_ORBIT_SETTINGS, ...JSON.parse(raw) };
+        const parsed = JSON.parse(raw);
+        if (!parsed.isCustomUpload) {
+          delete parsed.customImg1;
+          delete parsed.customImg2;
+          delete parsed.customImg3;
+        }
+        return { ...DEFAULT_ORBIT_SETTINGS, ...parsed };
       } catch (e) {
         return DEFAULT_ORBIT_SETTINGS;
       }
     };
+
+    const ASSETS_VERSION = '20261021_v4_purple_fix';
 
     const getOrbitThemeConfig = (theme) => {
       if (theme === 'azul') {
@@ -820,9 +828,9 @@
           sparkle2: '#93C5FD',
           sparkle3: '#60A5FA',
           ghostFilter: 'drop-shadow(-4px 0 6px #60A5FA)',
-          fallback1: './assets/characters/personagem-azul/frame1-normal.png',
-          fallback2: './assets/characters/personagem-azul/frame2-impulso.png',
-          fallback3: './assets/characters/personagem-azul/frame3-voo.png',
+          fallback1: `./assets/characters/personagem-azul/frame1-normal.png?v=${ASSETS_VERSION}`,
+          fallback2: `./assets/characters/personagem-azul/frame2-impulso.png?v=${ASSETS_VERSION}`,
+          fallback3: `./assets/characters/personagem-azul/frame3-voo.png?v=${ASSETS_VERSION}`,
         };
       }
       if (theme === 'roxo') {
@@ -835,9 +843,9 @@
           sparkle2: '#D8B4FE',
           sparkle3: '#C084FC',
           ghostFilter: 'drop-shadow(-4px 0 6px #C084FC)',
-          fallback1: './assets/characters/personagem-roxo/frame1-normal.png',
-          fallback2: './assets/characters/personagem-roxo/frame2-impulso.png',
-          fallback3: './assets/characters/personagem-roxo/frame3-voo.png',
+          fallback1: `./assets/characters/personagem-roxo/frame1-normal.png?v=${ASSETS_VERSION}`,
+          fallback2: `./assets/characters/personagem-roxo/frame2-impulso.png?v=${ASSETS_VERSION}`,
+          fallback3: `./assets/characters/personagem-roxo/frame3-voo.png?v=${ASSETS_VERSION}`,
         };
       }
       return {
@@ -849,9 +857,9 @@
         sparkle2: '#FFD27F',
         sparkle3: '#FFB84D',
         ghostFilter: 'sepia(1) saturate(5)',
-        fallback1: './assets/characters/personagem-1-padrao/frame1-normal.png',
-        fallback2: './assets/characters/personagem-1-padrao/frame2-impulso.png',
-        fallback3: './assets/characters/personagem-1-padrao/frame3-voo.png',
+        fallback1: `./assets/characters/personagem-1-padrao/frame1-normal.png?v=${ASSETS_VERSION}`,
+        fallback2: `./assets/characters/personagem-1-padrao/frame2-impulso.png?v=${ASSETS_VERSION}`,
+        fallback3: `./assets/characters/personagem-1-padrao/frame3-voo.png?v=${ASSETS_VERSION}`,
       };
     };
 
@@ -861,6 +869,11 @@
       const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
       const isPausedState = isPaused;
       const orbitTheme = getOrbitThemeConfig(themeColor);
+
+      const isManualUpload = Boolean(settings && settings.isCustomUpload && settings.customImg1);
+      const charF1 = isManualUpload ? settings.customImg1 : orbitTheme.fallback1;
+      const charF2 = isManualUpload ? (settings.customImg2 || settings.customImg1) : orbitTheme.fallback2;
+      const charF3 = isManualUpload ? (settings.customImg3 || settings.customImg1) : orbitTheme.fallback3;
 
       return (
         <div 
@@ -955,7 +968,7 @@
                     {/* SPRITE 1: NORMAL / PARADA */}
                     <g className="sprite-frame" style={{ display: orbitAnimState === 1 ? 'block' : 'none' }}>
                       <image 
-                        href={settings.customImg1 || orbitTheme.fallback1} 
+                        href={charF1} 
                         x="-34" 
                         y="-34" 
                         width="68" 
@@ -967,7 +980,7 @@
                     {/* SPRITE 2: INDO AO CÍRCULO (IMPULSO / DECOLAGEM) */}
                     <g className="sprite-frame" style={{ display: orbitAnimState === 2 ? 'block' : 'none' }}>
                       <image 
-                        href={settings.customImg2 || orbitTheme.fallback2} 
+                        href={charF2} 
                         x="-36" 
                         y="-34" 
                         width="72" 
@@ -980,7 +993,7 @@
                     <g className="sprite-frame" style={{ display: orbitAnimState === 3 ? 'block' : 'none' }}>
                       <g>
                         <image 
-                          href={settings.customImg3 || orbitTheme.fallback3} 
+                          href={charF3} 
                           x="-44" 
                           y="-32" 
                           width="74" 
@@ -989,7 +1002,7 @@
                           style={{ opacity: 0.4, filter: orbitTheme.ghostFilter }} 
                         />
                         <image 
-                          href={settings.customImg3 || orbitTheme.fallback3} 
+                          href={charF3} 
                           x="-34" 
                           y="-34" 
                           width="74" 
@@ -1026,6 +1039,7 @@
             const processed = processSpriteImage(img);
             onUpdateSettings({
               ...settings,
+              isCustomUpload: true,
               ...processed
             });
             onTriggerTestSequence();
@@ -1081,6 +1095,7 @@
       const handleResetSprites = () => {
         onUpdateSettings({
           ...settings,
+          isCustomUpload: false,
           customImg1: null,
           customImg2: null,
           customImg3: null
@@ -1606,29 +1621,18 @@
         if (themeColor === 'azul') requiredChar = 'personagem-azul';
         else if (themeColor === 'roxo') requiredChar = 'personagem-roxo';
 
-        if (charactersSpritesCache.current[requiredChar]) {
-          const cached = charactersSpritesCache.current[requiredChar];
-          setOrbitSettings(prev => ({
-            ...prev,
-            selectedCharacter: requiredChar,
-            customImg1: cached.customImg1,
-            customImg2: cached.customImg2,
-            customImg3: cached.customImg3
-          }));
-        } else {
-          loadCharacterFromDisk(requiredChar, (result) => {
-            if (result) {
-              charactersSpritesCache.current[requiredChar] = result;
-              setOrbitSettings(prev => ({
-                ...prev,
-                selectedCharacter: requiredChar,
-                customImg1: result.customImg1,
-                customImg2: result.customImg2,
-                customImg3: result.customImg3
-              }));
-            }
-          });
-        }
+        setOrbitSettings(prev => {
+          if (!prev.isCustomUpload) {
+            return {
+              ...prev,
+              selectedCharacter: requiredChar,
+              customImg1: null,
+              customImg2: null,
+              customImg3: null
+            };
+          }
+          return prev;
+        });
       }, [themeColor]);
 
       const handleUpdateOrbitSettings = (newSettings) => {
@@ -1860,6 +1864,14 @@
       const handleSelectTheme = (newColor) => {
         sound.playClick();
         setThemeColor(newColor);
+        setOrbitSettings(prev => ({
+          ...prev,
+          isCustomUpload: false,
+          selectedCharacter: newColor === 'azul' ? 'personagem-azul' : (newColor === 'roxo' ? 'personagem-roxo' : 'personagem-1-padrao'),
+          customImg1: null,
+          customImg2: null,
+          customImg3: null
+        }));
         resetTimer();
       };
 
