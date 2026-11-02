@@ -12,8 +12,8 @@ const THEME_PRESETS = {
   azul: {
     id: 'azul',
     name: 'Azul',
-    characterName: '',
-    characterLogo: null,
+    characterName: 'Minji',
+    characterLogo: 'assets/themes/minji.png',
     dotColor: '#2563EB',
     bg: '#BFDBFE',
     headerBg: 'rgba(239, 246, 255, 0.85)',
