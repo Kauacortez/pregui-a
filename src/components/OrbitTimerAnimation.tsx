@@ -45,7 +45,7 @@ interface OrbitTimerAnimationProps {
   themeColor?: string;
 }
 
-const ASSETS_VERSION = '20261021_v5_purple_unflatten';
+const ASSETS_VERSION = '20261102_v6_green';
 
 const getOrbitThemeConfig = (theme?: string) => {
   if (theme === 'azul') {
@@ -76,6 +76,36 @@ const getOrbitThemeConfig = (theme?: string) => {
       fallback1: `./assets/characters/personagem-roxo/frame1-normal.png?v=${ASSETS_VERSION}`,
       fallback2: `./assets/characters/personagem-roxo/frame2-impulso.png?v=${ASSETS_VERSION}`,
       fallback3: `./assets/characters/personagem-roxo/frame3-voo.png?v=${ASSETS_VERSION}`,
+    };
+  }
+  if (theme === 'verde') {
+    return {
+      trail1: '#D1FAE5',
+      trail2: '#A7F3D0',
+      trail3: '#6EE7B7',
+      trail4: '#10B981',
+      sparkle1: '#D1FAE5',
+      sparkle2: '#A7F3D0',
+      sparkle3: '#6EE7B7',
+      ghostFilter: 'drop-shadow(-4px 0 6px #34D399)',
+      fallback1: `./assets/characters/personagem-verde/frame1-normal.png?v=${ASSETS_VERSION}`,
+      fallback2: `./assets/characters/personagem-verde/frame2-impulso.png?v=${ASSETS_VERSION}`,
+      fallback3: `./assets/characters/personagem-verde/frame3-voo.png?v=${ASSETS_VERSION}`,
+    };
+  }
+  if (theme === 'rosa') {
+    return {
+      trail1: '#FCE7F3',
+      trail2: '#FBCFE8',
+      trail3: '#F472B6',
+      trail4: '#EC4899',
+      sparkle1: '#FCE7F3',
+      sparkle2: '#FBCFE8',
+      sparkle3: '#F472B6',
+      ghostFilter: 'drop-shadow(-4px 0 6px #F472B6)',
+      fallback1: `./assets/characters/personagem-1-padrao/frame1-normal.png?v=${ASSETS_VERSION}`,
+      fallback2: `./assets/characters/personagem-1-padrao/frame2-impulso.png?v=${ASSETS_VERSION}`,
+      fallback3: `./assets/characters/personagem-1-padrao/frame3-voo.png?v=${ASSETS_VERSION}`,
     };
   }
   return {

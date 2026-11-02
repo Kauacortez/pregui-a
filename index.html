@@ -652,9 +652,10 @@
       { id: 'personagem-1-padrao', name: 'Personagem 1 (Amarela / Padrão)', folder: 'assets/characters/personagem-1-padrao' },
       { id: 'personagem-azul', name: 'Personagem Azul (Tema Azul)', folder: 'assets/characters/personagem-azul' },
       { id: 'personagem-roxo', name: 'Personagem Roxa (Tema Roxo)', folder: 'assets/characters/personagem-roxo' },
-      { id: 'personagem-2', name: 'Personagem 2', folder: 'assets/characters/personagem-2' },
-      { id: 'personagem-3', name: 'Personagem 3', folder: 'assets/characters/personagem-3' },
-      { id: 'personagem-4', name: 'Personagem 4', folder: 'assets/characters/personagem-4' },
+      { id: 'personagem-verde', name: 'Personagem Verde (Tema Verde)', folder: 'assets/characters/personagem-verde' },
+      { id: 'personagem-2', name: 'Personagem 2 (Espelho Azul)', folder: 'assets/characters/personagem-2' },
+      { id: 'personagem-3', name: 'Personagem 3 (Espelho Roxo)', folder: 'assets/characters/personagem-3' },
+      { id: 'personagem-4', name: 'Personagem 4 (Espelho Verde)', folder: 'assets/characters/personagem-4' },
       { id: 'personagem-5', name: 'Personagem 5', folder: 'assets/characters/personagem-5' }
     ];
 
@@ -784,7 +785,7 @@
     };
 
     const SPRITE_VERSION_KEY = 'orbit_sprites_version';
-    const CURRENT_SPRITES_VERSION = '20261021_v4_purple_direct';
+    const CURRENT_SPRITES_VERSION = '20261102_v6_green';
 
     const loadOrbitSettings = () => {
       try {
@@ -815,7 +816,7 @@
       }
     };
 
-    const ASSETS_VERSION = '20261021_v5_purple_unflatten';
+    const ASSETS_VERSION = '20261102_v6_green';
 
     const getOrbitThemeConfig = (theme) => {
       if (theme === 'azul') {
@@ -846,6 +847,36 @@
           fallback1: `./assets/characters/personagem-roxo/frame1-normal.png?v=${ASSETS_VERSION}`,
           fallback2: `./assets/characters/personagem-roxo/frame2-impulso.png?v=${ASSETS_VERSION}`,
           fallback3: `./assets/characters/personagem-roxo/frame3-voo.png?v=${ASSETS_VERSION}`,
+        };
+      }
+      if (theme === 'verde') {
+        return {
+          trail1: '#D1FAE5',
+          trail2: '#A7F3D0',
+          trail3: '#6EE7B7',
+          trail4: '#10B981',
+          sparkle1: '#D1FAE5',
+          sparkle2: '#A7F3D0',
+          sparkle3: '#6EE7B7',
+          ghostFilter: 'drop-shadow(-4px 0 6px #34D399)',
+          fallback1: `./assets/characters/personagem-verde/frame1-normal.png?v=${ASSETS_VERSION}`,
+          fallback2: `./assets/characters/personagem-verde/frame2-impulso.png?v=${ASSETS_VERSION}`,
+          fallback3: `./assets/characters/personagem-verde/frame3-voo.png?v=${ASSETS_VERSION}`,
+        };
+      }
+      if (theme === 'rosa') {
+        return {
+          trail1: '#FCE7F3',
+          trail2: '#FBCFE8',
+          trail3: '#F472B6',
+          trail4: '#EC4899',
+          sparkle1: '#FCE7F3',
+          sparkle2: '#FBCFE8',
+          sparkle3: '#F472B6',
+          ghostFilter: 'drop-shadow(-4px 0 6px #F472B6)',
+          fallback1: `./assets/characters/personagem-1-padrao/frame1-normal.png?v=${ASSETS_VERSION}`,
+          fallback2: `./assets/characters/personagem-1-padrao/frame2-impulso.png?v=${ASSETS_VERSION}`,
+          fallback3: `./assets/characters/personagem-1-padrao/frame3-voo.png?v=${ASSETS_VERSION}`,
         };
       }
       return {
@@ -1616,10 +1647,11 @@
       const charactersSpritesCache = useRef({});
 
       useEffect(() => {
-        // Personagem dedicado por tema: azul -> personagem-azul; roxo -> personagem-roxo; demais -> personagem-1-padrao
+        // Personagem dedicado por tema: azul -> personagem-azul; roxo -> personagem-roxo; verde -> personagem-verde; demais -> personagem-1-padrao
         let requiredChar = 'personagem-1-padrao';
         if (themeColor === 'azul') requiredChar = 'personagem-azul';
         else if (themeColor === 'roxo') requiredChar = 'personagem-roxo';
+        else if (themeColor === 'verde') requiredChar = 'personagem-verde';
 
         setOrbitSettings(prev => {
           if (!prev.isCustomUpload) {
@@ -1864,10 +1896,14 @@
       const handleSelectTheme = (newColor) => {
         sound.playClick();
         setThemeColor(newColor);
+        let charId = 'personagem-1-padrao';
+        if (newColor === 'azul') charId = 'personagem-azul';
+        else if (newColor === 'roxo') charId = 'personagem-roxo';
+        else if (newColor === 'verde') charId = 'personagem-verde';
         setOrbitSettings(prev => ({
           ...prev,
           isCustomUpload: false,
-          selectedCharacter: newColor === 'azul' ? 'personagem-azul' : (newColor === 'roxo' ? 'personagem-roxo' : 'personagem-1-padrao'),
+          selectedCharacter: charId,
           customImg1: null,
           customImg2: null,
           customImg3: null
