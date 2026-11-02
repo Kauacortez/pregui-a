@@ -81,6 +81,7 @@ const THEME_PRESETS = {
     name: 'Verde',
     characterName: 'Haerin',
     characterLogo: 'assets/themes/haerin.png',
+    characterAvatar: 'assets/themes/haerin-avatar.png',
     dotColor: '#10B981',
     bg: '#BBF7D0',
     headerBg: 'rgba(240, 253, 244, 0.85)',
