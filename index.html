@@ -1576,9 +1576,9 @@
                 aria-label={theme.characterName ? `${theme.name} - ${theme.characterName}` : theme.name}
                 className="flex flex-col items-center group cursor-pointer focus:outline-none transition-all"
               >
-                {/* Bolinha Seletora de Cor com Tamanho Aumentado */}
+                {/* Seletor de Cor Quadrado com Cantos Arredondados */}
                 <div
-                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-all duration-200 flex items-center justify-center shrink-0 ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg transition-all duration-200 flex items-center justify-center shrink-0 ${
                     isSelected
                       ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 scale-105 shadow-sm'
                       : 'opacity-85 group-hover:opacity-100 group-hover:scale-110 active:scale-95'
@@ -1586,7 +1586,7 @@
                   style={{ backgroundColor: theme.dotColor }}
                 >
                   {isSelected && (
-                    <span className="w-2 h-2 rounded-full bg-white/95 shadow-xs pointer-events-none" />
+                    <span className="w-2 h-2 rounded-sm bg-white/95 shadow-xs pointer-events-none" />
                   )}
                 </div>
 
