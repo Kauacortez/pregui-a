@@ -12,6 +12,8 @@ const THEME_PRESETS = {
   azul: {
     id: 'azul',
     name: 'Azul',
+    characterName: '',
+    characterLogo: null,
     dotColor: '#2563EB',
     bg: '#BFDBFE',
     headerBg: 'rgba(239, 246, 255, 0.85)',
@@ -32,6 +34,8 @@ const THEME_PRESETS = {
   rosa: {
     id: 'rosa',
     name: 'Rosa',
+    characterName: '',
+    characterLogo: null,
     dotColor: '#EC4899',
     bg: '#FCE7F3',
     headerBg: 'rgba(253, 242, 248, 0.85)',
@@ -52,6 +56,8 @@ const THEME_PRESETS = {
   amarelo: {
     id: 'amarelo',
     name: 'Amarelo (Padrão)',
+    characterName: '',
+    characterLogo: null,
     dotColor: '#F59E0B',
     bg: '#FEF7CD',
     headerBg: 'rgba(255, 253, 247, 0.85)',
@@ -72,6 +78,8 @@ const THEME_PRESETS = {
   verde: {
     id: 'verde',
     name: 'Verde',
+    characterName: '',
+    characterLogo: null,
     dotColor: '#10B981',
     bg: '#BBF7D0',
     headerBg: 'rgba(240, 253, 244, 0.85)',
@@ -92,6 +100,8 @@ const THEME_PRESETS = {
   roxo: {
     id: 'roxo',
     name: 'Roxo',
+    characterName: 'Hyzin',
+    characterLogo: 'assets/themes/hyzin.png',
     dotColor: '#8B5CF6',
     bg: '#EDE9FE',
     headerBg: 'rgba(250, 245, 255, 0.85)',
@@ -127,12 +137,13 @@ interface ColorPaletteSelectorProps {
 const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentTheme, onSelectTheme }) => {
   return (
     <div
-      className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:py-1.5 rounded-full bg-slate-200/70 hover:bg-slate-200/90 border border-slate-300/80 shadow-xs backdrop-blur-xs transition-all"
+      className="inline-flex items-center gap-1 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-2xl bg-slate-200/80 hover:bg-slate-200/95 border border-slate-300/80 shadow-xs backdrop-blur-xs transition-all"
       role="radiogroup"
       aria-label="Seletor de cores"
     >
       {THEME_OPTIONS.map((theme) => {
         const isSelected = currentTheme === theme.id;
+        const themeAny = theme as any;
         return (
           <button
             key={theme.id}
@@ -140,18 +151,37 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
             role="radio"
             aria-checked={isSelected}
             onClick={() => onSelectTheme(theme.id)}
-            title={theme.name}
-            aria-label={theme.name}
-            className={`w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0 ${
-              isSelected
-                ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 scale-110 shadow-sm'
-                : 'opacity-80 hover:opacity-100 hover:scale-115 active:scale-95'
-            }`}
-            style={{ backgroundColor: theme.dotColor }}
+            title={themeAny.characterName ? `${theme.name} (${themeAny.characterName})` : theme.name}
+            aria-label={themeAny.characterName ? `${theme.name} - ${themeAny.characterName}` : theme.name}
+            className="flex flex-col items-center group cursor-pointer focus:outline-none transition-all"
           >
-            {isSelected && (
-              <span className="w-1.5 h-1.5 rounded-full bg-white/90 shadow-xs pointer-events-none" />
-            )}
+            {/* Bolinha Seletora de Cor com Tamanho Aumentado */}
+            <div
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-all duration-200 flex items-center justify-center shrink-0 ${
+                isSelected
+                  ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 scale-105 shadow-sm'
+                  : 'opacity-85 group-hover:opacity-100 group-hover:scale-110 active:scale-95'
+              }`}
+              style={{ backgroundColor: theme.dotColor }}
+            >
+              {isSelected && (
+                <span className="w-2 h-2 rounded-full bg-white/95 shadow-xs pointer-events-none" />
+              )}
+            </div>
+
+            {/* Espaço padronizado para nomes embaixo de cada cor (preparado para novas cores) */}
+            <div className="h-4 sm:h-4.5 w-8 sm:w-9 mt-1 flex items-center justify-center select-none overflow-visible">
+              {themeAny.characterLogo ? (
+                <img 
+                  src={themeAny.characterLogo} 
+                  alt={themeAny.characterName || 'Nome'} 
+                  className="h-3.5 sm:h-4 w-auto max-w-[36px] sm:max-w-[42px] object-contain transition-transform group-hover:scale-110 pointer-events-none" 
+                />
+              ) : (
+                /* Espaço reservado para nomes futuros mantendo o alinhamento de todas as bolinhas */
+                <span className="w-full h-full block" />
+              )}
+            </div>
           </button>
         );
       })}
