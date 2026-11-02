@@ -57,7 +57,7 @@ const THEME_PRESETS = {
     id: 'amarelo',
     name: 'Amarelo (Padrão)',
     characterName: 'Danielle',
-    characterLogo: 'assets/themes/danielle.png',
+    characterLogo: 'assets/themes/danielle.png?v=2',
     dotColor: '#F59E0B',
     bg: '#FEF7CD',
     headerBg: 'rgba(255, 253, 247, 0.85)',
