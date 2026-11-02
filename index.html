@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Modo Foco — Gestão Comportamental Anti-Procrastinação</title>
   <!-- Favicon SVG Vetorial Profissional -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2310B981%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><circle cx=%2212%22 cy=%2212%22 r=%226%22/><circle cx=%2212%22 cy=%2212%22 r=%222%22/></svg>">
@@ -785,7 +788,7 @@
     };
 
     const SPRITE_VERSION_KEY = 'orbit_sprites_version';
-    const CURRENT_SPRITES_VERSION = '20261102_v6_green';
+    const CURRENT_SPRITES_VERSION = '20261102_v7_green_final';
 
     const loadOrbitSettings = () => {
       try {
@@ -805,18 +808,18 @@
         const raw = localStorage.getItem(ORBIT_SETTINGS_KEY);
         if (!raw) return DEFAULT_ORBIT_SETTINGS;
         const parsed = JSON.parse(raw);
-        if (!parsed.isCustomUpload) {
-          delete parsed.customImg1;
-          delete parsed.customImg2;
-          delete parsed.customImg3;
-        }
+        // Sempre limpa customImg resíduos ao carregar a página
+        delete parsed.customImg1;
+        delete parsed.customImg2;
+        delete parsed.customImg3;
+        parsed.isCustomUpload = false;
         return { ...DEFAULT_ORBIT_SETTINGS, ...parsed };
       } catch (e) {
         return DEFAULT_ORBIT_SETTINGS;
       }
     };
 
-    const ASSETS_VERSION = '20261102_v6_green';
+    const ASSETS_VERSION = '20261102_v7_green_final';
 
     const getOrbitThemeConfig = (theme) => {
       if (theme === 'azul') {
@@ -901,10 +904,10 @@
       const isPausedState = isPaused;
       const orbitTheme = getOrbitThemeConfig(themeColor);
 
-      const isManualUpload = Boolean(settings && settings.isCustomUpload && settings.customImg1);
-      const charF1 = isManualUpload ? settings.customImg1 : orbitTheme.fallback1;
-      const charF2 = isManualUpload ? (settings.customImg2 || settings.customImg1) : orbitTheme.fallback2;
-      const charF3 = isManualUpload ? (settings.customImg3 || settings.customImg1) : orbitTheme.fallback3;
+      // Personagem estritamente vinculada ao tema ativo (sem risco de interferência de cache residual)
+      const charF1 = (settings && settings.isCustomUpload && settings.customImg1) ? settings.customImg1 : orbitTheme.fallback1;
+      const charF2 = (settings && settings.isCustomUpload && settings.customImg2) ? settings.customImg2 : orbitTheme.fallback2;
+      const charF3 = (settings && settings.isCustomUpload && settings.customImg3) ? settings.customImg3 : orbitTheme.fallback3;
 
       return (
         <div 
