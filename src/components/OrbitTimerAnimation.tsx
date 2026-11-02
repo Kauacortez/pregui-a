@@ -45,7 +45,7 @@ interface OrbitTimerAnimationProps {
   themeColor?: string;
 }
 
-const ASSETS_VERSION = '20261102_v8_pink_final';
+const ASSETS_VERSION = '20261102_v9_pink_removed';
 
 const getOrbitThemeConfig = (theme?: string) => {
   if (theme === 'azul') {
@@ -103,9 +103,9 @@ const getOrbitThemeConfig = (theme?: string) => {
       sparkle2: '#FBCFE8',
       sparkle3: '#F472B6',
       ghostFilter: 'drop-shadow(-4px 0 6px #F472B6)',
-      fallback1: `./assets/characters/personagem-rosa/frame1-normal.png?v=${ASSETS_VERSION}`,
-      fallback2: `./assets/characters/personagem-rosa/frame2-impulso.png?v=${ASSETS_VERSION}`,
-      fallback3: `./assets/characters/personagem-rosa/frame3-voo.png?v=${ASSETS_VERSION}`,
+      fallback1: null,
+      fallback2: null,
+      fallback3: null,
     };
   }
   return {
@@ -140,6 +140,8 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
   const charF1 = isManualUpload ? settings.customImg1! : orbitTheme.fallback1;
   const charF2 = isManualUpload ? (settings.customImg2 || settings.customImg1!) : orbitTheme.fallback2;
   const charF3 = isManualUpload ? (settings.customImg3 || settings.customImg1!) : orbitTheme.fallback3;
+
+  if (!charF1 && !charF2 && !charF3) return null;
 
   return (
     <div

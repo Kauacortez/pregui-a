@@ -656,11 +656,10 @@
       { id: 'personagem-azul', name: 'Personagem Azul (Tema Azul)', folder: 'assets/characters/personagem-azul' },
       { id: 'personagem-roxo', name: 'Personagem Roxa (Tema Roxo)', folder: 'assets/characters/personagem-roxo' },
       { id: 'personagem-verde', name: 'Personagem Verde (Tema Verde)', folder: 'assets/characters/personagem-verde' },
-      { id: 'personagem-rosa', name: 'Personagem Rosa (Tema Rosa)', folder: 'assets/characters/personagem-rosa' },
       { id: 'personagem-2', name: 'Personagem 2 (Espelho Azul)', folder: 'assets/characters/personagem-2' },
       { id: 'personagem-3', name: 'Personagem 3 (Espelho Roxo)', folder: 'assets/characters/personagem-3' },
       { id: 'personagem-4', name: 'Personagem 4 (Espelho Verde)', folder: 'assets/characters/personagem-4' },
-      { id: 'personagem-5', name: 'Personagem 5 (Espelho Rosa)', folder: 'assets/characters/personagem-5' }
+      { id: 'personagem-5', name: 'Personagem 5', folder: 'assets/characters/personagem-5' }
     ];
 
     const DEFAULT_ORBIT_SETTINGS = {
@@ -789,7 +788,7 @@
     };
 
     const SPRITE_VERSION_KEY = 'orbit_sprites_version';
-    const CURRENT_SPRITES_VERSION = '20261102_v8_pink_final';
+    const CURRENT_SPRITES_VERSION = '20261102_v9_pink_removed';
 
     const loadOrbitSettings = () => {
       try {
@@ -820,7 +819,7 @@
       }
     };
 
-    const ASSETS_VERSION = '20261102_v8_pink_final';
+    const ASSETS_VERSION = '20261102_v9_pink_removed';
 
     const getOrbitThemeConfig = (theme) => {
       if (theme === 'azul') {
@@ -878,9 +877,9 @@
           sparkle2: '#FBCFE8',
           sparkle3: '#F472B6',
           ghostFilter: 'drop-shadow(-4px 0 6px #F472B6)',
-          fallback1: `./assets/characters/personagem-rosa/frame1-normal.png?v=${ASSETS_VERSION}`,
-          fallback2: `./assets/characters/personagem-rosa/frame2-impulso.png?v=${ASSETS_VERSION}`,
-          fallback3: `./assets/characters/personagem-rosa/frame3-voo.png?v=${ASSETS_VERSION}`,
+          fallback1: null,
+          fallback2: null,
+          fallback3: null,
         };
       }
       return {
@@ -909,6 +908,9 @@
       const charF1 = (settings && settings.isCustomUpload && settings.customImg1) ? settings.customImg1 : orbitTheme.fallback1;
       const charF2 = (settings && settings.isCustomUpload && settings.customImg2) ? settings.customImg2 : orbitTheme.fallback2;
       const charF3 = (settings && settings.isCustomUpload && settings.customImg3) ? settings.customImg3 : orbitTheme.fallback3;
+
+      // Se não há personagem para o tema e nenhum upload customizado foi feito, não renderiza a animação
+      if (!charF1 && !charF2 && !charF3) return null;
 
       return (
         <div 
@@ -1651,12 +1653,12 @@
       const charactersSpritesCache = useRef({});
 
       useEffect(() => {
-        // Personagem dedicado por tema: azul -> personagem-azul; roxo -> personagem-roxo; verde -> personagem-verde; rosa -> personagem-rosa; demais -> personagem-1-padrao
+        // Personagem dedicado por tema: azul -> personagem-azul; roxo -> personagem-roxo; verde -> personagem-verde; rosa -> sem personagem (null); demais -> personagem-1-padrao
         let requiredChar = 'personagem-1-padrao';
         if (themeColor === 'azul') requiredChar = 'personagem-azul';
         else if (themeColor === 'roxo') requiredChar = 'personagem-roxo';
         else if (themeColor === 'verde') requiredChar = 'personagem-verde';
-        else if (themeColor === 'rosa') requiredChar = 'personagem-rosa';
+        else if (themeColor === 'rosa') requiredChar = null;
 
         setOrbitSettings(prev => {
           if (!prev.isCustomUpload) {
@@ -1905,7 +1907,7 @@
         if (newColor === 'azul') charId = 'personagem-azul';
         else if (newColor === 'roxo') charId = 'personagem-roxo';
         else if (newColor === 'verde') charId = 'personagem-verde';
-        else if (newColor === 'rosa') charId = 'personagem-rosa';
+        else if (newColor === 'rosa') charId = null;
         setOrbitSettings(prev => ({
           ...prev,
           isCustomUpload: false,
