@@ -34,8 +34,8 @@ const THEME_PRESETS = {
   rosa: {
     id: 'rosa',
     name: 'Rosa',
-    characterName: '',
-    characterLogo: null,
+    characterName: 'Hanni',
+    characterLogo: 'assets/themes/hanni.png',
     dotColor: '#EC4899',
     bg: '#FCE7F3',
     headerBg: 'rgba(253, 242, 248, 0.85)',
