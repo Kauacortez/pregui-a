@@ -14,6 +14,7 @@ const THEME_PRESETS = {
     name: 'Azul',
     characterName: 'Minji',
     characterLogo: 'assets/themes/minji.png',
+    characterAvatar: 'assets/themes/minji-avatar.png',
     dotColor: '#2563EB',
     bg: '#BFDBFE',
     headerBg: 'rgba(239, 246, 255, 0.85)',
@@ -157,15 +158,23 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
           >
             {/* Seletor de Cor Quadrado com Cantos Arredondados */}
             <div
-              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg transition-all duration-200 flex items-center justify-center shrink-0 ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg transition-all duration-200 flex items-center justify-center shrink-0 overflow-hidden ${
                 isSelected
                   ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 scale-105 shadow-sm'
                   : 'opacity-85 group-hover:opacity-100 group-hover:scale-110 active:scale-95'
               }`}
               style={{ backgroundColor: theme.dotColor }}
             >
-              {isSelected && (
-                <span className="w-2 h-2 rounded-sm bg-white/95 shadow-xs pointer-events-none" />
+              {themeAny.characterAvatar ? (
+                <img
+                  src={themeAny.characterAvatar}
+                  alt={themeAny.characterName || theme.name}
+                  className="w-full h-full object-cover pointer-events-none select-none"
+                />
+              ) : (
+                isSelected && (
+                  <span className="w-2 h-2 rounded-sm bg-white/95 shadow-xs pointer-events-none" />
+                )
               )}
             </div>
 
