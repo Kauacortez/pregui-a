@@ -56,8 +56,8 @@ const THEME_PRESETS = {
   amarelo: {
     id: 'amarelo',
     name: 'Amarelo (Padrão)',
-    characterName: '',
-    characterLogo: null,
+    characterName: 'Danielle',
+    characterLogo: 'assets/themes/danielle.png',
     dotColor: '#F59E0B',
     bg: '#FEF7CD',
     headerBg: 'rgba(255, 253, 247, 0.85)',
@@ -170,12 +170,12 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
             </div>
 
             {/* Espaço padronizado para nomes embaixo de cada cor (preparado para novas cores) */}
-            <div className="h-4 sm:h-4.5 w-8 sm:w-9 mt-1 flex items-center justify-center select-none overflow-visible">
+            <div className="h-4 sm:h-4.5 w-9 sm:w-11 mt-1 flex items-center justify-center select-none overflow-visible">
               {themeAny.characterLogo ? (
                 <img 
                   src={themeAny.characterLogo} 
                   alt={themeAny.characterName || 'Nome'} 
-                  className="h-3.5 sm:h-4 w-auto max-w-[36px] sm:max-w-[42px] object-contain transition-transform group-hover:scale-110 pointer-events-none" 
+                  className="h-3 sm:h-3.5 w-auto max-w-[42px] sm:max-w-[48px] object-contain transition-transform group-hover:scale-110 pointer-events-none drop-shadow-xs" 
                 />
               ) : (
                 /* Espaço reservado para nomes futuros mantendo o alinhamento de todas as bolinhas */
