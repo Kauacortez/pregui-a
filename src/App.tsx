@@ -106,6 +106,7 @@ const THEME_PRESETS = {
     name: 'Roxo',
     characterName: 'Hyzin',
     characterLogo: 'assets/themes/hyzin.png',
+    characterAvatar: 'assets/themes/hyzin-avatar.png',
     dotColor: '#8B5CF6',
     bg: '#EDE9FE',
     headerBg: 'rgba(250, 245, 255, 0.85)',
