@@ -1579,14 +1579,18 @@
                 onClick={() => onSelectTheme(theme.id)}
                 title={theme.characterName ? `${theme.name} (${theme.characterName})` : theme.name}
                 aria-label={theme.characterName ? `${theme.name} - ${theme.characterName}` : theme.name}
-                className="flex flex-col items-center group cursor-pointer focus:outline-none transition-all"
+                className={`flex flex-col items-center group cursor-pointer focus:outline-none transition-all duration-200 ${
+                  isSelected
+                    ? 'grayscale-0 opacity-100 scale-105'
+                    : 'grayscale opacity-60 hover:opacity-85 hover:scale-100 active:scale-95'
+                }`}
               >
                 {/* Seletor de Cor Quadrado com Cantos Arredondados */}
                 <div
                   className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg transition-all duration-200 flex items-center justify-center shrink-0 overflow-hidden ${
                     isSelected
-                      ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 scale-105 shadow-sm'
-                      : 'opacity-85 group-hover:opacity-100 group-hover:scale-110 active:scale-95'
+                      ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 shadow-sm'
+                      : ''
                   }`}
                   style={{ backgroundColor: theme.dotColor }}
                 >
