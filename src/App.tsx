@@ -59,7 +59,7 @@ const THEME_PRESETS = {
     id: 'amarelo',
     name: 'Amarelo (Padrão)',
     characterName: 'Danielle',
-    characterLogo: 'assets/themes/danielle.png?v=2',
+    characterLogo: 'assets/themes/danielle.png?v=3',
     characterAvatar: 'assets/themes/danielle-avatar.png',
     dotColor: '#F59E0B',
     bg: '#FEF7CD',
