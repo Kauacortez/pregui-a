@@ -45,7 +45,7 @@ interface OrbitTimerAnimationProps {
   themeColor?: string;
 }
 
-const ASSETS_VERSION = '20261102_v9_pink_removed';
+const ASSETS_VERSION = '20261106_v11_pink_character';
 
 const getOrbitThemeConfig = (theme?: string) => {
   if (theme === 'azul') {
@@ -103,9 +103,9 @@ const getOrbitThemeConfig = (theme?: string) => {
       sparkle2: '#FBCFE8',
       sparkle3: '#F472B6',
       ghostFilter: 'drop-shadow(-4px 0 6px #F472B6)',
-      fallback1: null,
-      fallback2: null,
-      fallback3: null,
+      fallback1: `./assets/characters/personagem-rosa/frame1-normal.png?v=${ASSETS_VERSION}`,
+      fallback2: `./assets/characters/personagem-rosa/frame2-impulso.png?v=${ASSETS_VERSION}`,
+      fallback3: `./assets/characters/personagem-rosa/frame3-voo.png?v=${ASSETS_VERSION}`,
     };
   }
   return {
