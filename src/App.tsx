@@ -152,13 +152,13 @@ interface ColorPaletteSelectorProps {
 const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentTheme, onSelectTheme }) => {
   return (
     <div
-      className="relative inline-flex items-center p-1 sm:p-1.5 rounded-2xl bg-white/50 hover:bg-white/70 border border-slate-300/90 shadow-sm backdrop-blur-md transition-all select-none"
+      className="relative inline-flex items-center p-1 rounded-xl bg-white/50 hover:bg-white/70 border border-slate-300/80 shadow-xs backdrop-blur-md transition-all select-none"
       role="radiogroup"
       aria-label="Seletor retangular de temas"
     >
       {/* Barra retangular contínua com a imagem do espectro de cores do tema */}
       <div 
-        className="relative w-[285px] sm:w-[325px] md:w-[365px] lg:w-[385px] h-12 sm:h-13 md:h-14 rounded-xl overflow-hidden border border-white/70 shadow-inner flex items-stretch"
+        className="relative w-[245px] sm:w-[275px] md:w-[295px] h-9 sm:h-10 rounded-lg overflow-hidden border border-white/70 shadow-inner flex items-stretch"
         style={{
           backgroundImage: 'url("assets/themes/theme-spectrum.png")',
           backgroundSize: 'cover',
@@ -187,14 +187,14 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
               onClick={() => onSelectTheme(theme.id)}
               title={`${theme.name} (${themeAny.characterName})`}
               aria-label={`Selecionar tema ${theme.name} - ${themeAny.characterName}`}
-              className="relative flex-1 h-full z-10 flex items-center justify-center p-0.5 sm:p-1 cursor-pointer group focus:outline-none"
+              className="relative flex-1 h-full z-10 flex items-center justify-center p-0.5 cursor-pointer group focus:outline-none"
             >
               {/* Moldura retangular destacada para a foto da personagem */}
               <div
-                className={`w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 md:w-10 md:h-10 rounded-lg overflow-hidden border-2 transition-all duration-200 flex items-center justify-center shrink-0 shadow-sm ${
+                className={`w-7 h-7 sm:w-7.5 sm:h-7.5 md:w-8 md:h-8 rounded-md overflow-hidden border transition-all duration-200 flex items-center justify-center shrink-0 shadow-xs ${
                   isSelected
-                    ? 'border-white ring-2 ring-slate-900/60 shadow-lg scale-105 grayscale-0 opacity-100'
-                    : 'border-white/50 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 group-hover:border-white group-hover:shadow-md'
+                    ? 'border-white ring-2 ring-slate-900/60 shadow-md scale-105 grayscale-0 opacity-100'
+                    : 'border-white/50 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 group-hover:border-white group-hover:shadow-xs'
                 }`}
                 style={{ backgroundColor: theme.dotColor }}
               >
@@ -205,7 +205,7 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
                     className="w-full h-full object-cover pointer-events-none select-none transition-transform duration-200 group-hover:scale-110"
                   />
                 ) : (
-                  <span className="w-3.5 h-3.5 rounded-md bg-white/95 shadow-xs pointer-events-none" />
+                  <span className="w-3 h-3 rounded-sm bg-white/95 shadow-xs pointer-events-none" />
                 )}
               </div>
             </button>
