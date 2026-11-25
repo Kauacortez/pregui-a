@@ -134,14 +134,14 @@ const THEME_OPTIONS = [
   THEME_PRESETS.roxo
 ];
 
-// Ordem espectral da imagem de referência contendo APENAS as cores do tema:
-// Rosa (Hanni) -> Amarelo (Danielle) -> Verde (Haerin) -> Azul (Minji) -> Roxo (Hyzin)
+// Ordem personalizada das cores do tema na barra de espectro:
+// Azul (Minji) -> Rosa (Hanni) -> Amarelo (Danielle) -> Roxo (Hyzin) -> Verde (Haerin)
 const SPECTRUM_THEME_OPTIONS = [
+  THEME_PRESETS.azul,
   THEME_PRESETS.rosa,
   THEME_PRESETS.amarelo,
-  THEME_PRESETS.verde,
-  THEME_PRESETS.azul,
-  THEME_PRESETS.roxo
+  THEME_PRESETS.roxo,
+  THEME_PRESETS.verde
 ];
 
 interface ColorPaletteSelectorProps {
@@ -160,17 +160,17 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
       <div 
         className="relative w-56 sm:w-64 md:w-72 h-8 sm:h-9 rounded-xl overflow-hidden border border-white/60 shadow-inner flex items-stretch"
         style={{
-          backgroundImage: 'url("assets/themes/theme-spectrum-rainbow.png")',
+          backgroundImage: 'url("assets/themes/theme-spectrum.png")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundColor: '#EC4899'
+          backgroundColor: '#2563EB'
         }}
       >
         {/* Gradiente CSS suave cobrindo exatamente as 5 cores dos temas */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-90"
           style={{
-            background: 'linear-gradient(to right, #EC4899 0%, #EC4899 10%, #F59E0B 28%, #10B981 50%, #2563EB 72%, #8B5CF6 90%, #8B5CF6 100%)'
+            background: 'linear-gradient(to right, #2563EB 0%, #2563EB 12%, #EC4899 28%, #EC4899 35%, #F59E0B 48%, #F59E0B 52%, #8B5CF6 70%, #8B5CF6 76%, #10B981 90%, #10B981 100%)'
           }}
         />
 
