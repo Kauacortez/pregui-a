@@ -4,7 +4,7 @@ import { MonsterTimer } from './components/MonsterTimer';
 import { BlacklistManager } from './components/BlacklistManager';
 import { DistractionDetector } from './components/DistractionDetector';
 import { PenaltyLockScreen } from './components/PenaltyLockScreen';
-import { Bell, BellOff, ShieldAlert } from 'lucide-react';
+import { Bell, BellOff, ShieldAlert, AlertTriangle, Check, RotateCcw, X } from 'lucide-react';
 import { useFocusStore } from './store/useFocusStore';
 
 // Presets de temas visuais (Azul, Rosa, Amarelo [padrão], Verde, Roxo)
@@ -206,6 +206,119 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
   );
 };
 
+interface ThemeChangeConfirmModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  pendingThemeColor: string | null;
+  timeLeft: number;
+  onConfirmKeepTime: () => void;
+  onConfirmResetTime: () => void;
+}
+
+const ThemeChangeConfirmModal: React.FC<ThemeChangeConfirmModalProps> = ({
+  isOpen,
+  onClose,
+  pendingThemeColor,
+  timeLeft,
+  onConfirmKeepTime,
+  onConfirmResetTime
+}) => {
+  if (!isOpen || !pendingThemeColor) return null;
+
+  const pendingTheme = THEME_PRESETS[pendingThemeColor as keyof typeof THEME_PRESETS] || THEME_PRESETS.amarelo;
+
+  const formatModalTime = (seconds: number) => {
+    const s = Math.max(0, seconds || 0);
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-[#FFFDF7] border-2 border-slate-300 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-md w-full flex flex-col gap-4 text-slate-900 animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 shrink-0 shadow-xs">
+              <AlertTriangle size={20} />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                Mudar Tema Durante a Sessão?
+              </h3>
+              <p className="text-xs text-slate-500 font-medium">
+                O cronômetro possui uma sessão ativa ou pausada
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+            title="Fechar aviso"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col gap-2 text-xs">
+          <div className="flex justify-between items-center text-slate-700">
+            <span className="font-semibold">Tempo no cronômetro:</span>
+            <span className="font-mono font-black text-sm text-slate-950 px-2.5 py-0.5 bg-white border border-slate-200 rounded-md shadow-xs">
+              {formatModalTime(timeLeft)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center text-slate-700">
+            <span className="font-semibold">Tema de destino:</span>
+            <span className="font-bold text-slate-900">
+              {pendingTheme.name} ({pendingTheme.characterName})
+            </span>
+          </div>
+        </div>
+
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Você deseja realmente mudar o tema? Escolha se prefere <strong>manter a numeração atual</strong> ou <strong>reiniciar a contagem</strong> para o novo tema:
+        </p>
+
+        <div className="flex flex-col gap-2 pt-1">
+          <button
+            type="button"
+            onClick={onConfirmKeepTime}
+            className="w-full py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm text-white bg-slate-900 hover:bg-slate-800 active:scale-98 transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+          >
+            <Check size={16} className="text-emerald-400" />
+            <span>Manter numeração e mudar tema</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onConfirmResetTime}
+            className="w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 active:scale-98 transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+          >
+            <RotateCcw size={14} className="text-slate-500" />
+            <span>Reiniciar cronômetro e mudar tema</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors text-center cursor-pointer mt-0.5"
+          >
+            Cancelar (Permanecer no tema atual)
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const App: React.FC = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(
     typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted'
@@ -221,9 +334,56 @@ export const App: React.FC = () => {
 
   const currentThemeConfig = THEME_PRESETS[themeColor as keyof typeof THEME_PRESETS] || THEME_PRESETS.amarelo;
 
-  const handleSelectTheme = (newColor: string) => {
+  const { isActive, isPaused, timeLeft, initialDuration, resetTimer } = useFocusStore();
+  const [pendingThemeColor, setPendingThemeColor] = useState<string | null>(null);
+  const [showThemeModal, setShowThemeModal] = useState(false);
+
+  const applyThemeChange = (newColor: string, shouldReset = false) => {
     setThemeColor(newColor);
-    useFocusStore.getState().resetTimer();
+    try {
+      localStorage.setItem('focus_theme_color', newColor);
+    } catch(e) {}
+    if (shouldReset) {
+      resetTimer();
+    }
+  };
+
+  const handleSelectTheme = (newColor: string) => {
+    if (newColor === themeColor) return;
+
+    const hasActiveOrPausedSession = isActive || (isPaused && timeLeft > 0) || (timeLeft > 0 && timeLeft < initialDuration);
+
+    if (hasActiveOrPausedSession) {
+      if (isActive) {
+        useFocusStore.setState({ isActive: false, isPaused: true });
+      }
+      setPendingThemeColor(newColor);
+      setShowThemeModal(true);
+      return;
+    }
+
+    applyThemeChange(newColor, false);
+  };
+
+  const handleConfirmThemeKeepTime = () => {
+    if (!pendingThemeColor) return;
+    const color = pendingThemeColor;
+    setPendingThemeColor(null);
+    setShowThemeModal(false);
+    applyThemeChange(color, false);
+  };
+
+  const handleConfirmThemeResetTime = () => {
+    if (!pendingThemeColor) return;
+    const color = pendingThemeColor;
+    setPendingThemeColor(null);
+    setShowThemeModal(false);
+    applyThemeChange(color, true);
+  };
+
+  const handleCancelThemeChange = () => {
+    setPendingThemeColor(null);
+    setShowThemeModal(false);
   };
 
   const [showPresenceProtocol, setShowPresenceProtocol] = useState(true);
@@ -342,6 +502,16 @@ export const App: React.FC = () => {
         {/* Gerenciador de distrações */}
         <BlacklistManager />
       </main>
+
+      {/* Modal de Confirmação para Troca de Tema durante Sessão */}
+      <ThemeChangeConfirmModal
+        isOpen={showThemeModal}
+        onClose={handleCancelThemeChange}
+        pendingThemeColor={pendingThemeColor}
+        timeLeft={timeLeft}
+        onConfirmKeepTime={handleConfirmThemeKeepTime}
+        onConfirmResetTime={handleConfirmThemeResetTime}
+      />
 
       {/* Rodapé */}
       <footer className="w-full max-w-7xl mx-auto text-center border-t border-amber-200/90 py-3 sm:py-4 px-4 text-xs text-amber-900/70 font-medium">
