@@ -134,6 +134,16 @@ const THEME_OPTIONS = [
   THEME_PRESETS.roxo
 ];
 
+// Ordem espectral da imagem de referência contendo APENAS as cores do tema:
+// Rosa (Hanni) -> Amarelo (Danielle) -> Verde (Haerin) -> Azul (Minji) -> Roxo (Hyzin)
+const SPECTRUM_THEME_OPTIONS = [
+  THEME_PRESETS.rosa,
+  THEME_PRESETS.amarelo,
+  THEME_PRESETS.verde,
+  THEME_PRESETS.azul,
+  THEME_PRESETS.roxo
+];
+
 interface ColorPaletteSelectorProps {
   currentTheme: string;
   onSelectTheme: (id: string) => void;
@@ -142,66 +152,69 @@ interface ColorPaletteSelectorProps {
 const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentTheme, onSelectTheme }) => {
   return (
     <div
-      className="inline-flex items-center gap-1 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-2xl bg-slate-200/80 hover:bg-slate-200/95 border border-slate-300/80 shadow-xs backdrop-blur-xs transition-all"
+      className="relative inline-flex items-center p-1 sm:p-1.5 rounded-2xl bg-white/40 hover:bg-white/60 border border-slate-300/80 shadow-sm backdrop-blur-md transition-all select-none"
       role="radiogroup"
-      aria-label="Seletor de cores"
+      aria-label="Seletor de temas por barra de cores"
     >
-      {THEME_OPTIONS.map((theme) => {
-        const isSelected = currentTheme === theme.id;
-        const themeAny = theme as any;
-        return (
-          <button
-            key={theme.id}
-            type="button"
-            role="radio"
-            aria-checked={isSelected}
-            onClick={() => onSelectTheme(theme.id)}
-            title={themeAny.characterName ? `${theme.name} (${themeAny.characterName})` : theme.name}
-            aria-label={themeAny.characterName ? `${theme.name} - ${themeAny.characterName}` : theme.name}
-            className={`flex flex-col items-center group cursor-pointer focus:outline-none transition-all duration-200 ${
-              isSelected
-                ? 'grayscale-0 opacity-100 scale-105'
-                : 'grayscale opacity-60 hover:opacity-85 hover:scale-100 active:scale-95'
-            }`}
-          >
-            {/* Seletor de Cor Quadrado com Cantos Arredondados */}
-            <div
-              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg transition-all duration-200 flex items-center justify-center shrink-0 overflow-hidden ${
-                isSelected
-                  ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-400 shadow-sm'
-                  : ''
-              }`}
-              style={{ backgroundColor: theme.dotColor }}
-            >
-              {themeAny.characterAvatar ? (
-                <img
-                  src={themeAny.characterAvatar}
-                  alt={themeAny.characterName || theme.name}
-                  className="w-full h-full object-cover pointer-events-none select-none"
-                />
-              ) : (
-                isSelected && (
-                  <span className="w-2 h-2 rounded-sm bg-white/95 shadow-xs pointer-events-none" />
-                )
-              )}
-            </div>
+      {/* Barra contínua com a imagem do espectro de cores do tema */}
+      <div 
+        className="relative w-56 sm:w-64 md:w-72 h-8 sm:h-9 rounded-xl overflow-hidden border border-white/60 shadow-inner flex items-stretch"
+        style={{
+          backgroundImage: 'url("assets/themes/theme-spectrum-rainbow.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: '#EC4899'
+        }}
+      >
+        {/* Gradiente CSS suave cobrindo exatamente as 5 cores dos temas */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-90"
+          style={{
+            background: 'linear-gradient(to right, #EC4899 0%, #EC4899 10%, #F59E0B 28%, #10B981 50%, #2563EB 72%, #8B5CF6 90%, #8B5CF6 100%)'
+          }}
+        />
 
-            {/* Espaço padronizado para nomes embaixo de cada cor (preparado para novas cores) */}
-            <div className="h-4 sm:h-4.5 w-9 sm:w-11 mt-1 flex items-center justify-center select-none overflow-visible">
-              {themeAny.characterLogo ? (
-                <img 
-                  src={themeAny.characterLogo} 
-                  alt={themeAny.characterName || 'Nome'} 
-                  className="h-3 sm:h-3.5 w-auto max-w-[42px] sm:max-w-[48px] object-contain transition-transform group-hover:scale-110 pointer-events-none drop-shadow-xs" 
-                />
+        {/* Segmentos clicáveis para cada uma das 5 cores correspondentes ao tema */}
+        {SPECTRUM_THEME_OPTIONS.map((theme) => {
+          const isSelected = currentTheme === theme.id;
+          const themeAny = theme as any;
+          return (
+            <button
+              key={theme.id}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              onClick={() => onSelectTheme(theme.id)}
+              title={`${theme.name} (${themeAny.characterName})`}
+              aria-label={`Selecionar tema ${theme.name} - ${themeAny.characterName}`}
+              className={`relative flex-1 h-full z-10 flex items-center justify-center cursor-pointer group focus:outline-none transition-all ${
+                isSelected ? 'scale-100' : 'hover:scale-98 opacity-90 hover:opacity-100'
+              }`}
+            >
+              {/* Indicador elegante de tema ativo */}
+              {isSelected ? (
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/95 border-2 border-slate-900/80 shadow-md flex items-center justify-center transform scale-100 animate-in zoom-in-75 duration-150">
+                  {themeAny.characterAvatar ? (
+                    <img
+                      src={themeAny.characterAvatar}
+                      alt={themeAny.characterName}
+                      className="w-full h-full rounded-full object-cover pointer-events-none select-none"
+                    />
+                  ) : (
+                    <span 
+                      className="w-3 h-3 rounded-full shadow-xs" 
+                      style={{ backgroundColor: theme.dotColor }}
+                    />
+                  )}
+                </div>
               ) : (
-                /* Espaço reservado para nomes futuros mantendo o alinhamento de todas as bolinhas */
-                <span className="w-full h-full block" />
+                /* Ponto sutil no hover */
+                <div className="w-2.5 h-2.5 rounded-full bg-white/50 group-hover:bg-white/90 group-hover:scale-125 shadow-xs transition-all pointer-events-none" />
               )}
-            </div>
-          </button>
-        );
-      })}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
