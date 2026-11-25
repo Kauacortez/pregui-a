@@ -115,6 +115,7 @@ export const MonsterTimer: React.FC<MonsterTimerProps> = ({ themeConfig }) => {
           isPaused={isPaused}
           settings={loadOrbitSettings()}
           themeColor={themeColor}
+          progressPercent={progressPercent}
         />
         <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
           <circle

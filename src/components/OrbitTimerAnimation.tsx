@@ -43,6 +43,7 @@ interface OrbitTimerAnimationProps {
   isPaused: boolean;
   settings: OrbitSettings;
   themeColor?: string;
+  progressPercent?: number;
 }
 
 const ASSETS_VERSION = '20261106_v11_pink_character';
@@ -129,12 +130,14 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
   isPaused,
   settings,
   themeColor,
+  progressPercent = 0,
 }) => {
   if (!settings || settings.enabled === false) return null;
 
-  const isSpinning = orbitAnimState === 3 && (isActive || isPaused);
-  const isPausedState = isPaused;
   const orbitTheme = getOrbitThemeConfig(themeColor);
+  const progressAngle = (typeof progressPercent === 'number' && progressPercent >= 0)
+    ? Math.min(360, Math.max(0, (progressPercent / 100) * 360))
+    : 0;
 
   const isManualUpload = Boolean(settings && settings.isCustomUpload && settings.customImg1);
   const charF1 = isManualUpload ? settings.customImg1! : orbitTheme.fallback1;
@@ -146,7 +149,6 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
   return (
     <div
       className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
-      style={{ ['--orbit-speed' as string]: `${settings.speed || 8}s` }}
     >
       <svg
         className="orbit-svg pixelated"
@@ -155,9 +157,12 @@ export const OrbitTimerAnimation: React.FC<OrbitTimerAnimationProps> = ({
         xmlns="http://www.w3.org/2000/svg"
       >
         <g
-          className={`rotating-group ${isSpinning ? 'spinning' : ''} ${
-            isPausedState ? 'paused' : ''
-          }`}
+          className="rotating-group"
+          style={{
+            transformOrigin: '170px 170px',
+            transform: `rotate(${progressAngle}deg)`,
+            transition: (isActive && !isPaused) ? 'transform 1000ms linear' : (isPaused ? 'none' : 'transform 300ms ease-out'),
+          }}
         >
           {/* RASTRO E BRILHOS (Visíveis no Estado 3 quando ativado) */}
           <g
