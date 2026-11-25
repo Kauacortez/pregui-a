@@ -206,11 +206,95 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ currentThem
   );
 };
 
+const MODAL_THEME_STYLES = {
+  azul: {
+    bg: '#BFDBFE',
+    border: '#60A5FA',
+    iconBg: '#DBEAFE',
+    iconBorder: '#3B82F6',
+    iconText: 'text-blue-900',
+    title: 'text-blue-950',
+    subtitle: 'text-blue-900/80',
+    promptText: 'text-blue-950',
+    btnPrimary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30',
+    btnPrimaryIcon: 'text-blue-200',
+    btnSecondary: 'bg-white/90 hover:bg-white text-blue-950 border border-blue-300 shadow-xs',
+    btnSecondaryIcon: 'text-blue-700',
+    btnCancel: 'text-blue-900/80 hover:text-blue-950',
+    closeBtn: 'text-blue-700 hover:text-blue-950 hover:bg-blue-200/60'
+  },
+  rosa: {
+    bg: '#FCE7F3',
+    border: '#F472B6',
+    iconBg: '#FDF2F8',
+    iconBorder: '#EC4899',
+    iconText: 'text-pink-900',
+    title: 'text-pink-950',
+    subtitle: 'text-pink-900/80',
+    promptText: 'text-pink-950',
+    btnPrimary: 'bg-pink-600 hover:bg-pink-700 text-white shadow-md shadow-pink-600/30',
+    btnPrimaryIcon: 'text-pink-200',
+    btnSecondary: 'bg-white/90 hover:bg-white text-pink-950 border border-pink-300 shadow-xs',
+    btnSecondaryIcon: 'text-pink-700',
+    btnCancel: 'text-pink-900/80 hover:text-pink-950',
+    closeBtn: 'text-pink-700 hover:text-pink-950 hover:bg-pink-200/60'
+  },
+  amarelo: {
+    bg: '#FEF7CD',
+    border: '#FBBF24',
+    iconBg: '#FEF9C3',
+    iconBorder: '#F59E0B',
+    iconText: 'text-amber-950',
+    title: 'text-amber-950',
+    subtitle: 'text-amber-900/80',
+    promptText: 'text-amber-950',
+    btnPrimary: 'bg-amber-500 hover:bg-amber-600 text-amber-950 shadow-md shadow-amber-500/30',
+    btnPrimaryIcon: 'text-amber-950',
+    btnSecondary: 'bg-white/90 hover:bg-white text-amber-950 border border-amber-300 shadow-xs',
+    btnSecondaryIcon: 'text-amber-800',
+    btnCancel: 'text-amber-900/80 hover:text-amber-950',
+    closeBtn: 'text-amber-800 hover:text-amber-950 hover:bg-amber-200/60'
+  },
+  verde: {
+    bg: '#BBF7D0',
+    border: '#34D399',
+    iconBg: '#DCFCE7',
+    iconBorder: '#10B981',
+    iconText: 'text-emerald-950',
+    title: 'text-emerald-950',
+    subtitle: 'text-emerald-900/80',
+    promptText: 'text-emerald-950',
+    btnPrimary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/30',
+    btnPrimaryIcon: 'text-emerald-200',
+    btnSecondary: 'bg-white/90 hover:bg-white text-emerald-950 border border-emerald-300 shadow-xs',
+    btnSecondaryIcon: 'text-emerald-700',
+    btnCancel: 'text-emerald-900/80 hover:text-emerald-950',
+    closeBtn: 'text-emerald-700 hover:text-emerald-950 hover:bg-emerald-200/60'
+  },
+  roxo: {
+    bg: '#EDE9FE',
+    border: '#C084FC',
+    iconBg: '#F5F3FF',
+    iconBorder: '#8B5CF6',
+    iconText: 'text-purple-950',
+    title: 'text-purple-950',
+    subtitle: 'text-purple-900/80',
+    promptText: 'text-purple-950',
+    btnPrimary: 'bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-600/30',
+    btnPrimaryIcon: 'text-purple-200',
+    btnSecondary: 'bg-white/90 hover:bg-white text-purple-950 border border-purple-300 shadow-xs',
+    btnSecondaryIcon: 'text-purple-700',
+    btnCancel: 'text-purple-900/80 hover:text-purple-950',
+    closeBtn: 'text-purple-700 hover:text-purple-950 hover:bg-purple-200/60'
+  }
+};
+
 interface ThemeChangeConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   pendingThemeColor: string | null;
-  timeLeft: number;
+  currentThemeColor?: string;
+  timeLeft?: number;
   onConfirmKeepTime: () => void;
   onConfirmResetTime: () => void;
 }
@@ -219,21 +303,13 @@ const ThemeChangeConfirmModal: React.FC<ThemeChangeConfirmModalProps> = ({
   isOpen,
   onClose,
   pendingThemeColor,
-  timeLeft,
+  currentThemeColor = 'amarelo',
   onConfirmKeepTime,
   onConfirmResetTime
 }) => {
   if (!isOpen || !pendingThemeColor) return null;
 
-  const pendingTheme = THEME_PRESETS[pendingThemeColor as keyof typeof THEME_PRESETS] || THEME_PRESETS.amarelo;
-
-  const formatModalTime = (seconds: number) => {
-    const s = Math.max(0, seconds || 0);
-    const h = Math.floor(s / 3600);
-    const m = Math.floor((s % 3600) / 60);
-    const sec = s % 60;
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-  };
+  const themeStyle = MODAL_THEME_STYLES[currentThemeColor as keyof typeof MODAL_THEME_STYLES] || MODAL_THEME_STYLES.amarelo;
 
   return (
     <div 
@@ -241,19 +317,23 @@ const ThemeChangeConfirmModal: React.FC<ThemeChangeConfirmModalProps> = ({
       onClick={onClose}
     >
       <div 
-        className="bg-[#FFFDF7] border-2 border-slate-300 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-md w-full flex flex-col gap-4 text-slate-900 animate-in zoom-in-95 duration-200"
+        style={{ backgroundColor: themeStyle.bg, borderColor: themeStyle.border }}
+        className="border-2 rounded-3xl p-5 sm:p-6 shadow-2xl max-w-md w-full flex flex-col gap-4 animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 shrink-0 shadow-xs">
+            <div 
+              style={{ backgroundColor: themeStyle.iconBg, borderColor: themeStyle.iconBorder }}
+              className={`w-10 h-10 rounded-2xl border flex items-center justify-center ${themeStyle.iconText} shrink-0 shadow-xs`}
+            >
               <AlertTriangle size={20} />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+              <h3 className={`text-base sm:text-lg font-black tracking-tight ${themeStyle.title}`}>
                 Mudar Tema Durante a Sessão?
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className={`text-xs font-medium ${themeStyle.subtitle}`}>
                 O cronômetro possui uma sessão ativa ou pausada
               </p>
             </div>
@@ -261,29 +341,14 @@ const ThemeChangeConfirmModal: React.FC<ThemeChangeConfirmModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+            className={`p-1 rounded-lg transition-colors cursor-pointer ${themeStyle.closeBtn}`}
             title="Fechar aviso"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col gap-2 text-xs">
-          <div className="flex justify-between items-center text-slate-700">
-            <span className="font-semibold">Tempo no cronômetro:</span>
-            <span className="font-mono font-black text-sm text-slate-950 px-2.5 py-0.5 bg-white border border-slate-200 rounded-md shadow-xs">
-              {formatModalTime(timeLeft)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-slate-700">
-            <span className="font-semibold">Tema de destino:</span>
-            <span className="font-bold text-slate-900">
-              {pendingTheme.name} ({pendingTheme.characterName})
-            </span>
-          </div>
-        </div>
-
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className={`text-xs sm:text-sm font-medium leading-relaxed ${themeStyle.promptText}`}>
           Você deseja realmente mudar o tema? Escolha se prefere <strong>manter a numeração atual</strong> ou <strong>reiniciar a contagem</strong> para o novo tema:
         </p>
 
@@ -291,25 +356,25 @@ const ThemeChangeConfirmModal: React.FC<ThemeChangeConfirmModalProps> = ({
           <button
             type="button"
             onClick={onConfirmKeepTime}
-            className="w-full py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm text-white bg-slate-900 hover:bg-slate-800 active:scale-98 transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+            className={`w-full py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 ${themeStyle.btnPrimary}`}
           >
-            <Check size={16} className="text-emerald-400" />
+            <Check size={16} className={themeStyle.btnPrimaryIcon} />
             <span>Manter numeração e mudar tema</span>
           </button>
 
           <button
             type="button"
             onClick={onConfirmResetTime}
-            className="w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 active:scale-98 transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+            className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 ${themeStyle.btnSecondary}`}
           >
-            <RotateCcw size={14} className="text-slate-500" />
+            <RotateCcw size={14} className={themeStyle.btnSecondaryIcon} />
             <span>Reiniciar cronômetro e mudar tema</span>
           </button>
 
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors text-center cursor-pointer mt-0.5"
+            className={`w-full py-2 text-xs font-semibold transition-colors text-center cursor-pointer mt-0.5 underline ${themeStyle.btnCancel}`}
           >
             Cancelar (Permanecer no tema atual)
           </button>
@@ -508,6 +573,7 @@ export const App: React.FC = () => {
         isOpen={showThemeModal}
         onClose={handleCancelThemeChange}
         pendingThemeColor={pendingThemeColor}
+        currentThemeColor={themeColor}
         timeLeft={timeLeft}
         onConfirmKeepTime={handleConfirmThemeKeepTime}
         onConfirmResetTime={handleConfirmThemeResetTime}
